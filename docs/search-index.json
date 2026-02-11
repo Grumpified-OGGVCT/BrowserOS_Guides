@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-02-11T23:24:11.954894",
+  "generated_at": "2026-02-11T23:28:58.011668",
   "version": "1.0.0",
-  "total_documents": 20,
+  "total_documents": 22,
   "documents": [
     {
       "id": "0643d3d3a465",
@@ -85,25 +85,25 @@
         "Knowledge Base & Resources",
         "📚 Core Documentation",
         "🎯 Practical Resources",
-        "🤖 AI-Powered Tools",
+        "🤖 AI-Powered Tools & Agentic Capabilities",
         "Generate a complete workflow from a use case",
         "Validate an existing workflow",
-        "🔄 Repository Maintenance"
+        "Start BrowserOS as MCP server for AI tools"
       ],
       "keywords": [
         "workflow",
         "workflows",
         "browseros",
+        "integration",
         "research",
         "advanced",
-        "integration",
-        "handling",
-        "validation",
-        "includes",
-        "real"
+        "agentic",
+        "capabilities",
+        "patterns",
+        "includes"
       ],
       "preview": "BrowserOS Workflows Research Brief RESEARCH BRIEF: Conduct exhaustive multi‑source research on BrowserOS Workflows to build the definitive technical knowledge base. Research Targets: - Official BrowserOS documentation docs, API references, changelogs - BrowserOS GitHub repositories source code, issues, PRs, examples, READMEs - Community discussions and implementation examples Information to Extract: - Core Workflow Architecture - How workflows are structured, defined, and executed - Step Types &",
-      "word_count": 389
+      "word_count": 459
     },
     {
       "id": "1ba8f79f2a30",
@@ -119,25 +119,25 @@
         "Knowledge Base & Resources",
         "📚 Core Documentation",
         "🎯 Practical Resources",
-        "🤖 AI-Powered Tools",
+        "🤖 AI-Powered Tools & Agentic Capabilities",
         "Generate a complete workflow from a use case",
         "Validate an existing workflow",
-        "🔄 Repository Maintenance"
+        "Start BrowserOS as MCP server for AI tools"
       ],
       "keywords": [
         "workflow",
         "workflows",
         "browseros",
+        "integration",
         "research",
         "advanced",
-        "integration",
-        "handling",
-        "validation",
-        "includes",
-        "real"
+        "agentic",
+        "capabilities",
+        "patterns",
+        "includes"
       ],
       "preview": "BrowserOS Workflows Research Brief RESEARCH BRIEF: Conduct exhaustive multi‑source research on BrowserOS Workflows to build the definitive technical knowledge base. Research Targets: - Official BrowserOS documentation docs, API references, changelogs - BrowserOS GitHub repositories source code, issues, PRs, examples, READMEs - Community discussions and implementation examples Information to Extract: - Core Workflow Architecture - How workflows are structured, defined, and executed - Step Types &",
-      "word_count": 389
+      "word_count": 459
     },
     {
       "id": "521f23c06f87",
@@ -410,6 +410,74 @@
       ],
       "preview": "🤖 Automated KB Update - Quick Setup Guide Prerequisites Organization has API keys for: - ✅ Ollama Cloud Service - For local LLM processing - ✅ OpenRouter - For enhanced AI research Claude, GPT-4, etc. Setup Steps 5 minutes 1. Add API Keys to GitHub Secrets Navigate to: Repository Settings → Secrets and variables → Actions → New repository secret Add these two secrets: | Secret Name | Value | Get it from | |-------------|-------|-------------| | OLLAMA API KEY | Your Ollama API key | https://olla",
       "word_count": 443
+    },
+    {
+      "id": "109cd20db096",
+      "title": "🤖 BrowserOS in Agentic AI Stacks - The Ultimate MCP Integration Guide",
+      "description": "**BrowserOS as a Model Context Protocol (MCP) Server for AI Agents**",
+      "category": "Documentation",
+      "path": "BrowserOS/MCP_AGENTIC_GUIDE.md",
+      "url": "../BrowserOS/MCP_AGENTIC_GUIDE.md",
+      "headings": [
+        "🤖 BrowserOS in Agentic AI Stacks - The Ultimate MCP Integration Guide",
+        "📖 Table of Contents",
+        "🎯 What is BrowserOS MCP?",
+        "The Breakthrough",
+        "Architecture",
+        "🔥 Why This Changes Everything",
+        "Before BrowserOS MCP",
+        "After BrowserOS MCP",
+        "Killer Features",
+        "💻 Compatible AI Tools & IDEs"
+      ],
+      "keywords": [
+        "browseros",
+        "agent",
+        "test",
+        "tools",
+        "claude",
+        "workflow",
+        "result",
+        "agentic",
+        "cases",
+        "code"
+      ],
+      "preview": "🤖 BrowserOS in Agentic AI Stacks - The Ultimate MCP Integration Guide BrowserOS as a Model Context Protocol MCP Server for AI Agents > 🚀 Transform Your AI Stack : Give LLMs browser automation superpowers > 🔗 Universal Integration : Works with VSCode, Cursor, Windsurf, Claude Desktop, and all MCP-compatible tools > 🤖 Agentic Workflows : Enable AI agents to browse, scrape, test, and automate the web autonomously > 💡 Real-World Power : Combine reasoning with action - AI that can actually DO things ",
+      "word_count": 1911
+    },
+    {
+      "id": "109cd20db096",
+      "title": "🤖 BrowserOS in Agentic AI Stacks - The Ultimate MCP Integration Guide",
+      "description": "**BrowserOS as a Model Context Protocol (MCP) Server for AI Agents**",
+      "category": "Documentation",
+      "path": "BrowserOS/MCP_AGENTIC_GUIDE.md",
+      "url": "../BrowserOS/MCP_AGENTIC_GUIDE.md",
+      "headings": [
+        "🤖 BrowserOS in Agentic AI Stacks - The Ultimate MCP Integration Guide",
+        "📖 Table of Contents",
+        "🎯 What is BrowserOS MCP?",
+        "The Breakthrough",
+        "Architecture",
+        "🔥 Why This Changes Everything",
+        "Before BrowserOS MCP",
+        "After BrowserOS MCP",
+        "Killer Features",
+        "💻 Compatible AI Tools & IDEs"
+      ],
+      "keywords": [
+        "browseros",
+        "agent",
+        "test",
+        "tools",
+        "claude",
+        "workflow",
+        "result",
+        "agentic",
+        "cases",
+        "code"
+      ],
+      "preview": "🤖 BrowserOS in Agentic AI Stacks - The Ultimate MCP Integration Guide BrowserOS as a Model Context Protocol MCP Server for AI Agents > 🚀 Transform Your AI Stack : Give LLMs browser automation superpowers > 🔗 Universal Integration : Works with VSCode, Cursor, Windsurf, Claude Desktop, and all MCP-compatible tools > 🤖 Agentic Workflows : Enable AI agents to browse, scrape, test, and automate the web autonomously > 💡 Real-World Power : Combine reasoning with action - AI that can actually DO things ",
+      "word_count": 1911
     },
     {
       "id": "797efe9dd37c",

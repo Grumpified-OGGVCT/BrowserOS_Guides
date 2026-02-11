@@ -36,18 +36,22 @@ A comprehensive, structured knowledge base enabling advanced workflow creation w
 
 - **[ADVANCED_TECHNIQUES.md](Research/ADVANCED_TECHNIQUES.md)** – Advanced and expert-level content beyond official guides. Includes internal architecture, undocumented features, production patterns, performance optimization, security patterns, and battle-tested enterprise solutions. Goes way beyond basics with real benchmarks and expert insights.
 
+- **[MCP_AGENTIC_GUIDE.md](MCP_AGENTIC_GUIDE.md)** – 🤖 **NEW!** Complete guide to using BrowserOS as an MCP (Model Context Protocol) server in agentic AI stacks. Integration guides for VSCode, Cursor, Windsurf, Claude Desktop, MSTY Studio, AnythingLLM, LM Studio, Ollama, and more. Includes autonomous agent patterns, real-world agentic use cases, and self-improving workflows.
+
 ### 🎯 Practical Resources
 - **[USE_CASE_MATRIX.md](USE_CASE_MATRIX.md)** – Comprehensive guide covering 500+ real-world use cases across 25+ industries. Includes ROI calculators, industry-specific solutions, time savings estimates, and success stories. Answers "What problems can BrowserOS solve?"
 
 - **[Workflow Library](Workflows/)** – Self-growing, AI-validated library of 130+ production-ready workflows organized into 10 categories (E-Commerce, Data Extraction, Testing & QA, Social Media, Research & Monitoring, CRM & Business, Content Creation, API Integration, Advanced Techniques, Community Contributed). Each workflow includes complete documentation, error handling, and real-world applicability.
 
-### 🤖 AI-Powered Tools
-The repository includes **Kimi-K2.5:cloud** integration for intelligent workflow generation and validation:
+### 🤖 AI-Powered Tools & Agentic Capabilities
+The repository includes **Kimi-K2.5:cloud** integration for intelligent workflow generation and validation, plus comprehensive MCP integration for agentic AI workflows:
 
 - **Workflow Generator** – AI-powered workflow creation from natural language use cases
 - **Feasibility Validator** – Real-world validation of workflow designs
 - **Idea Generator** – Automated workflow ideas based on industry trends
 - **Self-Growing System** – Weekly automated expansion of the workflow library
+- **MCP Server Integration** – Connect BrowserOS to any MCP-compatible AI tool (VSCode, Cursor, Claude Desktop, etc.)
+- **Agentic Patterns** – Autonomous AI agents with browser automation capabilities
 
 **Usage:**
 ```bash
@@ -56,6 +60,9 @@ python scripts/workflow_generator.py full --use-case "monitor competitor prices"
 
 # Validate an existing workflow
 python scripts/workflow_generator.py validate --workflow path/to/workflow.json
+
+# Start BrowserOS as MCP server for AI tools
+browseros mcp-server --port 3000
 ```
 
 ### 🔄 Repository Maintenance
