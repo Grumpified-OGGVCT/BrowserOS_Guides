@@ -57,12 +57,12 @@ class GitHubRepoTracker:
     def _initialize_github(self):
         """Initialize GitHub API client"""
         if not GITHUB_AVAILABLE:
-            print("⚠️ GitHub API not available")
+            print("⚠️ GitHub API not available - install PyGithub")
             return
         
         github_token = os.getenv("GITHUB_TOKEN")
         if not github_token:
-            print("⚠️ GITHUB_TOKEN not set, limited API access")
+            print("⚠️ GITHUB_TOKEN not set - using public API (limited rate)")
             self.github = Github()
         else:
             self.github = Github(github_token)
@@ -71,7 +71,12 @@ class GitHubRepoTracker:
             self.repo = self.github.get_repo(self.repo_name)
             print(f"✓ Connected to {self.repo_name}")
         except Exception as e:
-            print(f"❌ Failed to connect to {self.repo_name}: {e}")
+            # Handle connection errors gracefully
+            error_msg = str(e) if hasattr(e, '__str__') else type(e).__name__
+            print(f"❌ Failed to connect to {self.repo_name}: {error_msg}")
+            print("   This may be due to rate limiting or network issues.")
+            print("   Set GITHUB_TOKEN environment variable for higher rate limits.")
+            self.repo = None
     
     def load_state(self) -> RepoState:
         """Load repository state from file"""
