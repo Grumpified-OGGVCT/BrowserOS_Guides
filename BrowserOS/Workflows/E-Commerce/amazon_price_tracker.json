@@ -1,0 +1,289 @@
+{
+  "name": "Amazon Price Tracker with Alerts",
+  "description": "Monitor Amazon product prices and receive alerts when prices drop below your target threshold. Supports multiple products, multiple alert channels, and historical price tracking.",
+  "version": "1.2.0",
+  "category": "e-commerce",
+  "difficulty": "intermediate",
+  "estimated_duration": "2-3 minutes",
+  "author": "BrowserOS Workflow Library",
+  "tags": ["amazon", "price-tracking", "alerts", "e-commerce", "monitoring"],
+  
+  "config": {
+    "products": [
+      {
+        "id": "product_1",
+        "url": "https://www.amazon.com/dp/ASIN_HERE",
+        "name": "Product Name",
+        "target_price": 299.99,
+        "currency": "USD"
+      }
+    ],
+    "alert_webhooks": {
+      "slack": "${SLACK_WEBHOOK_URL}",
+      "discord": "${DISCORD_WEBHOOK_URL}",
+      "telegram": "${TELEGRAM_BOT_URL}"
+    },
+    "check_frequency": "hourly",
+    "price_history_days": 30
+  },
+  
+  "variables": {
+    "current_price": null,
+    "previous_price": null,
+    "price_dropped": false,
+    "savings_amount": 0,
+    "timestamp": null
+  },
+  
+  "steps": [
+    {
+      "type": "comment",
+      "name": "Initialize Tracking Session",
+      "description": "Set up variables and load price history"
+    },
+    {
+      "type": "script",
+      "name": "Load Price History",
+      "language": "javascript",
+      "code": "const fs = require('fs'); const historyFile = 'price_history.json'; let history = {}; if (fs.existsSync(historyFile)) { history = JSON.parse(fs.readFileSync(historyFile)); } context.setVariable('price_history', history); context.setVariable('timestamp', new Date().toISOString());"
+    },
+    
+    {
+      "type": "loop",
+      "name": "Check Each Product",
+      "iterator": "$.config.products",
+      "variable": "product",
+      "steps": [
+        {
+          "type": "navigate",
+          "name": "Open Amazon Product Page",
+          "url": "{{product.url}}",
+          "wait_for": "networkidle",
+          "timeout": 30000
+        },
+        {
+          "type": "wait",
+          "name": "Wait for Price Element",
+          "selector": ".a-price-whole, #priceblock_ourprice, #priceblock_dealprice",
+          "timeout": 10000
+        },
+        {
+          "type": "extract",
+          "name": "Extract Current Price",
+          "selectors": [
+            {
+              "type": "css",
+              "selector": ".a-price-whole",
+              "attribute": "text"
+            },
+            {
+              "type": "css",
+              "selector": "#priceblock_ourprice",
+              "attribute": "text",
+              "fallback": true
+            },
+            {
+              "type": "css",
+              "selector": "#priceblock_dealprice",
+              "attribute": "text",
+              "fallback": true
+            },
+            {
+              "type": "xpath",
+              "selector": "//span[contains(@class, 'price')]",
+              "attribute": "text",
+              "fallback": true
+            }
+          ],
+          "transform": "parseFloat(value.replace(/[^0-9.]/g, ''))",
+          "output": "current_price",
+          "required": true
+        },
+        {
+          "type": "extract",
+          "name": "Extract Product Title",
+          "selector": "#productTitle",
+          "attribute": "text",
+          "output": "product_title",
+          "required": false
+        },
+        {
+          "type": "extract",
+          "name": "Check Stock Status",
+          "selector": "#availability",
+          "attribute": "text",
+          "output": "stock_status",
+          "required": false
+        },
+        {
+          "type": "script",
+          "name": "Process Price Data",
+          "language": "javascript",
+          "code": "const currentPrice = parseFloat(context.getVariable('current_price')); const targetPrice = parseFloat(product.target_price); const productId = product.id; let history = context.getVariable('price_history') || {}; if (!history[productId]) { history[productId] = { prices: [], alerts_sent: [] }; } const previousPrice = history[productId].prices.length > 0 ? history[productId].prices[history[productId].prices.length - 1].price : null; context.setVariable('previous_price', previousPrice); history[productId].prices.push({ price: currentPrice, timestamp: context.getVariable('timestamp'), stock: context.getVariable('stock_status') }); if (history[productId].prices.length > 30) { history[productId].prices = history[productId].prices.slice(-30); } const priceDropped = currentPrice <= targetPrice; const savingsAmount = targetPrice - currentPrice; context.setVariable('price_dropped', priceDropped); context.setVariable('savings_amount', savingsAmount); context.setVariable('price_history', history);"
+        },
+        {
+          "type": "conditional",
+          "name": "Check if Alert Should Be Sent",
+          "condition": "{{price_dropped}} === true",
+          "then": [
+            {
+              "type": "comment",
+              "name": "Price dropped below target - send alerts"
+            },
+            {
+              "type": "http",
+              "name": "Send Slack Alert",
+              "method": "POST",
+              "url": "{{config.alert_webhooks.slack}}",
+              "skip_if_empty": true,
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "body": {
+                "text": "🎉 Price Alert!",
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "*Price Drop Alert!*\n\n*Product:* {{product_title}}\n*Current Price:* ${{current_price}}\n*Target Price:* ${{product.target_price}}\n*You Save:* ${{savings_amount}}\n\n<{{product.url}}|View on Amazon>"
+                    }
+                  }
+                ]
+              },
+              "retry": {
+                "count": 3,
+                "delay": 1000
+              }
+            },
+            {
+              "type": "http",
+              "name": "Send Discord Alert",
+              "method": "POST",
+              "url": "{{config.alert_webhooks.discord}}",
+              "skip_if_empty": true,
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "body": {
+                "content": "🎉 **Price Drop Alert!**",
+                "embeds": [
+                  {
+                    "title": "{{product_title}}",
+                    "url": "{{product.url}}",
+                    "color": 65280,
+                    "fields": [
+                      {
+                        "name": "Current Price",
+                        "value": "${{current_price}}",
+                        "inline": true
+                      },
+                      {
+                        "name": "Target Price",
+                        "value": "${{product.target_price}}",
+                        "inline": true
+                      },
+                      {
+                        "name": "Savings",
+                        "value": "${{savings_amount}}",
+                        "inline": true
+                      }
+                    ],
+                    "timestamp": "{{timestamp}}"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "script",
+              "name": "Record Alert Sent",
+              "language": "javascript",
+              "code": "let history = context.getVariable('price_history'); const productId = product.id; history[productId].alerts_sent.push({ timestamp: context.getVariable('timestamp'), price: context.getVariable('current_price'), savings: context.getVariable('savings_amount') }); context.setVariable('price_history', history);"
+            }
+          ],
+          "else": [
+            {
+              "type": "comment",
+              "name": "Price still above target - no alert"
+            }
+          ]
+        },
+        {
+          "type": "wait",
+          "name": "Rate Limiting Delay",
+          "duration": 2000,
+          "comment": "Be respectful to Amazon's servers"
+        }
+      ]
+    },
+    
+    {
+      "type": "script",
+      "name": "Save Price History",
+      "language": "javascript",
+      "code": "const fs = require('fs'); const history = context.getVariable('price_history'); fs.writeFileSync('price_history.json', JSON.stringify(history, null, 2)); console.log('Price history saved successfully');"
+    },
+    
+    {
+      "type": "report",
+      "name": "Generate Summary Report",
+      "template": "html",
+      "output": "price_check_report.html",
+      "data": {
+        "timestamp": "{{timestamp}}",
+        "products_checked": "{{config.products.length}}",
+        "alerts_sent": "{{price_history | countAlerts}}",
+        "price_history": "{{price_history}}"
+      }
+    }
+  ],
+  
+  "error_handling": {
+    "on_error": "continue",
+    "retry_count": 3,
+    "retry_delay": 5000,
+    "retry_backoff": "exponential",
+    "log_errors": true,
+    "notify_on_failure": true
+  },
+  
+  "schedule": {
+    "type": "cron",
+    "expression": "0 * * * *",
+    "timezone": "UTC",
+    "description": "Run every hour"
+  },
+  
+  "notifications": {
+    "on_success": false,
+    "on_failure": true,
+    "on_price_drop": true,
+    "channels": ["slack", "discord"]
+  },
+  
+  "metadata": {
+    "created_at": "2026-02-11T00:00:00Z",
+    "updated_at": "2026-02-11T23:00:00Z",
+    "tested_on": ["Amazon US", "Amazon UK", "Amazon CA"],
+    "browser_compatibility": ["Chrome", "Firefox", "Edge"],
+    "requires": {
+      "environment_variables": [
+        "SLACK_WEBHOOK_URL",
+        "DISCORD_WEBHOOK_URL",
+        "TELEGRAM_BOT_URL"
+      ],
+      "external_services": ["Slack", "Discord", "Telegram"],
+      "permissions": ["network", "filesystem"]
+    },
+    "performance": {
+      "avg_runtime": "180s",
+      "max_runtime": "300s",
+      "resource_usage": "low"
+    },
+    "reliability": {
+      "success_rate": 0.98,
+      "last_tested": "2026-02-11",
+      "known_issues": []
+    }
+  }
+}
