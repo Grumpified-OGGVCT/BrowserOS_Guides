@@ -54,10 +54,17 @@ Temporary Items
 # Node modules (if applicable)
 node_modules/
 
-# Python cache (if applicable)
+# Python cache and bytecode
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
 
 # Local verification logs
 **/verification_log_*.json
