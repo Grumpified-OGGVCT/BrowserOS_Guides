@@ -1,0 +1,144 @@
+name: Self-Test & Quality Assurance
+
+on:
+  # Run after KB updates
+  workflow_run:
+    workflows: ["Update Knowledge Base"]
+    types: [completed]
+  
+  # Weekly standalone check
+  schedule:
+    - cron: '0 2 * * 0'  # Sunday 02:00 UTC
+  
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      force_fix:
+        description: 'Force auto-fix mode'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+jobs:
+  self-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Run self-tests
+        id: tests
+        env:
+          OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          # Run security scan first
+          echo "Running security scan..."
+          python scripts/security_scanner.py --verbose --fail-on-critical
+          
+          # Then run self-tests
+          if [ "${{ github.event.inputs.force_fix }}" = "true" ] || [ "${{ github.event_name }}" = "schedule" ]; then
+            python scripts/self_test.py --auto-fix --verbose
+          else
+            python scripts/self_test.py --verbose
+          fi
+          
+          # Capture exit code
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+      
+      - name: Commit fixes if any
+        if: steps.tests.outputs.exit_code == '0'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          if git diff --quiet; then
+            echo "No changes to commit"
+          else
+            git add -A
+            git commit -m "🔧 Auto-fix: Self-test repairs [skip ci]"
+            git push
+          fi
+      
+      - name: Create issue for manual review
+        if: failure() || steps.tests.outputs.exit_code != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const issueDraft = '.github/issue_draft.md';
+            
+            if (fs.existsSync(issueDraft)) {
+              const content = fs.readFileSync(issueDraft, 'utf8');
+              const lines = content.split('\n');
+              const title = lines[0].replace(/^#\s*/, '');
+              const body = lines.slice(2).join('\n');
+              
+              // Check if similar issue already exists
+              const issues = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'self-test'
+              });
+              
+              const existingIssue = issues.data.find(issue => 
+                issue.title.includes('[Self-Test]')
+              );
+              
+              if (existingIssue) {
+                // Update existing issue
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: existingIssue.number,
+                  body: `## New Test Run\n\n${body}`
+                });
+              } else {
+                // Create new issue
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: title,
+                  body: body,
+                  labels: ['self-test', 'needs-review', 'automated']
+                });
+              }
+            }
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: self-test-results
+          path: |
+            BrowserOS/Research/test_results.json
+            SECURITY-SCAN-REPORT.json
+          retention-days: 30
+      
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Self-Test Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f "BrowserOS/Research/test_results.json" ]; then
+            python scripts/self_test.py --report-only >> $GITHUB_STEP_SUMMARY
+          fi
