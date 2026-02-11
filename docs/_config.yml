@@ -1,0 +1,46 @@
+# BrowserOS Knowledge Hub - GitHub Pages Configuration
+# This site showcases the ultimate BrowserOS knowledge resource
+
+# Site settings
+title: "BrowserOS Knowledge Hub"
+description: "The Ultimate BrowserOS Knowledge Source - 500+ use cases, 130+ workflows, AI-powered generation"
+url: "https://grumpified-oggvct.github.io"
+baseurl: "/BrowserOS_Guides"
+
+# Build settings
+markdown: kramdown
+theme: null
+
+# Exclude from processing
+exclude:
+  - README.md
+  - LICENSE
+  - .gitignore
+  - .git
+  - scripts/
+  - BrowserOS/Research/raw/
+  - node_modules/
+  - vendor/
+
+# Include files
+include:
+  - _*
+  
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# SEO
+lang: en
+author: "BrowserOS Community"
+twitter:
+  card: summary_large_image
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+      image: /assets/og-image.png
