@@ -72,6 +72,20 @@ jobs:
         run: |
           python scripts/validate_kb.py
       
+      - name: Generate new workflow ideas (Weekly with Kimi)
+        if: github.event_name == 'schedule'
+        env:
+          OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
+        run: |
+          # Generate new workflow ideas using Kimi-K2.5:cloud
+          echo "🤖 Generating new workflow ideas with Kimi-K2.5:cloud..."
+          python scripts/workflow_generator.py full \
+            --use-case "emerging automation needs in current market trends" \
+            --complexity "medium" \
+            --output-dir "BrowserOS/Workflows/Community-Contributed/generated-$(date +%Y-%m-%d)" \
+            --validate || echo "⚠️ Workflow generation encountered issues"
+        continue-on-error: true  # Don't fail workflow if generation has issues
+      
       - name: Check for changes
         id: check_changes
         run: |
