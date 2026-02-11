@@ -475,7 +475,7 @@ steps:
   
   - name: Send alerts
     type: api_call
-    url: "https://hooks.slack.com/services/XXX"
+    url: "{{secrets.slack_webhook_url}}"
     method: POST
     body: "{{price_changes}}"
 ```
