@@ -1,0 +1,195 @@
+# ============================================================================
+# BrowserOS KB Research - Docker Compose Configuration
+# ============================================================================
+# Supports multiple services: research app, Ollama, MCP server
+# Usage:
+#   docker-compose up -d                    # Start all services
+#   docker-compose up research              # Start only research service
+#   docker-compose logs -f research         # View logs
+# ============================================================================
+
+version: '3.8'
+
+services:
+  # ============================================================================
+  # Main Research Application
+  # ============================================================================
+  research:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: browseros-kb-research
+    restart: unless-stopped
+    
+    environment:
+      # Agent Configuration
+      - AGENT_MODE=${AGENT_MODE:-hybrid}
+      
+      # API Keys (from .env file or environment)
+      - OLLAMA_API_KEY=${OLLAMA_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      
+      # Connection modes
+      - OLLAMA_MODE=${OLLAMA_MODE:-http}
+      - OPENROUTER_MODE=${OPENROUTER_MODE:-http}
+      
+      # URLs for containerized services
+      - OLLAMA_BASE_URL=http://ollama:11434/v1
+      - MCP_SERVER_URL=http://mcp-server:3000
+      
+      # Force update flag
+      - FORCE_UPDATE=${FORCE_UPDATE:-false}
+      
+      # Logging
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    
+    volumes:
+      # Mount KB directory for persistence
+      - ./BrowserOS:/app/BrowserOS
+      
+      # Mount config for easy updates
+      - ./config.yml:/app/config.yml:ro
+      
+      # Mount logs
+      - ./logs:/app/logs
+      
+      # Git credentials (if needed)
+      - ~/.gitconfig:/home/kbuser/.gitconfig:ro
+    
+    networks:
+      - browseros-network
+    
+    depends_on:
+      - ollama
+    
+    # Uncomment for development with live reload
+    # command: python -u scripts/research_pipeline.py
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 512M
+  
+  # ============================================================================
+  # Ollama Service (Local LLM)
+  # ============================================================================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-service
+    restart: unless-stopped
+    
+    ports:
+      - "11434:11434"
+    
+    volumes:
+      # Persistent model storage
+      - ollama-data:/root/.ollama
+    
+    networks:
+      - browseros-network
+    
+    # Pull models on startup
+    # entrypoint: ["/bin/sh", "-c"]
+    # command:
+    #   - |
+    #     ollama serve &
+    #     sleep 10
+    #     ollama pull llama2
+    #     ollama pull codellama
+    #     wait
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+    
+    # GPU support (uncomment if available)
+    # runtime: nvidia
+    # environment:
+    #   - NVIDIA_VISIBLE_DEVICES=all
+  
+  # ============================================================================
+  # MCP Server (Optional - Model Context Protocol)
+  # ============================================================================
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: mcp-server
+    container_name: mcp-server
+    restart: unless-stopped
+    
+    ports:
+      - "3000:3000"
+    
+    environment:
+      - MCP_PORT=3000
+      - MCP_HOST=0.0.0.0
+      - MCP_PROTOCOL_VERSION=2024-11-05
+    
+    networks:
+      - browseros-network
+    
+    profiles:
+      - mcp  # Only start with: docker-compose --profile mcp up
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  browseros-network:
+    driver: bridge
+    name: browseros-kb-network
+
+# ============================================================================
+# Volumes
+# ============================================================================
+volumes:
+  ollama-data:
+    driver: local
+    name: browseros-ollama-data
+
+# ============================================================================
+# Example Commands
+# ============================================================================
+# Start all services:
+#   docker-compose up -d
+#
+# Start with MCP server:
+#   docker-compose --profile mcp up -d
+#
+# View logs:
+#   docker-compose logs -f research
+#
+# Run manual update:
+#   docker-compose exec research python scripts/research_pipeline.py
+#
+# Validate KB:
+#   docker-compose exec research python scripts/validate_kb.py
+#
+# Access Ollama directly:
+#   docker-compose exec ollama ollama list
+#   docker-compose exec ollama ollama pull llama2
+#
+# Stop services:
+#   docker-compose down
+#
+# Stop and remove volumes:
+#   docker-compose down -v

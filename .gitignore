@@ -234,6 +234,8 @@ yarn.lock
 .env
 .env.local
 .env.*.local
+.env.production
+.env.development
 secrets.json
 *secret*
 *password*

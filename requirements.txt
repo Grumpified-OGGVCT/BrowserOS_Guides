@@ -16,6 +16,14 @@ PyGithub>=2.1.0
 # Date/time handling
 python-dateutil>=2.8.0
 
+# Configuration management
+pyyaml>=6.0.1
+python-dotenv>=1.0.0
+
+# Optional SDK support (uncomment if using SDK mode)
+# ollama>=0.1.0          # Ollama Python SDK
+# openai>=1.0.0          # OpenAI/OpenRouter SDK
+
 # Optional: Additional web scraping tools
-# selenium>=4.15.0  # Uncomment if needed for dynamic content
-# playwright>=1.40.0  # Uncomment if needed for browser automation
+# selenium>=4.15.0       # Uncomment if needed for dynamic content
+# playwright>=1.40.0     # Uncomment if needed for browser automation
