@@ -3,6 +3,8 @@ BrowserOS Workflows Knowledge Base - AI-Powered Research Pipeline
 
 This script uses Ollama and OpenRouter APIs to automatically research and compile
 information about BrowserOS Workflows from various sources.
+
+Now includes direct GitHub repository tracking for intelligent incremental updates.
 """
 
 import os
@@ -14,12 +16,21 @@ from pathlib import Path
 from typing import List, Dict, Any
 import hashlib
 
+# Add repo tracker
+try:
+    from repo_tracker import GitHubRepoTracker
+    TRACKER_AVAILABLE = True
+except ImportError:
+    TRACKER_AVAILABLE = False
+    print("⚠️ repo_tracker not available")
+
 # Configuration
 REPO_ROOT = Path(__file__).parent.parent
 KB_PATH = REPO_ROOT / "BrowserOS" / "Research" / "BrowserOS_Workflows_KnowledgeBase.md"
 SOURCES_PATH = REPO_ROOT / "BrowserOS" / "Research" / "sources.json"
 RAW_DIR = REPO_ROOT / "BrowserOS" / "Research" / "raw"
 BROWSEROS_REPO = RAW_DIR / "browseros-ai-BrowserOS"
+REPO_STATE_PATH = REPO_ROOT / "BrowserOS" / "Research" / "repo_state.json"
 
 # API Configuration
 OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY")
@@ -154,12 +165,24 @@ class SourceArchiver:
 
 
 class KBResearcher:
-    """Main KB research coordinator"""
+    """Main KB research coordinator with GitHub tracking"""
     
     def __init__(self):
         self.ai = AIResearcher()
         self.archiver = SourceArchiver()
         self.sources = self.load_sources()
+        
+        # Initialize GitHub repo tracker
+        self.repo_tracker = None
+        if TRACKER_AVAILABLE:
+            try:
+                self.repo_tracker = GitHubRepoTracker(
+                    repo_name="browseros-ai/BrowserOS",
+                    state_file=REPO_STATE_PATH
+                )
+                print("✓ GitHub repository tracker initialized")
+            except Exception as e:
+                print(f"⚠️ Could not initialize repo tracker: {e}")
     
     def load_sources(self) -> List[Dict[str, Any]]:
         """Load source manifest"""
@@ -215,7 +238,23 @@ class KBResearcher:
         self.save_sources()
         return findings
     
-    def synthesize_kb_updates(self, repo_findings: Dict, web_findings: Dict) -> str:
+    def get_github_updates(self) -> Dict[str, Any]:
+        """Get updates directly from GitHub (commits, releases)"""
+        if not self.repo_tracker:
+            print("⚠️ GitHub tracker not available, skipping direct repo updates")
+            return {}
+        
+        print("\n🔍 Checking GitHub repository for updates...")
+        
+        # Check if this is first run
+        if not self.repo_tracker.state.last_commit_sha:
+            print("📚 First run detected - initializing repository database...")
+            return self.repo_tracker.initialize_from_scratch()
+        else:
+            print("🔄 Getting incremental updates since last run...")
+            return self.repo_tracker.get_incremental_updates()
+    
+    def synthesize_kb_updates(self, repo_findings: Dict, web_findings: Dict, github_updates: Dict = None) -> str:
         """Use AI to synthesize findings into KB updates"""
         print("\n🤖 Synthesizing knowledge base updates with AI...")
         
@@ -225,6 +264,29 @@ class KBResearcher:
         for file, content in repo_findings.items():
             summary += f"\n### {file}\n{content[:1000]}...\n"
         
+        # Add GitHub updates if available
+        if github_updates and github_updates.get('has_updates'):
+            summary += f"\n## GitHub Repository Updates\n"
+            
+            if github_updates.get('new_commits'):
+                summary += f"\n### New Commits ({len(github_updates['new_commits'])})\n"
+                for commit in github_updates['new_commits'][:10]:  # Limit to 10
+                    summary += f"- {commit['message'].split(chr(10))[0]} ({commit['sha'][:7]})\n"
+                
+                # Add commit analysis
+                if github_updates.get('commit_analysis'):
+                    summary += "\n### Changes by Category:\n"
+                    for category, items in github_updates['commit_analysis'].items():
+                        if items:
+                            summary += f"- {category.title()}: {len(items)} commits\n"
+            
+            if github_updates.get('new_releases'):
+                summary += f"\n### New Releases ({len(github_updates['new_releases'])})\n"
+                for release in github_updates['new_releases']:
+                    summary += f"- {release['name']} ({release['tag']}) - {release['published_at']}\n"
+                    if release['body']:
+                        summary += f"  {release['body'][:300]}...\n"
+        
         summary += f"\n## Web Sources ({len(web_findings)} sources)\n"
         for url in list(web_findings.keys())[:3]:
             summary += f"\n### {url}\n{web_findings[url][:500]}...\n"
@@ -233,12 +295,12 @@ class KBResearcher:
         prompt = f"""Analyze these research findings about BrowserOS Workflows and identify:
 1. New features or capabilities discovered
 2. Updates to existing documentation
-3. Important changes or deprecations
+3. Important changes or deprecations (from commits and releases)
 4. Security considerations
 5. Best practices and patterns
 
 Research Summary:
-{summary[:8000]}
+{summary[:12000]}
 
 Provide a concise summary of key findings that should update the knowledge base."""
         
@@ -297,25 +359,47 @@ For the most current information, always refer to the official sources listed in
         return True
     
     def run(self):
-        """Execute full research pipeline"""
+        """Execute full research pipeline with GitHub tracking"""
         print("=" * 60)
-        print("🚀 Starting AI-Powered KB Research Pipeline")
+        print("🚀 Starting AI-Powered KB Research Pipeline with GitHub Tracking")
         print("=" * 60)
         
-        # Step 1: Research from cloned repository
+        # Step 1: Get GitHub updates (commits, releases)
+        github_updates = self.get_github_updates()
+        
+        # Check if we have meaningful updates
+        has_github_updates = github_updates and github_updates.get('has_updates', False)
+        
+        if has_github_updates:
+            print(f"\n✅ GitHub updates detected:")
+            if github_updates.get('new_commits'):
+                print(f"  - {len(github_updates['new_commits'])} new commits")
+            if github_updates.get('new_releases'):
+                print(f"  - {len(github_updates['new_releases'])} new releases")
+        elif github_updates and github_updates.get('initialized'):
+            print("\n✅ Repository database initialized")
+        else:
+            print("\n✓ No new GitHub updates since last run")
+        
+        # Step 2: Research from cloned repository
         repo_findings = self.research_from_repo()
         
-        # Step 2: Research from web sources
+        # Step 3: Research from web sources  
         web_findings = self.research_from_web()
         
-        # Step 3: Synthesize with AI
-        insights = self.synthesize_kb_updates(repo_findings, web_findings)
+        # Step 4: Synthesize with AI (including GitHub updates)
+        insights = self.synthesize_kb_updates(repo_findings, web_findings, github_updates)
         
-        # Step 4: Update KB
+        # Step 5: Update KB if we have insights
         if insights and insights != "Manual review needed - AI analysis unavailable":
             updated = self.update_kb(insights)
             if updated:
                 print("\n✅ Pipeline completed successfully")
+                
+                # Print summary
+                if self.repo_tracker:
+                    print(self.repo_tracker.get_summary())
+                
                 return 0
             else:
                 print("\nℹ️ No updates needed")
