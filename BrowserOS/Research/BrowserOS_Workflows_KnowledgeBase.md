@@ -214,7 +214,7 @@ Execute multiple steps concurrently to improve performance:
 - name: Run data analysis
   type: shell
   command: "python analyze.py {{data_file}}"
-  cwd: "C:/workspace/scripts"
+  cwd: "/path/to/your/scripts"  # Replace with your actual path
   capture_output: true
 ```
 

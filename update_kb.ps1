@@ -9,8 +9,7 @@
 # ============================================================================
 
 param(
-    [string]$WorkspaceRoot = "C:\workspace\WorkFlows\BrowserOS",
-    [string]$RepositoryPath = "/home/runner/work/BrowserOS_Guides/BrowserOS_Guides",
+    [string]$RepositoryPath = (Get-Location).Path,
     [switch]$DryRun = $false
 )
 
@@ -172,7 +171,7 @@ try {
 # 4. Trigger: Weekly, select day/time
 # 5. Action: Start a program
 #    Program/script: powershell.exe
-#    Arguments: -ExecutionPolicy Bypass -File "C:\path\to\update_kb.ps1"
+#    Arguments: -ExecutionPolicy Bypass -File "<path-to-repo>\update_kb.ps1"
 # 6. Finish and test the task
 #
 # For testing, run with -DryRun switch:
