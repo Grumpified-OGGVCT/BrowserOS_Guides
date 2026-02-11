@@ -1,0 +1,69 @@
+# TextMate
+*.tmproj
+*.tmproject
+tmtags
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Build artifacts
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Node modules (if applicable)
+node_modules/
+
+# Python cache (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+
+# Local verification logs
+**/verification_log_*.json
+
+# Raw archived sources
+**/raw/*.html
+
+# Checksum files (tracked separately)
+*.checksum
