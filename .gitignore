@@ -65,5 +65,8 @@ __pycache__/
 # Raw archived sources
 **/raw/*.html
 
+# Cloned repositories for research
+**/raw/browseros-ai-BrowserOS/
+
 # Checksum files (tracked separately)
 *.checksum

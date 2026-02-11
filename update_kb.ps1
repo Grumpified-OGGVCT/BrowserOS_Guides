@@ -49,7 +49,33 @@ try {
     }
     Write-Log "Successfully pulled latest changes"
     
-    # Step 2: Run the research pipeline
+    # Step 2: Clone/update official BrowserOS repository for research
+    $browserOSRepoPath = "$RepositoryPath/Research/raw/browseros-ai-BrowserOS"
+    Write-Log "Syncing official BrowserOS repository..."
+    
+    if (Test-Path $browserOSRepoPath) {
+        Write-Log "Updating existing BrowserOS repository clone..."
+        Push-Location $browserOSRepoPath
+        git fetch origin
+        git pull origin main
+        if ($LASTEXITCODE -ne 0) {
+            Write-Log "Failed to update BrowserOS repo, continuing anyway..." "WARN"
+        }
+        Pop-Location
+    } else {
+        Write-Log "Cloning official BrowserOS repository..."
+        $parentDir = Split-Path -Parent $browserOSRepoPath
+        if (-not (Test-Path $parentDir)) {
+            New-Item -ItemType Directory -Path $parentDir -Force | Out-Null
+        }
+        git clone https://github.com/browseros-ai/BrowserOS.git $browserOSRepoPath
+        if ($LASTEXITCODE -ne 0) {
+            Write-Log "Failed to clone BrowserOS repo" "WARN"
+        }
+    }
+    Write-Log "BrowserOS repository sync complete"
+    
+    # Step 3: Run the research pipeline
     # NOTE: Replace this with the actual command that invokes the research pipeline
     # This could be a Python script, Node.js script, or another PowerShell script
     Write-Log "Running research pipeline..."
@@ -68,7 +94,7 @@ try {
         Write-Log "DRY RUN: Skipping research pipeline execution"
     }
     
-    # Step 3: Check for changes
+    # Step 4: Check for changes
     $changes = git status --porcelain
     if (-not $changes) {
         Write-Log "No changes detected after research pipeline. Exiting."
@@ -76,11 +102,11 @@ try {
         exit 0
     }
     
-    # Step 4: Stage all changes
+    # Step 5: Stage all changes
     Write-Log "Staging changes..."
     git add -A
     
-    # Step 5: Commit changes
+    # Step 6: Commit changes
     $commitMessage = "Automated KB update - $(Get-Date -Format 'yyyy-MM-dd')"
     Write-Log "Committing changes: $commitMessage"
     
@@ -93,7 +119,7 @@ try {
         Write-Log "DRY RUN: Would commit with message: $commitMessage"
     }
     
-    # Step 6: Create version tag
+    # Step 7: Create version tag
     $tagName = "kb-$(Get-Date -Format 'yyyy.MM.dd')"
     Write-Log "Creating tag: $tagName"
     
@@ -106,7 +132,7 @@ try {
         Write-Log "DRY RUN: Would create tag: $tagName"
     }
     
-    # Step 7: Push changes and tags
+    # Step 8: Push changes and tags
     Write-Log "Pushing changes to remote repository..."
     
     if (-not $DryRun) {
