@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrowserOS_Guides Repository Browser</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .repo-browser {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding-top: 80px;
+        }
+        
+        .browser-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .browser-header {
+            background: white;
+            border-radius: 16px 16px 0 0;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .browser-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 32px;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .browser-header p {
+            margin: 0;
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .browser-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .browser-stat {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .browser-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .browser-stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .browser-content {
+            background: white;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            min-height: 600px;
+        }
+        
+        .file-tree {
+            border-right: 2px solid #f0f0f0;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 800px;
+        }
+        
+        .file-tree-item {
+            padding: 8px 12px;
+            margin: 4px 0;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .file-tree-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .file-tree-item.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .file-tree-item.folder {
+            font-weight: 600;
+        }
+        
+        .file-tree-item.file {
+            padding-left: 30px;
+        }
+        
+        .file-tree-item .icon {
+            font-size: 16px;
+        }
+        
+        .file-preview {
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 800px;
+        }
+        
+        .preview-header {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .preview-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .preview-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .preview-content {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .preview-content h2 {
+            color: #1a1a2e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .preview-content ul {
+            margin-left: 20px;
+        }
+        
+        .preview-content a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .preview-content a:hover {
+            text-decoration: underline;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-action {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-github {
+            background: #24292e;
+            color: white;
+        }
+        
+        .btn-github:hover {
+            background: #444;
+        }
+        
+        .btn-raw {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-raw:hover {
+            background: #5568d3;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 20px;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .folder-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .folder-contents {
+            margin-left: 20px;
+        }
+        
+        .folder-contents.collapsed {
+            display: none;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 600;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="logo">🚀</span>
+                <span class="brand-name">BrowserOS Knowledge Hub</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#workflows">Workflows</a></li>
+                <li><a href="index.html#knowledge-base">Knowledge Base</a></li>
+                <li><a href="repo-browser.html" class="active">Repository Browser</a></li>
+                <li><a href="https://github.com/Grumpified-OGGVCT/BrowserOS_Guides" target="_blank" class="github-link">
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    GitHub
+                </a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Repository Browser -->
+    <section class="repo-browser">
+        <div class="browser-container">
+            <a href="index.html" class="back-link">
+                ← Back to Home
+            </a>
+            
+            <div class="browser-header">
+                <h1>
+                    <span>📂</span>
+                    BrowserOS_Guides Repository Browser
+                </h1>
+                <p>Browse and explore the complete repository structure</p>
+                
+                <div class="browser-stats">
+                    <div class="browser-stat">
+                        <span class="browser-stat-value" id="file-count">0</span>
+                        <span class="browser-stat-label">Files</span>
+                    </div>
+                    <div class="browser-stat">
+                        <span class="browser-stat-value" id="folder-count">0</span>
+                        <span class="browser-stat-label">Folders</span>
+                    </div>
+                    <div class="browser-stat">
+                        <span class="browser-stat-value" id="doc-count">0</span>
+                        <span class="browser-stat-label">Documentation Files</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="browser-content">
+                <div class="file-tree">
+                    <input type="text" class="search-box" id="search-box" placeholder="Search files...">
+                    <div id="file-tree-container"></div>
+                </div>
+                
+                <div class="file-preview">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📄</div>
+                        <h3>Select a file to preview</h3>
+                        <p>Click on any file in the tree to view its details</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Repository structure data
+        const repoStructure = {
+            name: 'BrowserOS_Guides',
+            type: 'folder',
+            children: [
+                {
+                    name: '.github',
+                    type: 'folder',
+                    children: [
+                        { name: 'ACTIONS_SETUP.md', type: 'file', description: 'GitHub Actions setup guide', path: '../.github/ACTIONS_SETUP.md' },
+                        {
+                            name: 'workflows',
+                            type: 'folder',
+                            children: [
+                                { name: 'self-test.yml', type: 'file', description: 'Automated self-test workflow', path: '../.github/workflows/self-test.yml' },
+                                { name: 'update-kb.yml', type: 'file', description: 'Knowledge base update automation', path: '../.github/workflows/update-kb.yml' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: 'BrowserOS',
+                    type: 'folder',
+                    children: [
+                        { name: 'README.md', type: 'file', description: 'BrowserOS documentation overview', path: '../BrowserOS/README.md' },
+                        { name: 'structure.md', type: 'file', description: 'Primary repository index and structure', path: '../BrowserOS/structure.md' },
+                        { name: 'MCP_AGENTIC_GUIDE.md', type: 'file', description: 'MCP and agentic AI integration guide', path: '../BrowserOS/MCP_AGENTIC_GUIDE.md' },
+                        { name: 'USE_CASE_MATRIX.md', type: 'file', description: '500+ use cases across 25+ industries', path: '../BrowserOS/USE_CASE_MATRIX.md' },
+                        {
+                            name: 'Research',
+                            type: 'folder',
+                            children: [
+                                { name: 'BrowserOS_Workflows_KnowledgeBase.md', type: 'file', description: 'Comprehensive workflows knowledge base', path: '../BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md' },
+                                { name: 'ADVANCED_TECHNIQUES.md', type: 'file', description: 'Advanced and expert-level techniques', path: '../BrowserOS/Research/ADVANCED_TECHNIQUES.md' },
+                                { name: 'verify_kb_completeness.ps1', type: 'file', description: 'KB validation script', path: '../BrowserOS/Research/verify_kb_completeness.ps1' },
+                                { name: 'sources.json', type: 'file', description: 'Research sources tracking', path: '../BrowserOS/Research/sources.json' }
+                            ]
+                        },
+                        {
+                            name: 'Workflows',
+                            type: 'folder',
+                            children: [
+                                { name: 'README.md', type: 'file', description: 'Workflows library overview', path: '../BrowserOS/Workflows/README.md' },
+                                {
+                                    name: 'E-Commerce',
+                                    type: 'folder',
+                                    children: [
+                                        { name: 'README.md', type: 'file', description: 'E-commerce workflows', path: '../BrowserOS/Workflows/E-Commerce/README.md' },
+                                        { name: 'amazon_price_tracker.json', type: 'file', description: 'Amazon price tracking workflow', path: '../BrowserOS/Workflows/E-Commerce/amazon_price_tracker.json' }
+                                    ]
+                                },
+                                { name: 'Data-Extraction', type: 'folder', path: '../BrowserOS/Workflows/Data-Extraction/' },
+                                { name: 'Testing-QA', type: 'folder', path: '../BrowserOS/Workflows/Testing-QA/' },
+                                { name: 'Social-Media', type: 'folder', path: '../BrowserOS/Workflows/Social-Media/' },
+                                { name: 'Research-Monitoring', type: 'folder', path: '../BrowserOS/Workflows/Research-Monitoring/' },
+                                { name: 'CRM-Business', type: 'folder', path: '../BrowserOS/Workflows/CRM-Business/' },
+                                { name: 'Content-Creation', type: 'folder', path: '../BrowserOS/Workflows/Content-Creation/' },
+                                { name: 'API-Integration', type: 'folder', path: '../BrowserOS/Workflows/API-Integration/' },
+                                { name: 'Advanced-Techniques', type: 'folder', path: '../BrowserOS/Workflows/Advanced-Techniques/' },
+                                { name: 'Community-Contributed', type: 'folder', path: '../BrowserOS/Workflows/Community-Contributed/' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: 'docs',
+                    type: 'folder',
+                    children: [
+                        { name: 'index.html', type: 'file', description: 'Main website homepage', path: 'index.html' },
+                        { name: 'repo-browser.html', type: 'file', description: 'Repository browser (this page)', path: 'repo-browser.html' },
+                        { name: 'styles.css', type: 'file', description: 'Website styles', path: 'styles.css' },
+                        { name: 'app.js', type: 'file', description: 'Website JavaScript', path: 'app.js' },
+                        { name: 'search-index.json', type: 'file', description: 'Search index data', path: 'search-index.json' }
+                    ]
+                },
+                {
+                    name: 'scripts',
+                    type: 'folder',
+                    children: [
+                        { name: 'workflow_generator.py', type: 'file', description: 'AI-powered workflow generation', path: '../scripts/workflow_generator.py' },
+                        { name: 'research_pipeline.py', type: 'file', description: 'Automated research pipeline', path: '../scripts/research_pipeline.py' },
+                        { name: 'validate_kb.py', type: 'file', description: 'Knowledge base validation', path: '../scripts/validate_kb.py' },
+                        { name: 'self_test.py', type: 'file', description: 'Self-test automation (42 tests)', path: '../scripts/self_test.py' },
+                        { name: 'security_scanner.py', type: 'file', description: 'Security vulnerability scanner', path: '../scripts/security_scanner.py' },
+                        { name: 'extract_claude_skills.py', type: 'file', description: 'Claude skills extraction', path: '../scripts/extract_claude_skills.py' },
+                        { name: 'repo_tracker.py', type: 'file', description: 'Repository tracking system', path: '../scripts/repo_tracker.py' },
+                        { name: 'generate_search_index.py', type: 'file', description: 'Search index generation', path: '../scripts/generate_search_index.py' },
+                        { name: 'agent_connectors.py', type: 'file', description: 'Universal agent connectors', path: '../scripts/agent_connectors.py' },
+                        { name: 'config_loader.py', type: 'file', description: 'Configuration management', path: '../scripts/config_loader.py' }
+                    ]
+                },
+                { name: 'README.md', type: 'file', description: 'Main repository README', path: '../README.md' },
+                { name: 'AUTOMATION_QUICKSTART.md', type: 'file', description: 'Quick start guide for automation', path: '../AUTOMATION_QUICKSTART.md' },
+                { name: 'DEPLOYMENT.md', type: 'file', description: 'Deployment guide (6 connection types)', path: '../DEPLOYMENT.md' },
+                { name: 'SECURITY-POLICY.md', type: 'file', description: 'Security policy and guidelines', path: '../SECURITY-POLICY.md' },
+                { name: 'SECURITY_AUDIT.md', type: 'file', description: 'Security audit report', path: '../SECURITY_AUDIT.md' },
+                { name: 'REPO_TRACKING.md', type: 'file', description: 'Repository tracking documentation', path: '../REPO_TRACKING.md' },
+                { name: 'COMPLETE_IMPLEMENTATION.md', type: 'file', description: 'Complete implementation details', path: '../COMPLETE_IMPLEMENTATION.md' },
+                { name: 'TRANSFORMATION_SUMMARY.md', type: 'file', description: 'Repository transformation summary', path: '../TRANSFORMATION_SUMMARY.md' },
+                { name: 'FINAL_SUMMARY.md', type: 'file', description: 'Final project summary', path: '../FINAL_SUMMARY.md' },
+                { name: 'config.yml', type: 'file', description: 'Main configuration (500+ parameters)', path: '../config.yml' },
+                { name: 'requirements.txt', type: 'file', description: 'Python dependencies', path: '../requirements.txt' },
+                { name: 'Dockerfile', type: 'file', description: 'Docker container definition', path: '../Dockerfile' },
+                { name: 'docker-compose.yml', type: 'file', description: 'Docker compose orchestration', path: '../docker-compose.yml' },
+                { name: '.env.template', type: 'file', description: 'Environment variables template', path: '../.env.template' },
+                { name: 'update_kb.ps1', type: 'file', description: 'PowerShell KB update script', path: '../update_kb.ps1' },
+                { name: 'LICENSE', type: 'file', description: 'MIT License', path: '../LICENSE' }
+            ]
+        };
+
+        // Track statistics
+        let fileCount = 0;
+        let folderCount = 0;
+        let docCount = 0;
+
+        function countItems(node) {
+            if (node.type === 'folder') {
+                folderCount++;
+                if (node.children) {
+                    node.children.forEach(countItems);
+                }
+            } else {
+                fileCount++;
+                if (node.name.endsWith('.md') || node.name.endsWith('.html')) {
+                    docCount++;
+                }
+            }
+        }
+
+        function renderFileTree(node, container, level = 0, parentPath = '') {
+            if (!node.children) return;
+
+            node.children.forEach(child => {
+                const item = document.createElement('div');
+                const fullPath = parentPath ? `${parentPath}/${child.name}` : child.name;
+                
+                if (child.type === 'folder') {
+                    item.className = 'file-tree-item folder folder-toggle';
+                    item.innerHTML = `
+                        <span class="icon">📁</span>
+                        <span>${child.name}</span>
+                    `;
+                    item.style.paddingLeft = `${level * 20 + 12}px`;
+                    
+                    const folderContents = document.createElement('div');
+                    folderContents.className = 'folder-contents';
+                    
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        folderContents.classList.toggle('collapsed');
+                        item.querySelector('.icon').textContent = 
+                            folderContents.classList.contains('collapsed') ? '📁' : '📂';
+                    });
+                    
+                    container.appendChild(item);
+                    container.appendChild(folderContents);
+                    renderFileTree(child, folderContents, level + 1, fullPath);
+                } else {
+                    item.className = 'file-tree-item file';
+                    const icon = child.name.endsWith('.md') ? '📄' : 
+                                child.name.endsWith('.json') ? '📋' : 
+                                child.name.endsWith('.py') ? '🐍' : 
+                                child.name.endsWith('.yml') || child.name.endsWith('.yaml') ? '⚙️' : 
+                                child.name.endsWith('.html') ? '🌐' : 
+                                child.name.endsWith('.css') ? '🎨' : 
+                                child.name.endsWith('.js') ? '📜' : '📄';
+                    
+                    item.innerHTML = `
+                        <span class="icon">${icon}</span>
+                        <span>${child.name}</span>
+                    `;
+                    item.style.paddingLeft = `${level * 20 + 12}px`;
+                    item.dataset.path = child.path || '';
+                    item.dataset.description = child.description || '';
+                    item.dataset.name = child.name;
+                    item.dataset.fullPath = fullPath;
+                    
+                    item.addEventListener('click', () => {
+                        document.querySelectorAll('.file-tree-item').forEach(el => 
+                            el.classList.remove('active'));
+                        item.classList.add('active');
+                        showFilePreview(child);
+                    });
+                    
+                    container.appendChild(item);
+                }
+            });
+        }
+
+        function showFilePreview(file) {
+            const preview = document.querySelector('.file-preview');
+            const githubUrl = `https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/blob/main/${file.path?.replace('../', '') || file.name}`;
+            const rawUrl = `https://raw.githubusercontent.com/Grumpified-OGGVCT/BrowserOS_Guides/main/${file.path?.replace('../', '') || file.name}`;
+            
+            preview.innerHTML = `
+                <div class="preview-header">
+                    <div class="preview-title">
+                        <span>${getFileIcon(file.name)}</span>
+                        ${file.name}
+                    </div>
+                    <div class="preview-meta">
+                        <span>📂 ${file.path?.split('/').slice(0, -1).join('/') || 'Root'}</span>
+                        <span>📝 ${getFileType(file.name)}</span>
+                    </div>
+                </div>
+                
+                <div class="preview-content">
+                    <h2>Description</h2>
+                    <p>${file.description || 'No description available'}</p>
+                    
+                    <h2>Actions</h2>
+                    <div class="action-buttons">
+                        <a href="${githubUrl}" target="_blank" class="btn-action btn-github">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                            </svg>
+                            View on GitHub
+                        </a>
+                        ${file.path ? `<a href="${file.path}" class="btn-action btn-raw">📄 View File</a>` : ''}
+                        <a href="${rawUrl}" target="_blank" class="btn-action btn-raw">⬇️ Download</a>
+                    </div>
+                    
+                    <h2>File Information</h2>
+                    <ul>
+                        <li><strong>Name:</strong> ${file.name}</li>
+                        <li><strong>Type:</strong> ${getFileType(file.name)}</li>
+                        <li><strong>Location:</strong> ${file.path || 'Root directory'}</li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        function getFileIcon(filename) {
+            if (filename.endsWith('.md')) return '📄';
+            if (filename.endsWith('.json')) return '📋';
+            if (filename.endsWith('.py')) return '🐍';
+            if (filename.endsWith('.yml') || filename.endsWith('.yaml')) return '⚙️';
+            if (filename.endsWith('.html')) return '🌐';
+            if (filename.endsWith('.css')) return '🎨';
+            if (filename.endsWith('.js')) return '📜';
+            if (filename.endsWith('.ps1')) return '💻';
+            return '📄';
+        }
+
+        function getFileType(filename) {
+            const ext = filename.split('.').pop().toUpperCase();
+            const types = {
+                'MD': 'Markdown Documentation',
+                'JSON': 'JSON Data',
+                'PY': 'Python Script',
+                'YML': 'YAML Configuration',
+                'YAML': 'YAML Configuration',
+                'HTML': 'HTML Document',
+                'CSS': 'Stylesheet',
+                'JS': 'JavaScript',
+                'PS1': 'PowerShell Script',
+                'TXT': 'Text File'
+            };
+            return types[ext] || ext + ' File';
+        }
+
+        // Search functionality
+        document.getElementById('search-box').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.file-tree-item.file');
+            
+            items.forEach(item => {
+                const name = item.dataset.name?.toLowerCase() || '';
+                const description = item.dataset.description?.toLowerCase() || '';
+                const fullPath = item.dataset.fullPath?.toLowerCase() || '';
+                
+                if (name.includes(searchTerm) || description.includes(searchTerm) || fullPath.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Initialize
+        countItems(repoStructure);
+        document.getElementById('file-count').textContent = fileCount;
+        document.getElementById('folder-count').textContent = folderCount;
+        document.getElementById('doc-count').textContent = docCount;
+
+        const treeContainer = document.getElementById('file-tree-container');
+        renderFileTree(repoStructure, treeContainer);
+    </script>
+</body>
+</html>
