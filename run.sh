@@ -103,22 +103,59 @@ while true; do
     echo
     echo "What would you like to do?"
     echo
-    echo "  1. Update Knowledge Base (research pipeline)"
-    echo "  2. Run Self-Test"
-    echo "  3. Generate Workflow"
+    echo "  1. Start MCP Server (Port 3100)"
+    echo "  2. Update Knowledge Base (research pipeline)"
+    echo "  3. Run Self-Test"
     echo "  4. Validate Knowledge Base"
-    echo "  5. Extract Claude Skills"
-    echo "  6. Generate Repository Structure"
-    echo "  7. Security Scan"
-    echo "  8. Check for and Install System Updates"
-    echo "  9. Configure Settings"
-    echo "  A. View Documentation"
+    echo "  5. Monitor WhatsApp Integration"
+    echo "  6. Generate Library Artifacts"
+    echo "  7. Build Provenance Index"
+    echo "  8. Generate Workflow"
+    echo "  9. Extract Claude Skills"
+    echo "  A. Generate Repository Structure"
+    echo "  B. Security Scan"
+    echo "  C. Check for and Install System Updates"
+    echo "  D. Configure Settings"
+    echo "  E. View Documentation"
     echo "  0. Exit"
     echo
-    read -p "Enter your choice [0-9,A]: " CHOICE
+    read -p "Enter your choice [0-9,A-E]: " CHOICE
 
     case $CHOICE in
         1)
+            # Start MCP Server
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Start MCP Server${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Starting HTTP MCP server on port 3100..."
+            echo
+            echo "The server will be available at: http://localhost:3100/mcp"
+            echo "Health check endpoint: http://localhost:3100/health"
+            echo
+            echo "To connect from BrowserOS:"
+            echo "  1. Open BrowserOS"
+            echo "  2. Go to Settings → Connected Apps"
+            echo "  3. Click 'Add Custom App'"
+            echo "  4. Enter URL: http://localhost:3100/mcp"
+            echo "  5. Name: BrowserOS Knowledge Base"
+            echo
+            echo "Press Ctrl+C to stop the server"
+            echo
+            read -p "Press Enter to start..."
+
+            # Check if Node.js is available
+            if command -v node &> /dev/null; then
+                MCP_SERVER_PORT=3100 node server/mcp-server.js
+            else
+                echo -e "${RED}✗ ERROR: Node.js not found${NC}"
+                echo "Please install Node.js 14+ to run the MCP server"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        2)
             # Update Knowledge Base
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -144,7 +181,7 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        2)
+        3)
             # Run Self-Test
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -162,30 +199,6 @@ while true; do
             else
                 echo
                 echo -e "${GREEN}✓ SUCCESS: All tests passed${NC}"
-            fi
-            read -p "Press Enter to continue..."
-            ;;
-
-        3)
-            # Generate Workflow
-            clear
-            echo -e "${BLUE}================================================================================${NC}"
-            echo -e "${BLUE}   Workflow Generator${NC}"
-            echo -e "${BLUE}================================================================================${NC}"
-            echo
-            echo "This tool generates new workflow JSON files using AI."
-            echo
-
-            read -p "Enter workflow description (or press Enter to skip): " DESC
-            if [ -n "$DESC" ]; then
-                $PYTHON_CMD scripts/workflow_generator.py --description "$DESC"
-                if [ $? -ne 0 ]; then
-                    echo
-                    echo -e "${RED}✗ ERROR: Workflow generation failed${NC}"
-                else
-                    echo
-                    echo -e "${GREEN}✓ SUCCESS: Workflow generated${NC}"
-                fi
             fi
             read -p "Press Enter to continue..."
             ;;
@@ -213,6 +226,99 @@ while true; do
             ;;
 
         5)
+            # Monitor WhatsApp Integration
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Monitor WhatsApp Integration${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Checking BrowserOS repositories for WhatsApp integration development..."
+            echo "This will search for keywords across multiple repositories."
+            echo
+            read -p "Press Enter to start monitoring..."
+
+            $PYTHON_CMD scripts/monitor_whatsapp.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Monitoring failed${NC}"
+            else
+                echo
+                echo -e "${GREEN}✓ SUCCESS: Monitoring complete${NC}"
+                echo
+                echo "Report saved to: WHATSAPP_WATCH_REPORT.md"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        6)
+            # Generate Library Artifacts
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Generate Library Artifacts${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Generating executable workflow templates and pattern index..."
+            echo
+
+            $PYTHON_CMD scripts/generate_library.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Library generation failed${NC}"
+            else
+                echo
+                echo -e "${GREEN}✓ SUCCESS: Library artifacts generated${NC}"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        7)
+            # Build Provenance Index
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Build Provenance Index${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Linking KB documentation to BrowserOS source code..."
+            echo "This creates forensic traceability for all documented features."
+            echo
+
+            $PYTHON_CMD scripts/build_provenance.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Provenance build failed${NC}"
+            else
+                echo
+                echo -e "${GREEN}✓ SUCCESS: Provenance index built${NC}"
+                echo "See: library/provenance_index.json"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        8)
+            # Generate Workflow
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Workflow Generator${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "This tool generates new workflow JSON files using AI."
+            echo
+
+            read -p "Enter workflow description (or press Enter to skip): " DESC
+            if [ -n "$DESC" ]; then
+                $PYTHON_CMD scripts/workflow_generator.py --description "$DESC"
+                if [ $? -ne 0 ]; then
+                    echo
+                    echo -e "${RED}✗ ERROR: Workflow generation failed${NC}"
+                else
+                    echo
+                    echo -e "${GREEN}✓ SUCCESS: Workflow generated${NC}"
+                fi
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        9)
             # Extract Claude Skills
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -233,7 +339,7 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        6)
+        [Aa])
             # Generate Repository Structure
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -254,7 +360,7 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        7)
+        [Bb])
             # Security Scan
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -276,7 +382,7 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        8)
+        [Cc])
             # Check for System Updates
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -297,7 +403,7 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        9)
+        [Dd])
             # Configure Settings
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -311,7 +417,7 @@ while true; do
             $PYTHON_CMD scripts/config_manager.py
             ;;
 
-        [Aa])
+        [Ee])
             # View Documentation
             clear
             echo -e "${BLUE}================================================================================${NC}"

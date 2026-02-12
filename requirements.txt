@@ -1,5 +1,5 @@
 # BrowserOS Knowledge Base - Python Dependencies
-# Required for GitHub Actions automated KB compilation
+# Required for GitHub Actions automated KB compilation and monitoring
 
 # Core dependencies
 requests>=2.31.0
@@ -10,8 +10,8 @@ lxml>=4.9.0
 markdown>=3.5.0
 html5lib>=1.1
 
-# GitHub API - REQUIRED for repo tracking
-PyGithub>=2.1.0
+# GitHub API - REQUIRED for repo tracking and monitoring
+PyGithub>=2.3.0
 
 # Date/time handling
 python-dateutil>=2.8.0
@@ -21,9 +21,19 @@ pyyaml>=6.0.1
 python-dotenv>=1.0.0
 
 # SDK support for universal connectors
-ollama>=0.1.0          # Ollama Python SDK
+ollama>=0.1.0          # Ollama Python SDK (OPTIONAL)
 openai>=1.0.0          # OpenAI/OpenRouter SDK
+
+# JSON Schema validation
+jsonschema>=4.20.0     # For workflow validation
+
+# Hashing and content integrity
+hashlib-wrapper>=1.0.0 # For SHA-256 content hashing (built-in fallback available)
 
 # Optional: Additional web scraping tools
 selenium>=4.15.0        # Required for screenshot generation (scripts/generate_screenshots.py)
 # playwright>=1.40.0     # Uncomment if needed for browser automation
+
+# Optional: Semantic search (Phase 8 - not yet required)
+# sentence-transformers>=2.2.0  # For semantic vectorization
+# faiss-cpu>=1.7.4              # For vector similarity search
