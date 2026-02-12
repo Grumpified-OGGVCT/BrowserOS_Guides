@@ -21,7 +21,7 @@ jobs:
   check-ports:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
       issues: write
       
     steps:
@@ -40,11 +40,14 @@ jobs:
           
       - name: Check BrowserOS port configuration
         id: port_check
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python scripts/check_browseros_ports.py
-          echo "check_status=$?" >> $GITHUB_OUTPUT
+          status=0
+          python scripts/check_browseros_ports.py || status=$?
+          echo "check_status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
           
       - name: Upload results
         if: always()

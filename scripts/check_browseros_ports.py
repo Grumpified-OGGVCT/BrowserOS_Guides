@@ -70,8 +70,10 @@ def search_code_in_repo(owner: str, repo: str, query: str, token: Optional[str] 
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
-        print(f"Warning: Could not search {owner}/{repo}: {e}")
-        return {"items": []}
+        # Treat search failures as hard errors so the script does not produce
+        # a false "pass" result when the check couldn't actually run.
+        print(f"Error: Could not search {owner}/{repo}: {e}", file=sys.stderr)
+        raise
 
 
 def get_file_content(owner: str, repo: str, path: str, token: Optional[str] = None) -> Optional[str]:

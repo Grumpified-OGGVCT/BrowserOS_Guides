@@ -134,8 +134,8 @@ services:
       - "3100:3100"
     
     environment:
-      - MCP_PORT=3100
-      - MCP_HOST=0.0.0.0
+      - BROWSEROS_GUIDES_PORT=3100
+      - BROWSEROS_GUIDES_HOST=0.0.0.0
       - MCP_PROTOCOL_VERSION=2024-11-05
     
     networks:
