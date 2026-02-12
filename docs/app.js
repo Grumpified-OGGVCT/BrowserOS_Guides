@@ -7,14 +7,24 @@
 let searchIndex = null;
 let searchIndexLoaded = false;
 
-// Initialize on page load
+// Initialize on page load with error boundary
 document.addEventListener('DOMContentLoaded', function() {
-    loadSearchIndex();
-    initializeSearch();
-    initializeNavigation();
-    initializeAnimations();
-    initializeMobileMenu();
-    initializeCategoryNavigation();
+    try {
+        loadSearchIndex();
+        initializeSearch();
+        initializeNavigation();
+        initializeAnimations();
+        initializeMobileMenu();
+        initializeCategoryNavigation();
+    } catch (error) {
+        console.error('Initialization error:', error);
+        // Display user-friendly error message
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: var(--error); color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 9999; box-shadow: var(--shadow-lg);';
+        errorDiv.textContent = 'An error occurred during page initialization. Some features may not work correctly.';
+        document.body.appendChild(errorDiv);
+        setTimeout(() => errorDiv.remove(), 5000);
+    }
 });
 
 // ============================================================================
@@ -78,11 +88,25 @@ function performSearch(query, filter) {
     const searchResults = document.getElementById('searchResults');
     
     if (!searchIndexLoaded || !searchIndex) {
-        searchResults.innerHTML = `
-            <div style="text-align: center; padding: 2rem; color: var(--gray-500);">
-                <p>⏳ Loading search index...</p>
-            </div>
-        `;
+        // Clear existing content safely
+        searchResults.textContent = '';
+        
+        // Build loading indicator with createElement (no innerHTML)
+        // Note: Spinner animation relies on .loading-spinner class in styles.css (lines ~607-619)
+        const loadingDiv = document.createElement('div');
+        loadingDiv.style.textAlign = 'center';
+        loadingDiv.style.padding = '2rem';
+        loadingDiv.style.color = 'var(--text-secondary)';
+        
+        const spinner = document.createElement('div');
+        spinner.className = 'loading-spinner';
+        
+        const message = document.createElement('p');
+        message.textContent = '⏳ Loading search index...';
+        
+        loadingDiv.appendChild(spinner);
+        loadingDiv.appendChild(message);
+        searchResults.appendChild(loadingDiv);
         return;
     }
     

@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrowserOS_Guides Repository Browser</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .repo-browser {
+            min-height: 100vh;
+            background: var(--bg-primary);
+            padding-top: 80px;
+            position: relative;
+        }
+        
+        .repo-browser::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 300px;
+            background: radial-gradient(circle at 50% 0%, rgba(255, 121, 0, 0.08) 0%, transparent 70%);
+            z-index: 0;
+        }
+        
+        .browser-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-10) var(--space-6);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .browser-header {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .browser-header h1 {
+            margin: 0 0 var(--space-3) 0;
+            font-size: 2rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+        
+        .browser-header p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        
+        .browser-stats {
+            display: flex;
+            gap: var(--space-8);
+            margin-top: var(--space-6);
+            padding-top: var(--space-6);
+            border-top: 1px solid var(--border-primary);
+        }
+        
+        .browser-stat {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .browser-stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--browseros-orange);
+            margin-bottom: var(--space-1);
+        }
+        
+        .browser-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .browser-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-top: none;
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            min-height: 600px;
+            overflow: hidden;
+        }
+        
+        .file-tree {
+            border-right: 1px solid var(--border-primary);
+            padding: var(--space-4);
+            overflow-y: auto;
+            max-height: 800px;
+            background: var(--bg-primary);
+        }
+        
+        .file-tree-item {
+            padding: var(--space-2) var(--space-3);
+            margin: var(--space-1) 0;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--text-secondary);
+        }
+        
+        .file-tree-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        .file-tree-item.active {
+            background: rgba(255, 121, 0, 0.15);
+            color: var(--browseros-orange);
+            border: 1px solid rgba(255, 121, 0, 0.3);
+            box-shadow: 0 0 8px rgba(255, 121, 0, 0.2);
+        }
+        
+        .file-tree-item.folder {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .file-tree-item.file {
+            padding-left: var(--space-8);
+        }
+        
+        .file-tree-item .icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .file-preview {
+            padding: var(--space-8);
+            overflow-y: auto;
+            max-height: 800px;
+        }
+        
+        .preview-header {
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-6);
+            border-bottom: 1px solid var(--border-primary);
+        }
+        
+        .preview-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+        }
+        
+        .preview-meta {
+            display: flex;
+            gap: var(--space-6);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+        
+        .preview-content {
+            font-size: 0.9375rem;
+            line-height: 1.7;
+        }
+        
+        .preview-content h2 {
+            color: var(--text-primary);
+            margin-top: var(--space-8);
+            margin-bottom: var(--space-4);
+            font-size: 1.25rem;
+        }
+        
+        .preview-content ul {
+            margin-left: var(--space-6);
+            color: var(--text-secondary);
+        }
+        
+        .preview-content ul li {
+            margin-bottom: var(--space-2);
+        }
+        
+        .preview-content a {
+            color: var(--browseros-orange);
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+        
+        .preview-content a:hover {
+            text-decoration: underline;
+            color: var(--browseros-orange-light);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: var(--space-3);
+            margin-top: var(--space-6);
+            flex-wrap: wrap;
+        }
+        
+        .btn-action {
+            padding: var(--space-3) var(--space-5);
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            border: 1px solid transparent;
+        }
+        
+        .btn-github {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--border-secondary);
+        }
+        
+        .btn-github:hover {
+            background: var(--bg-elevated);
+            border-color: var(--browseros-orange);
+            color: var(--browseros-orange);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-raw {
+            background: var(--browseros-orange);
+            color: var(--text-inverse);
+            box-shadow: var(--shadow-orange);
+        }
+        
+        .btn-raw:hover {
+            background: var(--browseros-orange-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 121, 0, 0.35);
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-lg);
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: var(--space-4);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+        
+        .search-box::placeholder {
+            color: var(--text-tertiary);
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--browseros-orange);
+            background: var(--bg-tertiary);
+            box-shadow: 0 0 0 3px rgba(255, 121, 0, 0.1);
+        }
+        
+        .folder-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .folder-contents {
+            margin-left: var(--space-4);
+        }
+        
+        .folder-contents.collapsed {
+            display: none;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--space-12) var(--space-6);
+            color: var(--text-tertiary);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: var(--space-6);
+            opacity: 0.5;
+        }
+        
+        .empty-state h3 {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-3);
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--text-primary);
+            text-decoration: none;
+            margin-bottom: var(--space-6);
+            font-weight: 600;
+            padding: var(--space-2) var(--space-4);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-lg);
+            transition: all var(--transition-base);
+            font-size: 0.9375rem;
+        }
+        
+        .back-link:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--browseros-orange);
+            color: var(--browseros-orange);
+            transform: translateX(-4px);
+        }
+        
+        @media (max-width: 968px) {
+            .browser-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .file-tree {
+                border-right: none;
+                border-bottom: 1px solid var(--border-primary);
+                max-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="logo">🚀</span>
+                <span class="brand-name">BrowserOS Knowledge Hub</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#workflows">Workflows</a></li>
+                <li><a href="index.html#knowledge-base">Knowledge Base</a></li>
+                <li><a href="repo-browser.html" class="active">Repository Browser</a></li>
+                <li><a href="https://github.com/Grumpified-OGGVCT/BrowserOS_Guides" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="View BrowserOS Guides on GitHub">
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    GitHub
+                </a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Repository Browser -->
+    <section class="repo-browser">
+        <div class="browser-container">
+            <a href="index.html" class="back-link">
+                ← Back to Home
+            </a>
+            
+            <div class="browser-header">
+                <h1>
+                    <span>📂</span>
+                    BrowserOS_Guides Repository Browser
+                </h1>
+                <p>Browse and explore the complete repository structure</p>
+                
+                <div class="browser-stats">
+                    <div class="browser-stat">
+                        <span class="browser-stat-value" id="file-count">0</span>
+                        <span class="browser-stat-label">Files</span>
+                    </div>
+                    <div class="browser-stat">
+                        <span class="browser-stat-value" id="folder-count">0</span>
+                        <span class="browser-stat-label">Folders</span>
+                    </div>
+                    <div class="browser-stat">
+                        <span class="browser-stat-value" id="doc-count">0</span>
+                        <span class="browser-stat-label">Documentation Files</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="browser-content">
+                <div class="file-tree">
+                    <input type="text" class="search-box" id="search-box" placeholder="Search files..." aria-label="Search repository files">
+                    <div id="file-tree-container"></div>
+                </div>
+                
+                <div class="file-preview">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📄</div>
+                        <h3>Select a file to preview</h3>
+                        <p>Click on any file in the tree to view its details</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Repository structure data
+        // TODO: This structure is hardcoded and will become stale as files change.
+        // Consider one of these approaches for production:
+        // 1. Generate this JSON at build-time using a CI script that scans the repo
+        // 2. Fetch the live tree from GitHub API at runtime (with caching/fallback)
+        // 3. Use GitHub Pages' built-in file listing capabilities
+        const repoStructure = {
+            name: 'BrowserOS_Guides',
+            type: 'folder',
+            children: [
+                {
+                    name: '.github',
+                    type: 'folder',
+                    children: [
+                        { name: 'ACTIONS_SETUP.md', type: 'file', description: 'GitHub Actions setup guide', path: '../.github/ACTIONS_SETUP.md' },
+                        {
+                            name: 'workflows',
+                            type: 'folder',
+                            children: [
+                                { name: 'self-test.yml', type: 'file', description: 'Automated self-test workflow', path: '../.github/workflows/self-test.yml' },
+                                { name: 'update-kb.yml', type: 'file', description: 'Knowledge base update automation', path: '../.github/workflows/update-kb.yml' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: 'BrowserOS',
+                    type: 'folder',
+                    children: [
+                        { name: 'README.md', type: 'file', description: 'BrowserOS documentation overview', path: '../BrowserOS/README.md' },
+                        { name: 'structure.md', type: 'file', description: 'Primary repository index and structure', path: '../BrowserOS/structure.md' },
+                        { name: 'MCP_AGENTIC_GUIDE.md', type: 'file', description: 'MCP and agentic AI integration guide', path: '../BrowserOS/MCP_AGENTIC_GUIDE.md' },
+                        { name: 'USE_CASE_MATRIX.md', type: 'file', description: '500+ use cases across 25+ industries', path: '../BrowserOS/USE_CASE_MATRIX.md' },
+                        {
+                            name: 'Research',
+                            type: 'folder',
+                            children: [
+                                { name: 'BrowserOS_Workflows_KnowledgeBase.md', type: 'file', description: 'Comprehensive workflows knowledge base', path: '../BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md' },
+                                { name: 'ADVANCED_TECHNIQUES.md', type: 'file', description: 'Advanced and expert-level techniques', path: '../BrowserOS/Research/ADVANCED_TECHNIQUES.md' },
+                                { name: 'verify_kb_completeness.ps1', type: 'file', description: 'KB validation script', path: '../BrowserOS/Research/verify_kb_completeness.ps1' },
+                                { name: 'sources.json', type: 'file', description: 'Research sources tracking', path: '../BrowserOS/Research/sources.json' }
+                            ]
+                        },
+                        {
+                            name: 'Workflows',
+                            type: 'folder',
+                            children: [
+                                { name: 'README.md', type: 'file', description: 'Workflows library overview', path: '../BrowserOS/Workflows/README.md' },
+                                {
+                                    name: 'E-Commerce',
+                                    type: 'folder',
+                                    children: [
+                                        { name: 'README.md', type: 'file', description: 'E-commerce workflows', path: '../BrowserOS/Workflows/E-Commerce/README.md' },
+                                        { name: 'amazon_price_tracker.json', type: 'file', description: 'Amazon price tracking workflow', path: '../BrowserOS/Workflows/E-Commerce/amazon_price_tracker.json' }
+                                    ]
+                                },
+                                { name: 'Data-Extraction', type: 'folder', path: '../BrowserOS/Workflows/Data-Extraction/' },
+                                { name: 'Testing-QA', type: 'folder', path: '../BrowserOS/Workflows/Testing-QA/' },
+                                { name: 'Social-Media', type: 'folder', path: '../BrowserOS/Workflows/Social-Media/' },
+                                { name: 'Research-Monitoring', type: 'folder', path: '../BrowserOS/Workflows/Research-Monitoring/' },
+                                { name: 'CRM-Business', type: 'folder', path: '../BrowserOS/Workflows/CRM-Business/' },
+                                { name: 'Content-Creation', type: 'folder', path: '../BrowserOS/Workflows/Content-Creation/' },
+                                { name: 'API-Integration', type: 'folder', path: '../BrowserOS/Workflows/API-Integration/' },
+                                { name: 'Advanced-Techniques', type: 'folder', path: '../BrowserOS/Workflows/Advanced-Techniques/' },
+                                { name: 'Community-Contributed', type: 'folder', path: '../BrowserOS/Workflows/Community-Contributed/' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: 'docs',
+                    type: 'folder',
+                    children: [
+                        { name: 'index.html', type: 'file', description: 'Main website homepage', path: 'index.html' },
+                        { name: 'repo-browser.html', type: 'file', description: 'Repository browser (this page)', path: 'repo-browser.html' },
+                        { name: 'styles.css', type: 'file', description: 'Website styles', path: 'styles.css' },
+                        { name: 'app.js', type: 'file', description: 'Website JavaScript', path: 'app.js' },
+                        { name: 'search-index.json', type: 'file', description: 'Search index data', path: 'search-index.json' }
+                    ]
+                },
+                {
+                    name: 'scripts',
+                    type: 'folder',
+                    children: [
+                        { name: 'workflow_generator.py', type: 'file', description: 'AI-powered workflow generation', path: '../scripts/workflow_generator.py' },
+                        { name: 'research_pipeline.py', type: 'file', description: 'Automated research pipeline', path: '../scripts/research_pipeline.py' },
+                        { name: 'validate_kb.py', type: 'file', description: 'Knowledge base validation', path: '../scripts/validate_kb.py' },
+                        { name: 'self_test.py', type: 'file', description: 'Self-test automation (42 tests)', path: '../scripts/self_test.py' },
+                        { name: 'security_scanner.py', type: 'file', description: 'Security vulnerability scanner', path: '../scripts/security_scanner.py' },
+                        { name: 'extract_claude_skills.py', type: 'file', description: 'Claude skills extraction', path: '../scripts/extract_claude_skills.py' },
+                        { name: 'repo_tracker.py', type: 'file', description: 'Repository tracking system', path: '../scripts/repo_tracker.py' },
+                        { name: 'generate_search_index.py', type: 'file', description: 'Search index generation', path: '../scripts/generate_search_index.py' },
+                        { name: 'agent_connectors.py', type: 'file', description: 'Universal agent connectors', path: '../scripts/agent_connectors.py' },
+                        { name: 'config_loader.py', type: 'file', description: 'Configuration management', path: '../scripts/config_loader.py' }
+                    ]
+                },
+                { name: 'README.md', type: 'file', description: 'Main repository README', path: '../README.md' },
+                { name: 'AUTOMATION_QUICKSTART.md', type: 'file', description: 'Quick start guide for automation', path: '../AUTOMATION_QUICKSTART.md' },
+                { name: 'DEPLOYMENT.md', type: 'file', description: 'Deployment guide (6 connection types)', path: '../DEPLOYMENT.md' },
+                { name: 'SECURITY-POLICY.md', type: 'file', description: 'Security policy and guidelines', path: '../SECURITY-POLICY.md' },
+                { name: 'SECURITY_AUDIT.md', type: 'file', description: 'Security audit report', path: '../SECURITY_AUDIT.md' },
+                { name: 'REPO_TRACKING.md', type: 'file', description: 'Repository tracking documentation', path: '../REPO_TRACKING.md' },
+                { name: 'COMPLETE_IMPLEMENTATION.md', type: 'file', description: 'Complete implementation details', path: '../COMPLETE_IMPLEMENTATION.md' },
+                { name: 'TRANSFORMATION_SUMMARY.md', type: 'file', description: 'Repository transformation summary', path: '../TRANSFORMATION_SUMMARY.md' },
+                { name: 'FINAL_SUMMARY.md', type: 'file', description: 'Final project summary', path: '../FINAL_SUMMARY.md' },
+                { name: 'config.yml', type: 'file', description: 'Main configuration (500+ parameters)', path: '../config.yml' },
+                { name: 'requirements.txt', type: 'file', description: 'Python dependencies', path: '../requirements.txt' },
+                { name: 'Dockerfile', type: 'file', description: 'Docker container definition', path: '../Dockerfile' },
+                { name: 'docker-compose.yml', type: 'file', description: 'Docker compose orchestration', path: '../docker-compose.yml' },
+                { name: '.env.template', type: 'file', description: 'Environment variables template', path: '../.env.template' },
+                { name: 'update_kb.ps1', type: 'file', description: 'PowerShell KB update script', path: '../update_kb.ps1' },
+                { name: 'LICENSE', type: 'file', description: 'MIT License', path: '../LICENSE' }
+            ]
+        };
+
+        // Track statistics
+        let fileCount = 0;
+        let folderCount = 0;
+        let docCount = 0;
+
+        function countItems(node) {
+            if (node.type === 'folder') {
+                folderCount++;
+                if (node.children) {
+                    node.children.forEach(countItems);
+                }
+            } else {
+                fileCount++;
+                if (node.name.endsWith('.md') || node.name.endsWith('.html')) {
+                    docCount++;
+                }
+            }
+        }
+
+        function renderFileTree(node, container, level = 0, parentPath = '') {
+            if (!node.children) return;
+
+            node.children.forEach(child => {
+                const item = document.createElement('div');
+                const fullPath = parentPath ? `${parentPath}/${child.name}` : child.name;
+                
+                if (child.type === 'folder') {
+                    item.className = 'file-tree-item folder folder-toggle';
+                    
+                    // Use safer DOM methods instead of innerHTML
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'icon';
+                    iconSpan.textContent = '📁';
+                    iconSpan.setAttribute('aria-hidden', 'true');
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = child.name;
+                    
+                    item.appendChild(iconSpan);
+                    item.appendChild(nameSpan);
+                    item.style.paddingLeft = `${level * 20 + 12}px`;
+                    item.setAttribute('role', 'button');
+                    item.setAttribute('aria-expanded', 'false');
+                    item.setAttribute('aria-label', `Folder: ${child.name}`);
+                    item.setAttribute('tabindex', '0');
+                    
+                    const folderContents = document.createElement('div');
+                    folderContents.className = 'folder-contents collapsed'; // Start collapsed to match aria-expanded="false"
+                    folderContents.setAttribute('role', 'group');
+                    
+                    const toggleFolder = (e) => {
+                        e.stopPropagation();
+                        folderContents.classList.toggle('collapsed');
+                        const isExpanded = !folderContents.classList.contains('collapsed');
+                        iconSpan.textContent = isExpanded ? '📂' : '📁';
+                        item.setAttribute('aria-expanded', isExpanded.toString());
+                    };
+                    
+                    item.addEventListener('click', toggleFolder);
+                    item.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            toggleFolder(e);
+                        }
+                    });
+                    
+                    container.appendChild(item);
+                    container.appendChild(folderContents);
+                    renderFileTree(child, folderContents, level + 1, fullPath);
+                } else {
+                    item.className = 'file-tree-item file';
+                    const icon = child.name.endsWith('.md') ? '📄' : 
+                                child.name.endsWith('.json') ? '📋' : 
+                                child.name.endsWith('.py') ? '🐍' : 
+                                child.name.endsWith('.yml') || child.name.endsWith('.yaml') ? '⚙️' : 
+                                child.name.endsWith('.html') ? '🌐' : 
+                                child.name.endsWith('.css') ? '🎨' : 
+                                child.name.endsWith('.js') ? '📜' : '📄';
+                    
+                    // Use safer DOM methods instead of innerHTML
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'icon';
+                    iconSpan.textContent = icon;
+                    iconSpan.setAttribute('aria-hidden', 'true');
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = child.name;
+                    
+                    item.appendChild(iconSpan);
+                    item.appendChild(nameSpan);
+                    item.style.paddingLeft = `${level * 20 + 12}px`;
+                    item.dataset.path = child.path || '';
+                    item.dataset.description = child.description || '';
+                    item.dataset.name = child.name;
+                    item.dataset.fullPath = fullPath;
+                    item.setAttribute('role', 'button');
+                    item.setAttribute('aria-label', `File: ${child.name}`);
+                    item.setAttribute('tabindex', '0');
+                    
+                    const selectFile = () => {
+                        document.querySelectorAll('.file-tree-item').forEach(el => 
+                            el.classList.remove('active'));
+                        item.classList.add('active');
+                        showFilePreview(child);
+                    };
+                    
+                    item.addEventListener('click', selectFile);
+                    item.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            selectFile();
+                        }
+                    });
+                    
+                    container.appendChild(item);
+                }
+            });
+        }
+
+        function showFilePreview(file) {
+            const preview = document.querySelector('.file-preview');
+            const githubUrl = `https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/blob/main/${file.path?.replace('../', '') || file.name}`;
+            const rawUrl = `https://raw.githubusercontent.com/Grumpified-OGGVCT/BrowserOS_Guides/main/${file.path?.replace('../', '') || file.name}`;
+            
+            // Clear existing content
+            preview.textContent = '';
+            
+            // Create preview header
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'preview-header';
+            
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'preview-title';
+            
+            const iconSpan = document.createElement('span');
+            iconSpan.textContent = getFileIcon(file.name);
+            iconSpan.setAttribute('aria-hidden', 'true');
+            
+            const fileName = document.createTextNode(file.name);
+            
+            titleDiv.appendChild(iconSpan);
+            titleDiv.appendChild(fileName);
+            
+            const metaDiv = document.createElement('div');
+            metaDiv.className = 'preview-meta';
+            
+            const locationSpan = document.createElement('span');
+            locationSpan.textContent = `📂 ${file.path?.split('/').slice(0, -1).join('/') || 'Root'}`;
+            
+            const typeSpan = document.createElement('span');
+            typeSpan.textContent = `📝 ${getFileType(file.name)}`;
+            
+            metaDiv.appendChild(locationSpan);
+            metaDiv.appendChild(typeSpan);
+            
+            headerDiv.appendChild(titleDiv);
+            headerDiv.appendChild(metaDiv);
+            
+            // Create preview content
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'preview-content';
+            
+            const descH2 = document.createElement('h2');
+            descH2.textContent = 'Description';
+            
+            const descP = document.createElement('p');
+            descP.textContent = file.description || 'No description available';
+            
+            const actionsH2 = document.createElement('h2');
+            actionsH2.textContent = 'Actions';
+            
+            const actionButtonsDiv = document.createElement('div');
+            actionButtonsDiv.className = 'action-buttons';
+            
+            // GitHub button
+            const githubLink = document.createElement('a');
+            githubLink.href = githubUrl;
+            githubLink.target = '_blank';
+            githubLink.rel = 'noopener noreferrer';
+            githubLink.className = 'btn-action btn-github';
+            githubLink.setAttribute('aria-label', 'View file on GitHub');
+            
+            const githubSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            githubSvg.setAttribute('width', '16');
+            githubSvg.setAttribute('height', '16');
+            githubSvg.setAttribute('viewBox', '0 0 16 16');
+            githubSvg.setAttribute('fill', 'currentColor');
+            githubSvg.setAttribute('role', 'img');
+            githubSvg.setAttribute('aria-label', 'GitHub logo');
+            
+            const githubPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            githubPath.setAttribute('d', 'M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z');
+            
+            githubSvg.appendChild(githubPath);
+            githubLink.appendChild(githubSvg);
+            githubLink.appendChild(document.createTextNode(' View on GitHub'));
+            
+            actionButtonsDiv.appendChild(githubLink);
+            
+            // View File button (only for docs folder)
+            if (file.path && !file.path.startsWith('../')) {
+                const viewFileLink = document.createElement('a');
+                viewFileLink.href = file.path;
+                viewFileLink.className = 'btn-action btn-raw';
+                viewFileLink.setAttribute('aria-label', 'View file content');
+                viewFileLink.textContent = '📄 View File';
+                actionButtonsDiv.appendChild(viewFileLink);
+            }
+            
+            // Download button
+            const downloadLink = document.createElement('a');
+            downloadLink.href = rawUrl;
+            downloadLink.target = '_blank';
+            downloadLink.rel = 'noopener noreferrer';
+            downloadLink.className = 'btn-action btn-raw';
+            downloadLink.setAttribute('aria-label', 'Download file');
+            downloadLink.textContent = '⬇️ Download';
+            
+            actionButtonsDiv.appendChild(downloadLink);
+            
+            // File Information
+            const infoH2 = document.createElement('h2');
+            infoH2.textContent = 'File Information';
+            
+            const infoUl = document.createElement('ul');
+            
+            const nameLi = document.createElement('li');
+            const nameStrong = document.createElement('strong');
+            nameStrong.textContent = 'Name:';
+            nameLi.appendChild(nameStrong);
+            nameLi.appendChild(document.createTextNode(' ' + file.name));
+            
+            const typeLi = document.createElement('li');
+            const typeStrong = document.createElement('strong');
+            typeStrong.textContent = 'Type:';
+            typeLi.appendChild(typeStrong);
+            typeLi.appendChild(document.createTextNode(' ' + getFileType(file.name)));
+            
+            const locationLi = document.createElement('li');
+            const locationStrong = document.createElement('strong');
+            locationStrong.textContent = 'Location:';
+            locationLi.appendChild(locationStrong);
+            locationLi.appendChild(document.createTextNode(' ' + (file.path || 'Root directory')));
+            
+            infoUl.appendChild(nameLi);
+            infoUl.appendChild(typeLi);
+            infoUl.appendChild(locationLi);
+            
+            // Assemble everything
+            contentDiv.appendChild(descH2);
+            contentDiv.appendChild(descP);
+            contentDiv.appendChild(actionsH2);
+            contentDiv.appendChild(actionButtonsDiv);
+            contentDiv.appendChild(infoH2);
+            contentDiv.appendChild(infoUl);
+            
+            preview.appendChild(headerDiv);
+            preview.appendChild(contentDiv);
+        }
+
+        function getFileIcon(filename) {
+            if (filename.endsWith('.md')) return '📄';
+            if (filename.endsWith('.json')) return '📋';
+            if (filename.endsWith('.py')) return '🐍';
+            if (filename.endsWith('.yml') || filename.endsWith('.yaml')) return '⚙️';
+            if (filename.endsWith('.html')) return '🌐';
+            if (filename.endsWith('.css')) return '🎨';
+            if (filename.endsWith('.js')) return '📜';
+            if (filename.endsWith('.ps1')) return '💻';
+            return '📄';
+        }
+
+        function getFileType(filename) {
+            // Handle files without extensions (e.g., Dockerfile, LICENSE)
+            if (!filename.includes('.')) {
+                return filename.charAt(0).toUpperCase() + filename.slice(1);
+            }
+            const ext = filename.split('.').pop().toUpperCase();
+            const types = {
+                'MD': 'Markdown Documentation',
+                'JSON': 'JSON Data',
+                'PY': 'Python Script',
+                'YML': 'YAML Configuration',
+                'YAML': 'YAML Configuration',
+                'HTML': 'HTML Document',
+                'CSS': 'Stylesheet',
+                'JS': 'JavaScript',
+                'PS1': 'PowerShell Script',
+                'TXT': 'Text File'
+            };
+            return types[ext] || ext + ' File';
+        }
+
+        // Search functionality
+        document.getElementById('search-box').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.file-tree-item.file');
+            
+            items.forEach(item => {
+                const name = item.dataset.name?.toLowerCase() || '';
+                const description = item.dataset.description?.toLowerCase() || '';
+                const fullPath = item.dataset.fullPath?.toLowerCase() || '';
+                
+                if (name.includes(searchTerm) || description.includes(searchTerm) || fullPath.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Initialize
+        countItems(repoStructure);
+        document.getElementById('file-count').textContent = fileCount;
+        document.getElementById('folder-count').textContent = folderCount;
+        document.getElementById('doc-count').textContent = docCount;
+
+        const treeContainer = document.getElementById('file-tree-container');
+        renderFileTree(repoStructure, treeContainer);
+    </script>
+</body>
+</html>
