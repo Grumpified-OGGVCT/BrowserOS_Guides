@@ -1,9 +1,14 @@
 {
-  "generated_at": "2026-02-12T20:16:28.133490",
-  "total_patterns": 916,
+  "generated_at": "2026-02-12T21:30:51.455723",
+  "total_patterns": 919,
   "categories": {
     "e-commerce": [
       "Amazon Price Tracker with Alerts"
+    ],
+    "Communication": [
+      "Safe WhatsApp Broadcast",
+      "Multilingual WhatsApp Support Agent",
+      "WhatsApp to CRM Sync"
     ],
     "App Automation": [
       "api_bible_automation",
@@ -3723,6 +3728,56 @@
       "source_file": "BrowserOS/Workflows/E-Commerce/amazon_price_tracker.json",
       "has_error_handling": true,
       "has_scheduling": true
+    },
+    {
+      "name": "Safe WhatsApp Broadcast",
+      "category": "Communication",
+      "difficulty": "intermediate",
+      "tags": [
+        "whatsapp",
+        "broadcast",
+        "bulk-messaging",
+        "rate-limiting",
+        "communication"
+      ],
+      "step_types": [],
+      "source_file": "BrowserOS/Workflows/Communication/safe_whatsapp_broadcast.json",
+      "has_error_handling": false,
+      "has_scheduling": false
+    },
+    {
+      "name": "Multilingual WhatsApp Support Agent",
+      "category": "Communication",
+      "difficulty": "advanced",
+      "tags": [
+        "whatsapp",
+        "multilingual",
+        "support",
+        "translation",
+        "ai-agent",
+        "customer-service"
+      ],
+      "step_types": [],
+      "source_file": "BrowserOS/Workflows/Communication/multilingual_whatsapp_support.json",
+      "has_error_handling": false,
+      "has_scheduling": false
+    },
+    {
+      "name": "WhatsApp to CRM Sync",
+      "category": "Communication",
+      "difficulty": "advanced",
+      "tags": [
+        "whatsapp",
+        "crm",
+        "salesforce",
+        "hubspot",
+        "data-sync",
+        "automation"
+      ],
+      "step_types": [],
+      "source_file": "BrowserOS/Workflows/Communication/whatsapp_to_crm_sync.json",
+      "has_error_handling": false,
+      "has_scheduling": false
     },
     {
       "name": "api_bible_automation",

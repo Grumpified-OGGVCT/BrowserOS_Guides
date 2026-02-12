@@ -1,7 +1,7 @@
 {
   "test_run": {
-    "timestamp": "2026-02-12T18:47:19.824917",
-    "duration_seconds": 0.075468,
+    "timestamp": "2026-02-12T21:31:19.095859",
+    "duration_seconds": 0.08439,
     "total_tests": 13,
     "passed": 9,
     "failed": 4,

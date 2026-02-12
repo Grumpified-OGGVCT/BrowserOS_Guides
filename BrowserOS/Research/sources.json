@@ -17,7 +17,11 @@
     "author": "browseros-ai",
     "type": "github_repository",
     "abstract": "Main BrowserOS repository with source code, issues, PRs, and examples",
-    "branches": ["main", "dev", "beta"],
+    "branches": [
+      "main",
+      "dev",
+      "beta"
+    ],
     "track_beta": true,
     "beta_knowledge_file": "beta_features.md",
     "priority": "critical",
@@ -33,7 +37,10 @@
     "author": "browseros-ai",
     "type": "github_repository",
     "abstract": "TypeScript-based agent that orchestrates workflows and MCP tools for BrowserOS",
-    "branches": ["main", "dev"],
+    "branches": [
+      "main",
+      "dev"
+    ],
     "track_beta": true,
     "priority": "high",
     "provenance": {
@@ -48,7 +55,9 @@
     "author": "browseros-ai",
     "type": "github_repository",
     "abstract": "StackOverflow for AI agents - inter-agent communication and knowledge sharing platform",
-    "branches": ["main"],
+    "branches": [
+      "main"
+    ],
     "track_beta": false,
     "priority": "medium",
     "provenance": {
@@ -63,7 +72,9 @@
     "author": "browseros-ai",
     "type": "github_repository",
     "abstract": "Legacy agent submodule - reference for understanding architectural evolution",
-    "branches": ["main"],
+    "branches": [
+      "main"
+    ],
     "track_beta": false,
     "priority": "low",
     "provenance": {
