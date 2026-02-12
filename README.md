@@ -27,7 +27,10 @@
 <div align="center">
 
 ### **Interactive Knowledge Hub**
-![BrowserOS Knowledge Hub homepage showing hero section with 500+ use cases, 130+ workflows, and AI-powered tools](docs/screenshots/01-hero-section.png)
+<picture>
+  <source srcset="docs/screenshots/01-hero-section.webp" type="image/webp">
+  <img src="docs/screenshots/01-hero-section.png" alt="BrowserOS Knowledge Hub homepage showing hero section with 500+ use cases, 130+ workflows, and AI-powered tools" loading="lazy">
+</picture>
 
 *The static website in `docs/` includes the full interactive knowledge hub with 500+ use cases and 130+ workflows*
 
@@ -80,7 +83,10 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-![Workflows section displaying 130+ organized workflows across E-Commerce, Data Extraction, Testing, QA, Social Media, Research, CRM, Content Creation, and API Integration categories](docs/screenshots/02-workflows-section.png)
+<picture>
+  <source srcset="docs/screenshots/02-workflows-section.webp" type="image/webp">
+  <img src="docs/screenshots/02-workflows-section.png" alt="Workflows section displaying 130+ organized workflows across E-Commerce, Data Extraction, Testing, QA, Social Media, Research, CRM, Content Creation, and API Integration categories" loading="lazy">
+</picture>
 
 *E-Commerce, Data Extraction, Testing & QA, Social Media, Research, CRM, Content Creation, API Integration, and more!*
 
@@ -90,7 +96,10 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-![Use cases section showing 500+ real-world examples across retail, healthcare, finance, logistics, marketing, and customer service industries](docs/screenshots/03-use-cases-section.png)
+<picture>
+  <source srcset="docs/screenshots/03-use-cases-section.webp" type="image/webp">
+  <img src="docs/screenshots/03-use-cases-section.png" alt="Use cases section showing 500+ real-world examples across retail, healthcare, finance, logistics, marketing, and customer service industries" loading="lazy">
+</picture>
 
 *Real-world examples from retail, healthcare, finance, logistics, marketing, customer service, and beyond*
 
@@ -100,7 +109,10 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-![MCP and Agentic AI integration guide showing compatibility with VSCode, Cursor, Windsurf, Claude Desktop, MSTY, AnythingLLM, and 10+ other AI development tools](docs/screenshots/04-mcp-agentic-section.png)
+<picture>
+  <source srcset="docs/screenshots/04-mcp-agentic-section.webp" type="image/webp">
+  <img src="docs/screenshots/04-mcp-agentic-section.png" alt="MCP and Agentic AI integration guide showing compatibility with VSCode, Cursor, Windsurf, Claude Desktop, MSTY, AnythingLLM, and 10+ other AI development tools" loading="lazy">
+</picture>
 
 *Use BrowserOS with VSCode, Cursor, Windsurf, Claude Desktop, MSTY, AnythingLLM, and 10+ AI tools*
 
@@ -110,7 +122,10 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-![Interactive repository browser interface showing file tree navigation, search functionality, and content preview capabilities](docs/screenshots/05-repo-browser.png)
+<picture>
+  <source srcset="docs/screenshots/05-repo-browser.webp" type="image/webp">
+  <img src="docs/screenshots/05-repo-browser.png" alt="Interactive repository browser interface showing file tree navigation, search functionality, and content preview capabilities" loading="lazy">
+</picture>
 
 *Browse the entire repository structure, search files, preview content, and navigate with ease*
 
@@ -120,7 +135,10 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-![Search interface with AI-powered search capabilities across 500+ use cases, 130+ workflows, and comprehensive documentation](docs/screenshots/06-search-section.png)
+<picture>
+  <source srcset="docs/screenshots/06-search-section.webp" type="image/webp">
+  <img src="docs/screenshots/06-search-section.png" alt="Search interface with AI-powered search capabilities across 500+ use cases, 130+ workflows, and comprehensive documentation" loading="lazy">
+</picture>
 
 *AI-powered search across 500+ use cases, 130+ workflows, and comprehensive documentation*
 

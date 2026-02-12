@@ -3,6 +3,13 @@
 // Real semantic search with fuzzy matching and keyword scoring
 // ============================================================================
 
+// Configuration
+const CONFIG = {
+    SEARCH_DEBOUNCE_MS: 300,  // Configurable debounce delay for search input
+    SEARCH_MIN_CHARS: 1,      // Minimum characters before triggering search
+    SEARCH_MAX_RESULTS: 50    // Maximum number of results to display
+};
+
 // Global search index - loaded from search-index.json
 let searchIndex = null;
 let searchIndexLoaded = false;
@@ -34,12 +41,28 @@ document.addEventListener('DOMContentLoaded', function() {
 async function loadSearchIndex() {
     try {
         const response = await fetch('search-index.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         searchIndex = await response.json();
         searchIndexLoaded = true;
         console.log(`✅ Search index loaded: ${searchIndex.total_documents} documents`);
     } catch (error) {
         console.error('Failed to load search index:', error);
         searchIndexLoaded = false;
+        
+        // Display user-friendly error message
+        const searchResults = document.getElementById('searchResults');
+        if (searchResults) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = 'padding: 1rem; background: var(--bg-secondary, #1A1F26); border-radius: 8px; margin-top: 1rem;';
+            errorDiv.innerHTML = `
+                <p style="color: var(--warning, #F59E0B); font-weight: 600; margin-bottom: 0.5rem;">⚠️ Search temporarily unavailable</p>
+                <p style="color: var(--text-secondary, #9AA0A6); font-size: 0.875rem;">Unable to load search index. Please try refreshing the page or browse the <a href="#workflows" style="color: var(--browseros-orange, #FF7900);">workflows</a> directly.</p>
+            `;
+            // Store for later display when user tries to search
+            searchResults.dataset.errorMessage = errorDiv.outerHTML;
+        }
     }
 }
 
@@ -59,13 +82,13 @@ function initializeSearch() {
         searchInput.addEventListener('input', debounce(function(e) {
             const query = e.target.value.toLowerCase().trim();
             
-            if (query.length > 0) {
+            if (query.length >= CONFIG.SEARCH_MIN_CHARS) {
                 performSearch(query, currentFilter);
             } else {
                 searchResults.classList.remove('active');
                 searchResults.replaceChildren(); // Safer than innerHTML = ''
             }
-        }, 300));
+        }, CONFIG.SEARCH_DEBOUNCE_MS));
     }
     
     // Handle filter buttons
@@ -91,12 +114,19 @@ function performSearch(query, filter) {
         // Clear existing content safely
         searchResults.textContent = '';
         
+        // Check if there's a stored error message
+        if (searchResults.dataset.errorMessage) {
+            searchResults.innerHTML = searchResults.dataset.errorMessage;
+            searchResults.classList.add('active');
+            return;
+        }
+        
         // Build loading indicator with createElement (no innerHTML)
         // Note: Spinner animation relies on .loading-spinner class in styles.css (lines ~607-619)
         const loadingDiv = document.createElement('div');
         loadingDiv.style.textAlign = 'center';
         loadingDiv.style.padding = '2rem';
-        loadingDiv.style.color = 'var(--text-secondary)';
+        loadingDiv.style.color = 'var(--text-secondary, #9AA0A6)';
         
         const spinner = document.createElement('div');
         spinner.className = 'loading-spinner';
@@ -244,31 +274,31 @@ function displaySearchResults(results, query) {
     
     if (results.length === 0) {
         searchResults.innerHTML = `
-            <div style="text-align: center; padding: 2rem; color: var(--gray-500);">
+            <div style="text-align: center; padding: 2rem; color: var(--gray-500, #6B7280);">
                 <p>No results found for "<strong>${escapeHtml(query)}</strong>"</p>
-                <p style="font-size: 0.875rem; margin-top: 0.5rem;">Try different keywords or browse <a href="#workflows" style="color: var(--primary);">workflows</a> and <a href="#knowledge-base" style="color: var(--primary);">documentation</a></p>
+                <p style="font-size: 0.875rem; margin-top: 0.5rem;">Try different keywords or browse <a href="#workflows" style="color: var(--primary, #FF7900);">workflows</a> and <a href="#knowledge-base" style="color: var(--primary, #FF7900);">documentation</a></p>
             </div>
         `;
     } else {
         const resultsHTML = results.map(result => `
-            <a href="${escapeHtml(result.url)}" class="search-result-item" style="display: block; padding: 1rem; border-bottom: 1px solid var(--gray-200); text-decoration: none; color: inherit; transition: background 0.2s;">
+            <a href="${escapeHtml(result.url)}" class="search-result-item" style="display: block; padding: 1rem; border-bottom: 1px solid var(--gray-200, #E5E7EB); text-decoration: none; color: inherit; transition: background 0.2s;">
                 <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
                     <div style="flex: 1; min-width: 0;">
                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-                            <span style="background: var(--primary); color: white; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; white-space: nowrap;">${escapeHtml(result.category)}</span>
-                            ${result.score > 500 ? '<span style="background: var(--success); color: white; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">⭐ Top Match</span>' : ''}
+                            <span style="background: var(--primary, #FF7900); color: white; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; white-space: nowrap;">${escapeHtml(result.category)}</span>
+                            ${result.score > 500 ? '<span style="background: var(--success, #10B981); color: white; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">⭐ Top Match</span>' : ''}
                         </div>
-                        <h4 style="margin-bottom: 0.25rem; color: var(--gray-900); font-size: 1.125rem; font-weight: 600;">${highlightMatch(result.title, query)}</h4>
-                        <p style="color: var(--gray-600); font-size: 0.875rem; line-height: 1.5;">${highlightMatch(result.description, query)}</p>
+                        <h4 style="margin-bottom: 0.25rem; color: var(--gray-900, #111827); font-size: 1.125rem; font-weight: 600;">${highlightMatch(result.title, query)}</h4>
+                        <p style="color: var(--gray-600, #4B5563); font-size: 0.875rem; line-height: 1.5;">${highlightMatch(result.description, query)}</p>
                         ${result.keywords && result.keywords.length > 0 ? `
                             <div style="display: flex; gap: 0.25rem; margin-top: 0.5rem; flex-wrap: wrap;">
                                 ${result.keywords.slice(0, 5).map(kw => `
-                                    <span style="background: var(--gray-100); color: var(--gray-600); padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">${escapeHtml(kw)}</span>
+                                    <span style="background: var(--gray-100, #F3F4F6); color: var(--gray-600, #4B5563); padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">${escapeHtml(kw)}</span>
                                 `).join('')}
                             </div>
                         ` : ''}
                     </div>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" style="flex-shrink: 0; color: var(--gray-400); margin-top: 0.25rem;">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" style="flex-shrink: 0; color: var(--gray-400, #9CA3AF); margin-top: 0.25rem;">
                         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
                     </svg>
                 </div>
@@ -276,11 +306,11 @@ function displaySearchResults(results, query) {
         `).join('');
         
         const relevanceNote = results.length > 5 ? 
-            `<p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem;">Results ranked by relevance</p>` : '';
+            `<p style="font-size: 0.75rem; color: var(--gray-500, #6B7280); margin-top: 0.25rem;">Results ranked by relevance</p>` : '';
         
         searchResults.innerHTML = `
-            <div style="margin-bottom: 1rem; padding: 0.5rem 1rem; background: var(--gray-50); border-radius: var(--radius-lg);">
-                <p style="color: var(--gray-600); font-size: 0.875rem; font-weight: 500;">Found <strong style="color: var(--primary);">${results.length}</strong> result${results.length !== 1 ? 's' : ''} for "<strong>${escapeHtml(query)}</strong>"</p>
+            <div style="margin-bottom: 1rem; padding: 0.5rem 1rem; background: var(--gray-50, #F9FAFB); border-radius: var(--radius-lg, 0.75rem);">
+                <p style="color: var(--gray-600, #4B5563); font-size: 0.875rem; font-weight: 500;">Found <strong style="color: var(--primary, #FF7900);">${results.length}</strong> result${results.length !== 1 ? 's' : ''} for "<strong>${escapeHtml(query)}</strong>"</p>
                 ${relevanceNote}
             </div>
             ${resultsHTML}
