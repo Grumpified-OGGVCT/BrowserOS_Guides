@@ -25,5 +25,5 @@ ollama>=0.1.0          # Ollama Python SDK
 openai>=1.0.0          # OpenAI/OpenRouter SDK
 
 # Optional: Additional web scraping tools
-# selenium>=4.15.0       # Uncomment if needed for dynamic content
+selenium>=4.15.0        # Required for screenshot generation (scripts/generate_screenshots.py)
 # playwright>=1.40.0     # Uncomment if needed for browser automation

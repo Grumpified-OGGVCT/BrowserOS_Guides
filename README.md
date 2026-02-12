@@ -3,9 +3,38 @@
 > **A self-maintaining, AI-powered knowledge base for BrowserOS Workflows**  
 > Automatically compiled from the latest documentation, code, and community resources
 
+<div align="center">
+
+## 🌐 Live Website (Setup Required)
+
+**Interactive knowledge hub with 500+ use cases, 130+ workflows, and AI-powered tools**
+
+> ⚠️ **GitHub Pages Setup Required**: To make the live site available at [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/), you need to:
+> 1. **Merge this PR** to main/master branch
+> 2. **Enable GitHub Pages**: Go to Settings → Pages → Source: "GitHub Actions"
+> 3. The deployment workflow will automatically publish the site
+
 [![GitHub Actions](https://img.shields.io/badge/automation-GitHub%20Actions-blue)](/.github/workflows/update-kb.yml)
 [![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
+
+</div>
+
+---
+
+## 📸 Website Preview
+
+<div align="center">
+
+### **Interactive Knowledge Hub**
+<picture>
+  <source srcset="docs/screenshots/01-hero-section.webp" type="image/webp">
+  <img src="docs/screenshots/01-hero-section.png" alt="BrowserOS Knowledge Hub homepage showing hero section with 500+ use cases, 130+ workflows, and AI-powered tools" loading="lazy">
+</picture>
+
+*The static website in `docs/` includes the full interactive knowledge hub with 500+ use cases and 130+ workflows*
+
+</div>
 
 ---
 
@@ -45,6 +74,75 @@ This is a **living, self-maintaining knowledge base** that:
 
 **Challenge**: Keeping up with BrowserOS's rapid development  
 **Solution**: Automated AI-powered knowledge compilation from official sources
+
+---
+
+## 🎨 Website Features (in `docs/` Directory)
+
+### 📚 130+ Workflows Organized by Category
+
+<div align="center">
+
+<picture>
+  <source srcset="docs/screenshots/02-workflows-section.webp" type="image/webp">
+  <img src="docs/screenshots/02-workflows-section.png" alt="Workflows section displaying 130+ organized workflows across E-Commerce, Data Extraction, Testing, QA, Social Media, Research, CRM, Content Creation, and API Integration categories" loading="lazy">
+</picture>
+
+*E-Commerce, Data Extraction, Testing & QA, Social Media, Research, CRM, Content Creation, API Integration, and more!*
+
+</div>
+
+### 🎯 500+ Use Cases Across Industries
+
+<div align="center">
+
+<picture>
+  <source srcset="docs/screenshots/03-use-cases-section.webp" type="image/webp">
+  <img src="docs/screenshots/03-use-cases-section.png" alt="Use cases section showing 500+ real-world examples across retail, healthcare, finance, logistics, marketing, and customer service industries" loading="lazy">
+</picture>
+
+*Real-world examples from retail, healthcare, finance, logistics, marketing, customer service, and beyond*
+
+</div>
+
+### 🤖 MCP & Agentic AI Integration
+
+<div align="center">
+
+<picture>
+  <source srcset="docs/screenshots/04-mcp-agentic-section.webp" type="image/webp">
+  <img src="docs/screenshots/04-mcp-agentic-section.png" alt="MCP and Agentic AI integration guide showing compatibility with VSCode, Cursor, Windsurf, Claude Desktop, MSTY, AnythingLLM, and 10+ other AI development tools" loading="lazy">
+</picture>
+
+*Use BrowserOS with VSCode, Cursor, Windsurf, Claude Desktop, MSTY, AnythingLLM, and 10+ AI tools*
+
+</div>
+
+### 📂 Interactive Repository Browser
+
+<div align="center">
+
+<picture>
+  <source srcset="docs/screenshots/05-repo-browser.webp" type="image/webp">
+  <img src="docs/screenshots/05-repo-browser.png" alt="Interactive repository browser interface showing file tree navigation, search functionality, and content preview capabilities" loading="lazy">
+</picture>
+
+*Browse the entire repository structure, search files, preview content, and navigate with ease*
+
+</div>
+
+### 🔍 Powerful Search Functionality
+
+<div align="center">
+
+<picture>
+  <source srcset="docs/screenshots/06-search-section.webp" type="image/webp">
+  <img src="docs/screenshots/06-search-section.png" alt="Search interface with AI-powered search capabilities across 500+ use cases, 130+ workflows, and comprehensive documentation" loading="lazy">
+</picture>
+
+*AI-powered search across 500+ use cases, 130+ workflows, and comprehensive documentation*
+
+</div>
 
 ---
 
@@ -187,9 +285,50 @@ This is a **living, self-maintaining knowledge base** that:
 
 ## 🚀 Quick Start
 
-### For Users: View the Knowledge Base
+### 🌐 View the Interactive Website
 
-📖 **Read the KB**: [BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
+The website exists in the `docs/` directory and can be viewed:
+
+#### Option 1: View Locally (Works Now)
+```bash
+# Clone the repository
+git clone https://github.com/Grumpified-OGGVCT/BrowserOS_Guides.git
+cd BrowserOS_Guides
+
+# Start a local web server
+python3 -m http.server 8000 --directory docs
+
+# Open in browser: http://localhost:8000
+```
+
+#### Option 2: Via GitHub Pages (Requires Setup)
+To enable the live GitHub Pages site at `https://grumpified-oggvct.github.io/BrowserOS_Guides/`:
+
+1. **Merge this PR** to main/master branch
+2. **Enable GitHub Pages**:
+   - Go to: Settings → Pages
+   - Source: Select "GitHub Actions"
+   - Save
+3. **Deployment is automatic** - The workflow in `.github/workflows/deploy-pages.yml` will deploy on every push to main
+
+### 📖 Access the Knowledge Base Content
+
+**Three ways to explore:**
+
+1. **📂 Interactive Website** *(in `docs/` folder)*
+   - Full website with navigation
+   - Real-time search
+   - Repository browser
+   - View locally or deploy to GitHub Pages
+
+2. **📂 Repository Browser**: Open `docs/repo-browser.html` locally
+   - Navigate folder structure
+   - Search across all files
+   - Preview markdown content
+
+3. **📄 Direct KB**: [BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
+   - Complete knowledge base markdown
+   - Downloadable for offline use
 
 ### For Maintainers: Enable Automation
 
@@ -373,6 +512,12 @@ We welcome contributions to improve the knowledge base!
 - **🔧 workflow-use**: [github.com/browser-use/workflow-use](https://github.com/browser-use/workflow-use)
 - **📖 Browser Use Docs**: [docs.browser-use.com](https://docs.browser-use.com)
 
+### This Repository's Resources
+
+- **📂 Interactive Website**: Available in `docs/` directory (view locally or deploy to GitHub Pages)
+- **📂 Repository Browser**: `docs/repo-browser.html` (view locally)
+- **💻 GitHub Repo**: [github.com/Grumpified-OGGVCT/BrowserOS_Guides](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides)
+
 ### Community
 
 - **💬 Discussions**: [GitHub Discussions](https://github.com/browseros-ai/BrowserOS/discussions)
@@ -382,6 +527,19 @@ We welcome contributions to improve the knowledge base!
 ---
 
 ## ❓ FAQ
+
+### Q: How do I view the interactive website?
+**A**: The website files are in the `docs/` directory. You can:
+- **View locally now**: Run `python3 -m http.server 8000 --directory docs` and open http://localhost:8000
+- **Deploy to GitHub Pages**: Merge this PR, then enable GitHub Pages in Settings → Pages → Source: "GitHub Actions"
+
+The website includes searchable workflows, use cases, repository browser, and comprehensive documentation.
+
+### Q: Why isn't the GitHub Pages link working?
+**A**: GitHub Pages requires setup:
+1. This PR needs to be merged to main branch
+2. GitHub Pages needs to be enabled in repository settings (Settings → Pages → Source: "GitHub Actions")
+3. Once enabled, the deployment workflow will automatically publish the site at https://grumpified-oggvct.github.io/BrowserOS_Guides/
 
 ### Q: Why automate this?
 **A**: BrowserOS is rapidly evolving. Automated compilation ensures the KB stays current without manual effort, capturing new features as they're released.
@@ -432,6 +590,11 @@ It helps others discover this resource and shows appreciation for the automation
 
 **Built with ❤️ by the community**  
 **Celebrating the incredible work of the BrowserOS team 🎉**
+
+### 📂 Interactive Website in `docs/` Directory
+
+View locally: `python3 -m http.server 8000 --directory docs`  
+Deploy to Pages: Merge PR + enable in Settings → Pages
 
 [⭐ Star this repo](../../stargazers) • [🔀 Fork it](../../fork) • [📖 Read the KB](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
 
