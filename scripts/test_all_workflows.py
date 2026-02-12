@@ -5,10 +5,6 @@ Tests all GitHub Actions workflows to ensure they work as intended.
 """
 
 import json
-import os
-import subprocess
-import sys
-import time
 from datetime import datetime, timezone
 from pathlib import Path
 

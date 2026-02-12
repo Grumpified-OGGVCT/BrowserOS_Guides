@@ -5,9 +5,7 @@ Triggers all workflows that support manual execution via workflow_dispatch
 """
 
 import json
-import os
 import subprocess
-import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -126,14 +124,14 @@ class WorkflowTrigger:
             {
                 "file": "update-kb.yml",
                 "name": "Update BrowserOS Knowledge Base",
-                "inputs": {"force_update": "false"},
+                "inputs": {"force_update": False},
                 "priority": 1,
                 "description": "Syncs with official BrowserOS repo and generates new workflows"
             },
             {
                 "file": "self-test.yml", 
                 "name": "Self-Test & Quality Assurance",
-                "inputs": {"force_fix": "true"},
+                "inputs": {"force_fix": True},
                 "priority": 2,
                 "description": "Runs comprehensive tests and security scans"
             },

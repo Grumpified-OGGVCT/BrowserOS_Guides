@@ -402,7 +402,7 @@ Once manually triggered and verified, workflows will run automatically:
 
 The BrowserOS_Guides repository has well-structured and valid workflows, but **two critical workflows have never been triggered**:
 
-1. **Update Knowledge Base** - Core automation for repository content
+1. **Update BrowserOS Knowledge Base** - Core automation for repository content
 2. **Self-Test & Quality Assurance** - Critical for health and security
 
 **Immediate Action Required**: Trigger both workflows manually to verify functionality before relying on automated schedules.
