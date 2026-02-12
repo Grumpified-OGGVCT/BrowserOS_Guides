@@ -564,6 +564,22 @@
                 <p>Powered by Kimi-K2.5:cloud via Ollama Cloud API</p>
             </div>
             
+            <!-- Setup Notice for API Key -->
+            <div style="background: var(--bg-elevated); border: 2px solid var(--info); border-radius: 8px; padding: var(--space-6); margin-bottom: var(--space-8);">
+                <h3 style="color: var(--info); margin: 0 0 var(--space-3) 0; display: flex; align-items: center; gap: var(--space-2);">
+                    <span>ℹ️</span>
+                    <span>Setup Required</span>
+                </h3>
+                <p style="margin: 0 0 var(--space-3) 0; color: var(--text-secondary);">
+                    The workflow generator requires an <strong>OLLAMA_API_KEY</strong> to function. 
+                    GitHub Actions workflows already have access to organization secrets.
+                </p>
+                <p style="margin: 0; color: var(--text-secondary);">
+                    <strong>For local development:</strong> Set the environment variable before starting the MCP server.
+                    See <a href="WORKFLOW_GENERATOR_SETUP.html" style="color: var(--browseros-orange); text-decoration: none;">Setup Guide →</a>
+                </p>
+            </div>
+            
             <div class="tools-showcase">
                 <div class="tool-card main-tool">
                     <div class="tool-header">
