@@ -5,29 +5,31 @@
 
 <div align="center">
 
-## 🌐 Explore the Live Website
+## 🌐 Live Website (Setup Required)
 
 **Interactive knowledge hub with 500+ use cases, 130+ workflows, and AI-powered tools**
 
-**👉 [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/) 👈**
+> ⚠️ **GitHub Pages Setup Required**: To make the live site available at [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/), you need to:
+> 1. **Merge this PR** to main/master branch
+> 2. **Enable GitHub Pages**: Go to Settings → Pages → Source: "GitHub Actions"
+> 3. The deployment workflow will automatically publish the site
 
 [![GitHub Actions](https://img.shields.io/badge/automation-GitHub%20Actions-blue)](/.github/workflows/update-kb.yml)
 [![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
-[![Live Site](https://img.shields.io/badge/🌐_Live_Site-Visit_Now-FF7900?style=for-the-badge)](https://grumpified-oggvct.github.io/BrowserOS_Guides/)
 
 </div>
 
 ---
 
-## 📸 Live Website Preview
+## 📸 Website Preview
 
 <div align="center">
 
 ### **Interactive Knowledge Hub**
-[![BrowserOS Knowledge Hub](docs/screenshots/01-hero-section.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/)
+![BrowserOS Knowledge Hub](docs/screenshots/01-hero-section.png)
 
-**👆 Click the image above to explore the live site!**
+*The static website in `docs/` includes the full interactive knowledge hub with 500+ use cases and 130+ workflows*
 
 </div>
 
@@ -72,13 +74,13 @@ This is a **living, self-maintaining knowledge base** that:
 
 ---
 
-## 🎨 Website Features in Action
+## 🎨 Website Features (in `docs/` Directory)
 
 ### 📚 130+ Workflows Organized by Category
 
 <div align="center">
 
-[![Workflows Section](docs/screenshots/02-workflows-section.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/#workflows)
+![Workflows Section](docs/screenshots/02-workflows-section.png)
 
 *E-Commerce, Data Extraction, Testing & QA, Social Media, Research, CRM, Content Creation, API Integration, and more!*
 
@@ -88,7 +90,7 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-[![Use Cases Section](docs/screenshots/03-use-cases-section.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/#use-cases)
+![Use Cases Section](docs/screenshots/03-use-cases-section.png)
 
 *Real-world examples from retail, healthcare, finance, logistics, marketing, customer service, and beyond*
 
@@ -98,7 +100,7 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-[![MCP Agentic Section](docs/screenshots/04-mcp-agentic-section.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/#mcp-agentic)
+![MCP Agentic Section](docs/screenshots/04-mcp-agentic-section.png)
 
 *Use BrowserOS with VSCode, Cursor, Windsurf, Claude Desktop, MSTY, AnythingLLM, and 10+ AI tools*
 
@@ -108,7 +110,7 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-[![Repo Browser](docs/screenshots/05-repo-browser.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/repo-browser.html)
+![Repo Browser](docs/screenshots/05-repo-browser.png)
 
 *Browse the entire repository structure, search files, preview content, and navigate with ease*
 
@@ -118,7 +120,7 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-[![Search Section](docs/screenshots/06-search-section.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/#search)
+![Search Section](docs/screenshots/06-search-section.png)
 
 *AI-powered search across 500+ use cases, 130+ workflows, and comprehensive documentation*
 
@@ -265,27 +267,43 @@ This is a **living, self-maintaining knowledge base** that:
 
 ## 🚀 Quick Start
 
-### 🌐 Explore the Live Website
+### 🌐 View the Interactive Website
 
-<div align="center">
+The website exists in the `docs/` directory and can be viewed:
 
-**👉 [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/) 👈**
+#### Option 1: View Locally (Works Now)
+```bash
+# Clone the repository
+git clone https://github.com/Grumpified-OGGVCT/BrowserOS_Guides.git
+cd BrowserOS_Guides
 
-*Interactive hub with searchable workflows, use cases, and comprehensive documentation*
+# Start a local web server
+python3 -m http.server 8000 --directory docs
 
-</div>
+# Open in browser: http://localhost:8000
+```
 
-### 📖 For Users: Access the Knowledge Base
+#### Option 2: Via GitHub Pages (Requires Setup)
+To enable the live GitHub Pages site at `https://grumpified-oggvct.github.io/BrowserOS_Guides/`:
+
+1. **Merge this PR** to main/master branch
+2. **Enable GitHub Pages**:
+   - Go to: Settings → Pages
+   - Source: Select "GitHub Actions"
+   - Save
+3. **Deployment is automatic** - The workflow in `.github/workflows/deploy-pages.yml` will deploy on every push to main
+
+### 📖 Access the Knowledge Base Content
 
 **Three ways to explore:**
 
-1. **🌐 Live Website** *(Recommended)*: [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/)
-   - Interactive navigation
+1. **📂 Interactive Website** *(in `docs/` folder)*
+   - Full website with navigation
    - Real-time search
    - Repository browser
-   - AI-powered tools
+   - View locally or deploy to GitHub Pages
 
-2. **📂 Repository Browser**: [Browse files online](https://grumpified-oggvct.github.io/BrowserOS_Guides/repo-browser.html)
+2. **📂 Repository Browser**: Open `docs/repo-browser.html` locally
    - Navigate folder structure
    - Search across all files
    - Preview markdown content
@@ -478,8 +496,8 @@ We welcome contributions to improve the knowledge base!
 
 ### This Repository's Resources
 
-- **🌐 Live Website**: [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/) ⭐
-- **📂 Repository Browser**: [Browse Files](https://grumpified-oggvct.github.io/BrowserOS_Guides/repo-browser.html)
+- **📂 Interactive Website**: Available in `docs/` directory (view locally or deploy to GitHub Pages)
+- **📂 Repository Browser**: `docs/repo-browser.html` (view locally)
 - **💻 GitHub Repo**: [github.com/Grumpified-OGGVCT/BrowserOS_Guides](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides)
 
 ### Community
@@ -492,8 +510,18 @@ We welcome contributions to improve the knowledge base!
 
 ## ❓ FAQ
 
-### Q: Where is the live website?
-**A**: Visit [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/) to explore the interactive knowledge hub with searchable workflows, use cases, and documentation. The site is automatically deployed via GitHub Pages and updates with every commit.
+### Q: How do I view the interactive website?
+**A**: The website files are in the `docs/` directory. You can:
+- **View locally now**: Run `python3 -m http.server 8000 --directory docs` and open http://localhost:8000
+- **Deploy to GitHub Pages**: Merge this PR, then enable GitHub Pages in Settings → Pages → Source: "GitHub Actions"
+
+The website includes searchable workflows, use cases, repository browser, and comprehensive documentation.
+
+### Q: Why isn't the GitHub Pages link working?
+**A**: GitHub Pages requires setup:
+1. This PR needs to be merged to main branch
+2. GitHub Pages needs to be enabled in repository settings (Settings → Pages → Source: "GitHub Actions")
+3. Once enabled, the deployment workflow will automatically publish the site at https://grumpified-oggvct.github.io/BrowserOS_Guides/
 
 ### Q: Why automate this?
 **A**: BrowserOS is rapidly evolving. Automated compilation ensures the KB stays current without manual effort, capturing new features as they're released.
@@ -545,8 +573,11 @@ It helps others discover this resource and shows appreciation for the automation
 **Built with ❤️ by the community**  
 **Celebrating the incredible work of the BrowserOS team 🎉**
 
-### 🌐 [Explore the Live Website](https://grumpified-oggvct.github.io/BrowserOS_Guides/)
+### 📂 Interactive Website in `docs/` Directory
 
-[⭐ Star this repo](../../stargazers) • [🔀 Fork it](../../fork) • [🌐 Visit Website](https://grumpified-oggvct.github.io/BrowserOS_Guides/) • [📖 Read the KB](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
+View locally: `python3 -m http.server 8000 --directory docs`  
+Deploy to Pages: Merge PR + enable in Settings → Pages
+
+[⭐ Star this repo](../../stargazers) • [🔀 Fork it](../../fork) • [📖 Read the KB](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
 
 </div>
