@@ -727,6 +727,7 @@
                 const viewFileLink = document.createElement('a');
                 viewFileLink.href = file.path;
                 viewFileLink.className = 'btn-action btn-raw';
+                viewFileLink.setAttribute('aria-label', 'View file content');
                 viewFileLink.textContent = '📄 View File';
                 actionButtonsDiv.appendChild(viewFileLink);
             }

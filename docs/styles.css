@@ -125,13 +125,12 @@ code {
     outline-offset: 2px;
 }
 
+/* Enhanced focus styles for interactive elements with box-shadow */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-    outline: 2px solid var(--browseros-orange);
-    outline-offset: 2px;
     box-shadow: 0 0 0 4px rgba(255, 121, 0, 0.2);
 }
 
