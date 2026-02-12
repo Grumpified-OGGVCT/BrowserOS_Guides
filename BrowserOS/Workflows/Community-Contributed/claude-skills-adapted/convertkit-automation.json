@@ -1,0 +1,62 @@
+{
+  "name": "convertkit_automation",
+  "description": "Automate ConvertKit (Kit) tasks via Rube MCP (Composio): manage subscribers, tags, broadcasts, and broadcast stats. Always search tools first for current schemas.",
+  "version": "1.0.0",
+  "source": "adapted-from-claude-skill",
+  "original_skill": "convertkit-automation",
+  "category": "App Automation",
+  "tags": [
+    "claude-skill",
+    "community"
+  ],
+  "metadata": {
+    "created": "2026-02-12T05:21:11.093101",
+    "adapted_from": "awesome-claude-skills",
+    "requires_mcp": [
+      "rube"
+    ],
+    "use_cases": [
+      ".com'"
+    ]
+  },
+  "steps": [
+    {
+      "name": "navigate",
+      "type": "navigate",
+      "url": "{{target_url}}",
+      "description": "Navigate to target website"
+    },
+    {
+      "name": "extract_data",
+      "type": "extract",
+      "selector": "{{data_selector}}",
+      "description": "Extract relevant data for convertkit-automation"
+    },
+    {
+      "name": "process_results",
+      "type": "custom",
+      "description": "Process extracted data",
+      "notes": "Adapted from Claude skill - implement custom logic here"
+    }
+  ],
+  "configuration": {
+    "target_url": {
+      "type": "string",
+      "required": true,
+      "description": "Target website URL"
+    },
+    "data_selector": {
+      "type": "string",
+      "required": true,
+      "description": "CSS selector for data extraction"
+    }
+  },
+  "notes": [
+    "This workflow was automatically adapted from the Claude skill: convertkit-automation",
+    "Original skill description: Automate ConvertKit (Kit) tasks via Rube MCP (Composio): manage subscribers, tags, broadcasts, and broadcast stats. Always search tools first for current schemas.",
+    "Additional customization required for production use",
+    "See original skill at: https://github.com/Grumpified-OGGVCT/awesome-claude-skills",
+    "\u26a0\ufe0f SECURITY: This workflow has been scanned and sanitized, but review before production use",
+    "Content hash: 04cfa5500c290fc4"
+  ]
+}
