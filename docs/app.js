@@ -92,6 +92,7 @@ function performSearch(query, filter) {
         searchResults.textContent = '';
         
         // Build loading indicator with createElement (no innerHTML)
+        // Note: Spinner animation relies on .loading-spinner class in styles.css (lines ~607-619)
         const loadingDiv = document.createElement('div');
         loadingDiv.style.textAlign = 'center';
         loadingDiv.style.padding = '2rem';
