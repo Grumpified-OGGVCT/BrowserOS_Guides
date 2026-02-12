@@ -1,0 +1,221 @@
+{
+  "generated_at": "2026-02-12T20:59:39.235671",
+  "browseros_commit_sha": null,
+  "kb_version": 1770929534.5036795,
+  "step_types": {
+    "navigate": {
+      "description": "Navigate to a URL",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235601"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235692"
+    },
+    "click": {
+      "description": "Click on an element",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235613"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235703"
+    },
+    "input": {
+      "description": "Type text into a field",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235617"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235714"
+    },
+    "extract": {
+      "description": "Extract data from page",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235619"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235723"
+    },
+    "wait": {
+      "description": "Wait for condition",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235622"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235730"
+    },
+    "conditional": {
+      "description": "Branch based on condition",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235624"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235736"
+    },
+    "loop": {
+      "description": "Iterate over items",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235627"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235742"
+    },
+    "parallel": {
+      "description": "Execute steps concurrently",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235629"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235748"
+    },
+    "screenshot": {
+      "description": "Capture page image",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235631"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235753"
+    },
+    "execute_code": {
+      "description": "Run Python code",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235637"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235760"
+    },
+    "read_file": {
+      "description": "Read from local workspace",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235639"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235766"
+    },
+    "write_file": {
+      "description": "Write to local workspace",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235641"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235772"
+    },
+    "shell": {
+      "description": "Execute shell command",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235644"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235779"
+    },
+    "api_call": {
+      "description": "Make HTTP request",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235646"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235784"
+    },
+    "sub_workflow": {
+      "description": "Call another workflow",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235648"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235790"
+    },
+    "Manual": {
+      "description": "User-initiated via UI",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235652"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235796"
+    },
+    "Scheduled": {
+      "description": "Cron-based execution",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235654"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235802"
+    },
+    "API": {
+      "description": "Invoked via REST API",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235657"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235807"
+    },
+    "Webhook": {
+      "description": "HTTP POST endpoint",
+      "kb_documentation": {
+        "file": "BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+        "section": "Step Types Catalog",
+        "documented_at": "2026-02-12T20:59:39.235660"
+      },
+      "source_code_locations": [],
+      "provenance_confidence": "low",
+      "last_verified": "2026-02-12T20:59:39.235813"
+    }
+  },
+  "statistics": {
+    "total_step_types": 19,
+    "steps_with_source_provenance": 0,
+    "provenance_coverage": "0.0%"
+  }
+}
