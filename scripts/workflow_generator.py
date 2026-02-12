@@ -44,27 +44,87 @@ class KimiWorkflowGenerator:
     See: docs/SAFETY_POLICY.md for full details
     """
     
-    # Safety keywords that trigger immediate rejection
+    # Context-aware safety patterns
     # NOTE: These only apply to the PUBLIC hosted generator
     # Private instances can modify this list as needed
-    NSFW_KEYWORDS = [
-        'porn', 'nsfw', 'adult', 'sex', 'xxx', 'escort', 'dating app hack',
-        'tinder bot', 'onlyfans', 'camgirl', 'webcam', 'nude', 'explicit'
-    ]
     
-    ILLEGAL_KEYWORDS = [
-        'hack', 'crack', 'exploit', 'ddos', 'dos attack', 'credential stuff',
-        'brute force', 'password crack', 'steal', 'fraud', 'phish',
-        'identity theft', 'credit card', 'social security', 'fake id',
-        'counterfeit', 'pirate', 'torrent site', 'warez', 'bypass paywall',
-        'bypass drm', 'cheat exam', 'plagiarism', 'essay mill', 'fake review',
-        'spam bot', 'fake account', 'buy followers', 'clickfarm', 'carding'
-    ]
+    # Pattern format: (pattern, category, confidence_threshold)
+    # Higher confidence = more certain it's malicious
+    SAFETY_PATTERNS = {
+        'nsfw': [
+            ('porn', 0.9),
+            ('nsfw', 0.9),
+            ('adult content', 0.8),
+            ('sex', 0.7),  # Lower confidence - could be "sex education"
+            ('xxx', 0.9),
+            ('escort', 0.8),
+            ('dating app hack', 1.0),
+            ('tinder bot', 0.9),
+            ('onlyfans', 0.7),  # Could be legitimate creator tools
+            ('camgirl', 0.9),
+            ('nude', 0.8),
+            ('explicit', 0.6),  # Lower - could be "explicit consent"
+        ],
+        'illegal': [
+            # Specific malicious intent - HIGH confidence
+            ('hack into', 1.0),
+            ('crack password', 1.0),
+            ('exploit vulnerab', 1.0),
+            ('ddos attack', 1.0),
+            ('credential stuff', 1.0),
+            ('brute force password', 1.0),
+            ('steal data', 1.0),
+            ('steal credit card', 1.0),
+            ('fraud', 0.9),
+            ('phishing', 1.0),
+            ('identity theft', 1.0),
+            ('fake id', 1.0),
+            ('counterfeit', 0.9),
+            ('pirate software', 0.9),
+            ('bypass paywall', 0.9),
+            ('bypass drm', 0.9),
+            ('cheat on exam', 1.0),
+            ('plagiarism tool', 1.0),
+            ('essay mill', 1.0),
+            ('fake review', 0.9),
+            ('spam bot', 0.9),
+            ('fake account creation', 0.9),
+            ('buy followers', 0.8),
+            ('clickfarm', 0.9),
+            ('carding', 1.0),
+            # Generic terms - LOWER confidence (need context)
+            ('hack', 0.5),  # Could be "hackathon" or "growth hack"
+            ('crack', 0.5),  # Could be "crack the code" (solve)
+            ('exploit', 0.4),  # Could be "exploit opportunity"
+        ],
+        'privacy': [
+            ('scrape email', 1.0),
+            ('scrape phone', 1.0),
+            ('scrape personal data', 1.0),
+            ('harvest emails', 1.0),
+            ('dox', 1.0),
+            ('doxxing', 1.0),
+            ('stalk', 0.9),
+            ('track someone', 0.9),
+            ('spy on', 1.0),
+            ('monitor spouse', 1.0),
+            ('employee spy', 1.0),
+            ('keylogger', 1.0),
+            ('screenshot spy', 0.9),
+        ]
+    }
     
-    PRIVACY_KEYWORDS = [
-        'scrape email', 'scrape phone', 'scrape personal', 'dox', 'doxxing',
-        'stalk', 'track location', 'spy on', 'monitor spouse', 'employee spy',
-        'keylog', 'screenshot capture', 'webcam access', 'microphone access'
+    # Legitimate contexts that should NOT be flagged
+    LEGITIMATE_CONTEXTS = [
+        'payment flow', 'payment process', 'checkout', 'e-commerce',
+        'process payment', 'payment gateway', 'stripe', 'paypal',
+        'security audit', 'security test', 'penetration test', 'pentest',
+        'own website', 'own site', 'my website', 'my application',
+        'test environment', 'development', 'staging',
+        'authorized', 'permission', 'consent', 'opt-in',
+        'compliance', 'gdpr', 'legal', 'terms of service',
+        'growth hack', 'life hack', 'productivity hack',
+        'hack together', 'hackathon', 'hack day'
     ]
     
     def __init__(self, api_key: Optional[str] = None):
@@ -90,7 +150,7 @@ class KimiWorkflowGenerator:
     
     def check_safety(self, use_case: str, industry: Optional[str] = None) -> Dict[str, Any]:
         """
-        Check if use case contains unsafe or illegal content
+        Context-aware safety check for use cases
         
         NOTE: This safety check is designed for the PUBLIC hosted generator.
         Users running private instances can modify or disable this method
@@ -107,37 +167,63 @@ class KimiWorkflowGenerator:
         industry_lower = (industry or '').lower()
         combined = f"{use_case_lower} {industry_lower}"
         
-        # Check for NSFW content
-        for keyword in self.NSFW_KEYWORDS:
-            if keyword in combined:
+        # First, check for legitimate contexts that should override flags
+        is_legitimate = False
+        for context in self.LEGITIMATE_CONTEXTS:
+            if context in combined:
+                is_legitimate = True
+                break
+        
+        # Track highest confidence match for each category
+        matches = {
+            'nsfw': {'confidence': 0, 'pattern': None},
+            'illegal': {'confidence': 0, 'pattern': None},
+            'privacy': {'confidence': 0, 'pattern': None}
+        }
+        
+        # Check all patterns
+        for category, patterns in self.SAFETY_PATTERNS.items():
+            for pattern, confidence in patterns:
+                if pattern in combined:
+                    if confidence > matches[category]['confidence']:
+                        matches[category]['confidence'] = confidence
+                        matches[category]['pattern'] = pattern
+        
+        # Determine if we should reject based on confidence and context
+        CONFIDENCE_THRESHOLD = 0.8  # Require 80% confidence to reject
+        
+        for category, match in matches.items():
+            confidence = match['confidence']
+            pattern = match['pattern']
+            
+            if confidence >= CONFIDENCE_THRESHOLD:
+                # High confidence match - but check if legitimate context overrides
+                if is_legitimate and confidence < 1.0:
+                    # Legitimate context found, and not 100% confident it's bad
+                    # Let it through with a warning
+                    continue
+                
+                # Reject this use case
+                category_messages = {
+                    'nsfw': 'NSFW content detected: Use case contains prohibited adult/explicit material',
+                    'illegal': 'Illegal activity detected: Use case involves prohibited actions that may violate laws',
+                    'privacy': 'Privacy violation detected: Use case involves unauthorized data collection or surveillance'
+                }
+                
                 return {
                     'safe': False,
-                    'category': 'nsfw',
-                    'reason': f"NSFW content detected: Use case contains prohibited adult/explicit material",
-                    'keyword': keyword
+                    'category': category,
+                    'reason': category_messages[category],
+                    'pattern': pattern,
+                    'confidence': confidence,
+                    'note': 'If this is a legitimate use case, please clarify the context in your request'
                 }
         
-        # Check for illegal activities
-        for keyword in self.ILLEGAL_KEYWORDS:
-            if keyword in combined:
-                return {
-                    'safe': False,
-                    'category': 'illegal',
-                    'reason': f"Illegal activity detected: Use case involves prohibited actions that may violate laws",
-                    'keyword': keyword
-                }
-        
-        # Check for privacy violations
-        for keyword in self.PRIVACY_KEYWORDS:
-            if keyword in combined:
-                return {
-                    'safe': False,
-                    'category': 'privacy',
-                    'reason': f"Privacy violation detected: Use case involves unauthorized data collection or surveillance",
-                    'keyword': keyword
-                }
-        
-        return {'safe': True}
+        return {
+            'safe': True,
+            'confidence': 1.0 - max(m['confidence'] for m in matches.values()),
+            'note': 'Use case passed safety checks'
+        }
     
     def _load_config(self) -> Dict:
         """Load configuration from config.yml"""
