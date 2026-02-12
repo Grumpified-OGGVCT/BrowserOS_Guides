@@ -47,7 +47,10 @@ class SourceIntegrityManager:
                 'Accept': 'text/html,application/xhtml+xml,application/json'
             }
             
-            if GITHUB_TOKEN and 'github.com' in url:
+            # Properly validate GitHub URLs before adding authentication
+            from urllib.parse import urlparse
+            parsed_url = urlparse(url)
+            if GITHUB_TOKEN and parsed_url.netloc == 'github.com':
                 headers['Authorization'] = f'token {GITHUB_TOKEN}'
             
             response = self.session.get(url, headers=headers, timeout=30)
