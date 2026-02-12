@@ -1,5 +1,6 @@
 {
   "name": "NetSuite Automation",
+  "id": "netsuite automation",
   "description": "NetSuite Automation: manage customers, sales orders, invoices, inventory, and records via Oracle NetSuite ERP with SuiteQL queries",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,17 +11,13 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.893678",
+    "created": "2026-02-12T05:42:41.163327Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
     "use_cases": [
-      "**",
-      "s:**",
-      "**",
-      "**",
-      "**"
+      "s:**"
     ]
   },
   "steps": [

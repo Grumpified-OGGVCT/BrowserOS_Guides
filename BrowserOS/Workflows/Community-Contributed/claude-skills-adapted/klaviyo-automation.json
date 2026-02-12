@@ -1,5 +1,6 @@
 {
   "name": "klaviyo_automation",
+  "id": "klaviyo_automation",
   "description": "Automate Klaviyo tasks via Rube MCP (Composio): manage email/SMS campaigns, inspect campaign messages, track tags, and monitor send jobs. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.308507",
+    "created": "2026-02-12T05:42:41.542858Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

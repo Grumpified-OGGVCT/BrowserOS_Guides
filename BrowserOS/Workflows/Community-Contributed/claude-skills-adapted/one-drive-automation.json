@@ -1,5 +1,6 @@
 {
   "name": "one_drive_automation",
+  "id": "one_drive_automation",
   "description": "Automate OneDrive file management, search, uploads, downloads, sharing, permissions, and folder operations via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.393395",
+    "created": "2026-02-12T05:42:41.619671Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

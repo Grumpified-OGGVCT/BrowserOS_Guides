@@ -1,5 +1,6 @@
 {
   "name": "Uploadcare Automation",
+  "id": "uploadcare automation",
   "description": "Automate Uploadcare file management including listing, storing, inspecting, downloading, and organizing file groups through natural language commands",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.912995",
+    "created": "2026-02-12T05:42:41.181364Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

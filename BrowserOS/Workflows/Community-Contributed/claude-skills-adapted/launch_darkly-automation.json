@@ -1,5 +1,6 @@
 {
   "name": "launch_darkly_automation",
+  "id": "launch_darkly_automation",
   "description": "Automate LaunchDarkly tasks via Rube MCP (Composio): feature flags, environments, segments, and rollout management. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,13 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.317198",
+    "created": "2026-02-12T05:42:41.550423Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
     "use_cases": [
-      "2. Execute prerequisite steps first (e.g., fetch before update)",
-      "|"
+      "2. Execute prerequisite steps first (e.g., fetch before update)"
     ]
   },
   "steps": [

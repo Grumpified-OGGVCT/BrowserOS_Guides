@@ -1,5 +1,6 @@
 {
   "name": "productlane_automation",
+  "id": "productlane_automation",
   "description": "Automate Productlane tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.442985",
+    "created": "2026-02-12T05:42:41.665303Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

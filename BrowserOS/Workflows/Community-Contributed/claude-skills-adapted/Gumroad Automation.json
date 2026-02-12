@@ -1,5 +1,6 @@
 {
   "name": "Gumroad Automation",
+  "id": "gumroad automation",
   "description": "Automate Gumroad product management, sales tracking, license verification, and webhook subscriptions using natural language through the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.878418",
+    "created": "2026-02-12T05:42:41.148061Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

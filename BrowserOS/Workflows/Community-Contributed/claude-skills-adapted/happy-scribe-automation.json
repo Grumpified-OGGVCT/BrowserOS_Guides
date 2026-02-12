@@ -1,5 +1,6 @@
 {
   "name": "happy_scribe_automation",
+  "id": "happy_scribe_automation",
   "description": "Automate Happy Scribe tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.255172",
+    "created": "2026-02-12T05:42:41.498367Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

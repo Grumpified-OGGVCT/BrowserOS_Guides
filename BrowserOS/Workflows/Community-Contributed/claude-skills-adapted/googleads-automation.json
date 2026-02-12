@@ -1,5 +1,6 @@
 {
   "name": "googleads_automation",
+  "id": "googleads_automation",
   "description": "Automate Google Ads analytics tasks via Rube MCP (Composio): list Google Ads links, run GA4 reports, check compatibility, list properties and accounts. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.237605",
+    "created": "2026-02-12T05:42:41.483022Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

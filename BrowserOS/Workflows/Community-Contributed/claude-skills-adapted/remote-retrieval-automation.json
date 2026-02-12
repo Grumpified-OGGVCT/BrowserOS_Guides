@@ -1,5 +1,6 @@
 {
   "name": "remote_retrieval_automation",
+  "id": "remote_retrieval_automation",
   "description": "Automate Remote Retrieval tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.460755",
+    "created": "2026-02-12T05:42:41.679880Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

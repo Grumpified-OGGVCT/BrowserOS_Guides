@@ -1,5 +1,6 @@
 {
   "name": "Apify Automation",
+  "id": "apify automation",
   "description": "Automate web scraping and data extraction with Apify -- run Actors, manage datasets, create reusable tasks, and retrieve crawl results through the Composio Apify integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.855421",
+    "created": "2026-02-12T05:42:41.127091Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

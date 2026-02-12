@@ -1,5 +1,6 @@
 {
   "name": "QuickBooks Automation",
+  "id": "quickbooks automation",
   "description": "QuickBooks Automation: manage invoices, customers, accounts, and payments in QuickBooks Online for streamlined bookkeeping",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,16 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.901466",
+    "created": "2026-02-12T05:42:41.170816Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "**",
-      "**",
-      "**"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

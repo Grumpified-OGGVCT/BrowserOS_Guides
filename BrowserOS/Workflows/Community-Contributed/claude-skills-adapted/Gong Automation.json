@@ -1,5 +1,6 @@
 {
   "name": "Gong Automation",
+  "id": "gong automation",
   "description": "Automate Gong conversation intelligence -- retrieve call recordings, transcripts, detailed analytics, speaker stats, and workspace data -- using natural language through the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.875023",
+    "created": "2026-02-12T05:42:41.145611Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

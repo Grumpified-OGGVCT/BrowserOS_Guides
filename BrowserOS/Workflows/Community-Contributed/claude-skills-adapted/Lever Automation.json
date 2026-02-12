@@ -1,5 +1,6 @@
 {
   "name": "Lever Automation",
+  "id": "lever automation",
   "description": "Automate recruiting workflows in Lever ATS -- manage opportunities, job postings, requisitions, pipeline stages, and candidate tags through the Composio Lever integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.888776",
+    "created": "2026-02-12T05:42:41.158579Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

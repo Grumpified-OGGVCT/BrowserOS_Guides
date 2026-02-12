@@ -1,5 +1,6 @@
 {
   "name": "PhantomBuster Automation",
+  "id": "phantombuster automation",
   "description": "Automate lead generation, web scraping, and social media data extraction workflows through PhantomBuster's cloud platform via Composio",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.898443",
+    "created": "2026-02-12T05:42:41.167890Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

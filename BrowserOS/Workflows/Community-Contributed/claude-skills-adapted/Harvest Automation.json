@@ -1,5 +1,6 @@
 {
   "name": "Harvest Automation",
+  "id": "harvest automation",
   "description": "Automate time tracking, project management, and invoicing workflows in Harvest -- log hours, manage projects, clients, and tasks through natural language commands.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.880144",
+    "created": "2026-02-12T05:42:41.149097Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

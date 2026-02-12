@@ -1,5 +1,6 @@
 {
   "name": "googleslides_automation",
+  "id": "googleslides_automation",
   "description": "Automate Google Slides tasks via Rube MCP (Composio): create presentations, add slides from Markdown, batch update, copy from templates, get thumbnails. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.247041",
+    "created": "2026-02-12T05:42:41.491264Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

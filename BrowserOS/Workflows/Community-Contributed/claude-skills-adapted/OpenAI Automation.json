@@ -1,5 +1,6 @@
 {
   "name": "OpenAI Automation",
+  "id": "openai automation",
   "description": "Automate OpenAI API operations -- generate responses with multimodal and structured output support, create embeddings, generate images, and list models via the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.896411",
+    "created": "2026-02-12T05:42:41.166021Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

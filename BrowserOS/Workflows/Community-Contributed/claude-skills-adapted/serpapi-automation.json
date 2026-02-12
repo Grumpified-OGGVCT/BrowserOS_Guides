@@ -1,5 +1,6 @@
 {
   "name": "serpapi_automation",
+  "id": "serpapi_automation",
   "description": "Automate Serpapi tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.507189",
+    "created": "2026-02-12T05:42:41.719030Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

@@ -1,5 +1,6 @@
 {
   "name": "wave_accounting_automation",
+  "id": "wave_accounting_automation",
   "description": "Automate Wave Accounting tasks via Rube MCP (Composio): invoices, customers, payments, and small business accounting. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,13 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.610473",
+    "created": "2026-02-12T05:42:41.810671Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
     "use_cases": [
-      "2. Execute prerequisite steps first (e.g., fetch before update)",
-      "|"
+      "2. Execute prerequisite steps first (e.g., fetch before update)"
     ]
   },
   "steps": [

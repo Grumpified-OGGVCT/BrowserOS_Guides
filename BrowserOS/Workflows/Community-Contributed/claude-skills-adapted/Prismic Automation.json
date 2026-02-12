@@ -1,5 +1,6 @@
 {
   "name": "Prismic Automation",
+  "id": "prismic automation",
   "description": "Automate headless CMS operations in Prismic -- query documents, search content, retrieve custom types, and manage repository refs through the Composio Prismic integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.899471",
+    "created": "2026-02-12T05:42:41.168872Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

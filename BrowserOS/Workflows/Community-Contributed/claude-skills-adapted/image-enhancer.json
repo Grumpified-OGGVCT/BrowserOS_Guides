@@ -1,5 +1,6 @@
 {
   "name": "image_enhancer",
+  "id": "image_enhancer",
   "description": "Improves the quality of images, especially screenshots, by enhancing resolution, sharpness, and clarity. Perfect for preparing images for presentations, documentation, or social media posts.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,13 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.278949",
+    "created": "2026-02-12T05:42:41.518018Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [],
     "use_cases": [
       "**: Adjusts based on intended use (web, print, social media)",
-      "**User**: \"Improve the image quality of screenshot-2024.png\"",
-      "s"
+      "**User**: \"Improve the image quality of screenshot-2024.png\""
     ]
   },
   "steps": [

@@ -1,5 +1,6 @@
 {
   "name": "benchmark_email_automation",
+  "id": "benchmark_email_automation",
   "description": "Automate Benchmark Email tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.990089",
+    "created": "2026-02-12T05:42:41.259570Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

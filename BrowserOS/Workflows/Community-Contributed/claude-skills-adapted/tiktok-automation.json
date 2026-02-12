@@ -1,5 +1,6 @@
 {
   "name": "tiktok_automation",
+  "id": "tiktok_automation",
   "description": "Automate TikTok tasks via Rube MCP (Composio): upload/publish videos, post photos, manage content, and view user profiles/stats. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.572647",
+    "created": "2026-02-12T05:42:41.776576Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

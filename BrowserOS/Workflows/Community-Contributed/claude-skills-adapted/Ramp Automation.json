@@ -1,5 +1,6 @@
 {
   "name": "Ramp Automation",
+  "id": "ramp automation",
   "description": "Ramp Automation: manage corporate card transactions, reimbursements, users, and expense tracking via the Ramp platform",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,18 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.902565",
+    "created": "2026-02-12T05:42:41.171879Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "**",
-      "**",
-      "**",
-      "**",
-      "**"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

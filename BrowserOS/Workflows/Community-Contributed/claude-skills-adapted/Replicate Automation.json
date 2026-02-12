@@ -1,5 +1,6 @@
 {
   "name": "Replicate Automation",
+  "id": "replicate automation",
   "description": "Automate Replicate AI model operations -- run predictions, upload files, inspect model schemas, list versions, and manage prediction history via the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.903540",
+    "created": "2026-02-12T05:42:41.172758Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

@@ -1,5 +1,6 @@
 {
   "name": "browserbase_tool_automation",
+  "id": "browserbase_tool_automation",
   "description": "Automate Browserbase Tool tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.028723",
+    "created": "2026-02-12T05:42:41.299474Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

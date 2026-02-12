@@ -1,5 +1,6 @@
 {
   "name": "raffle_winner_picker",
+  "id": "raffle_winner_picker",
   "description": "Picks random winners from lists, spreadsheets, or Google Sheets for giveaways, raffles, and contests. Ensures fair, unbiased selection with transparency.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,13 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.450494",
+    "created": "2026-02-12T05:42:41.671247Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [],
     "use_cases": [
       "**User**: \"Pick a random row from this Google Sheet to select a winner for a giveaway.\"",
       "- picking a Sora 2 giveaway winner from his subscriber Slack community",
-      "Workflows",
-      "s"
+      "Workflows"
     ]
   },
   "steps": [

@@ -1,5 +1,6 @@
 {
   "name": "google_classroom_automation",
+  "id": "google_classroom_automation",
   "description": "Automate Google Classroom tasks via Rube MCP (Composio): course management, assignments, student rosters, and announcements. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,13 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.234376",
+    "created": "2026-02-12T05:42:41.480129Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
     "use_cases": [
-      "2. Execute prerequisite steps first (e.g., fetch before update)",
-      "|"
+      "2. Execute prerequisite steps first (e.g., fetch before update)"
     ]
   },
   "steps": [

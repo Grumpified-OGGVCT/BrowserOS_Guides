@@ -1,5 +1,6 @@
 {
   "name": "Mistral AI Automation",
+  "id": "mistral ai automation",
   "description": "Automate Mistral AI operations -- manage files and libraries, upload documents for fine-tuning, batch processing, and OCR, track fine-tuning jobs, and build RAG pipelines via the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.891477",
+    "created": "2026-02-12T05:42:41.161228Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

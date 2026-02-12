@@ -1,5 +1,6 @@
 {
   "name": "make_automation",
+  "id": "make_automation",
   "description": "Automate Make (Integromat) tasks via Rube MCP (Composio): operations, enums, language and timezone lookups. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,17 +11,15 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.344497",
+    "created": "2026-02-12T05:42:41.574367Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
     "use_cases": [
-      "s",
       "ID, or status filters",
       "### 2. List Available Languages",
-      "s or interfaces",
-      "s"
+      "s or interfaces"
     ]
   },
   "steps": [

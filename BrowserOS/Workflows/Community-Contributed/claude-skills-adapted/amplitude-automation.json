@@ -1,5 +1,6 @@
 {
   "name": "amplitude_automation",
+  "id": "amplitude_automation",
   "description": "Automate Amplitude tasks via Rube MCP (Composio): events, user activity, cohorts, user identification. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.948753",
+    "created": "2026-02-12T05:42:41.214343Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

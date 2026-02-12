@@ -1,5 +1,6 @@
 {
   "name": "Wave Accounting Automation",
+  "id": "wave accounting automation",
   "description": "Wave Accounting toolkit is not currently available as a native integration. No Wave-specific tools were found in the Composio platform. This skill is a placeholder pending future integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.913646",
+    "created": "2026-02-12T05:42:41.182706Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

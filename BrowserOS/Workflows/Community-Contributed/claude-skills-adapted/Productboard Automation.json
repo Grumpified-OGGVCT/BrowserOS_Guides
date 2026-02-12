@@ -1,5 +1,6 @@
 {
   "name": "Productboard Automation",
+  "id": "productboard automation",
   "description": "Automate product management workflows in Productboard -- manage features, notes, objectives, components, and releases through natural language commands.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.900523",
+    "created": "2026-02-12T05:42:41.169888Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      ".com"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

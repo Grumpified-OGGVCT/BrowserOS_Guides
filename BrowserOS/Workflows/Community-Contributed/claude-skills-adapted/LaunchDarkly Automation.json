@@ -1,5 +1,6 @@
 {
   "name": "LaunchDarkly Automation",
+  "id": "launchdarkly automation",
   "description": "Automate LaunchDarkly feature flag management -- list projects and environments, create and delete trigger workflows, and track code references via the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.885907",
+    "created": "2026-02-12T05:42:41.154558Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

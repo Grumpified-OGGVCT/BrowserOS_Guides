@@ -1,5 +1,6 @@
 {
   "name": "ring_central_automation",
+  "id": "ring_central_automation",
   "description": "Automate RingCentral tasks via Rube MCP (Composio): calls, messages, meetings, and unified communications. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,13 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.472425",
+    "created": "2026-02-12T05:42:41.689718Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
     "use_cases": [
-      "2. Execute prerequisite steps first (e.g., fetch before update)",
-      "|"
+      "2. Execute prerequisite steps first (e.g., fetch before update)"
     ]
   },
   "steps": [

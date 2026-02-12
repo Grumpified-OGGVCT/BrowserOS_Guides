@@ -1,5 +1,6 @@
 {
   "name": "google_search_console_automation",
+  "id": "google_search_console_automation",
   "description": "Automate Google Search Console tasks via Rube MCP (Composio): query search analytics, list sites, inspect URLs, submit sitemaps, monitor search performance. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.232411",
+    "created": "2026-02-12T05:42:41.478423Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

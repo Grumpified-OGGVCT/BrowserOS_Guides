@@ -1,5 +1,6 @@
 {
   "name": "changelog_generator",
+  "id": "changelog_generator",
   "description": "Automatically creates user-facing changelogs from git commits by analyzing commit history, categorizing changes, and transforming technical commits into clear, customer-friendly release notes. Turns hours of manual changelog writing into minutes of automated generation.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,13 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.056604",
+    "created": "2026-02-12T05:42:41.324277Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [],
     "use_cases": [
       "**User**: \"Create a changelog for commits from the past 7 days\"",
-      "from Lenny's Newsletter",
-      "s"
+      "from Lenny's Newsletter"
     ]
   },
   "steps": [

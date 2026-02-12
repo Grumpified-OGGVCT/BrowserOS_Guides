@@ -1,5 +1,6 @@
 {
   "name": "Capsule CRM Automation",
+  "id": "capsule crm automation",
   "description": "Automate Capsule CRM operations -- manage contacts (parties), run structured filter queries, track tasks and projects, log entries, and handle organizations -- using natural language through the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.860446",
+    "created": "2026-02-12T05:42:41.131963Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

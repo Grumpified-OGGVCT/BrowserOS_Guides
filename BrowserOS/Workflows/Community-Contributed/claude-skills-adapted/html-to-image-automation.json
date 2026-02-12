@@ -1,5 +1,6 @@
 {
   "name": "html_to_image_automation",
+  "id": "html_to_image_automation",
   "description": "Automate Html To Image tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.267559",
+    "created": "2026-02-12T05:42:41.508712Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

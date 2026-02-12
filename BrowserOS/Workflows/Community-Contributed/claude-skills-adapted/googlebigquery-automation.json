@@ -1,5 +1,6 @@
 {
   "name": "googlebigquery_automation",
+  "id": "googlebigquery_automation",
   "description": "Automate Google BigQuery tasks via Rube MCP (Composio): run SQL queries, explore datasets and metadata, execute MBQL queries via Metabase integration. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.238880",
+    "created": "2026-02-12T05:42:41.484154Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

@@ -1,5 +1,6 @@
 {
   "name": "calendly_automation",
+  "id": "calendly_automation",
   "description": "Automate Calendly scheduling, event management, invitee tracking, availability checks, and organization administration via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.042443",
+    "created": "2026-02-12T05:42:41.311528Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

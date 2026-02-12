@@ -1,5 +1,6 @@
 {
   "name": "datadog_automation",
+  "id": "datadog_automation",
   "description": "Automate Datadog tasks via Rube MCP (Composio): query metrics, search logs, manage monitors/dashboards, create events and downtimes. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.109022",
+    "created": "2026-02-12T05:42:41.370537Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

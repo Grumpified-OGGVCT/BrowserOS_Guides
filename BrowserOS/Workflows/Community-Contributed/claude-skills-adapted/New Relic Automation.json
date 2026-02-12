@@ -1,5 +1,6 @@
 {
   "name": "New Relic Automation",
+  "id": "new relic automation",
   "description": "Automate New Relic observability workflows -- manage alert policies, notification channels, alert conditions, and monitor applications and browser apps via the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,13 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.894621",
+    "created": "2026-02-12T05:42:41.164237Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
     "use_cases": [
-      "s)",
       ".com,oncall@example.com\" }",
       ".com/alerts\", auth_username, auth_password }"
     ]

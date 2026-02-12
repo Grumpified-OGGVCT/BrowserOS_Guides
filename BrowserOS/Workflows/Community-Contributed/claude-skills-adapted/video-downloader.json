@@ -1,5 +1,6 @@
 {
   "name": "video_downloader",
+  "id": "video_downloader",
   "description": "Downloads videos from YouTube and other platforms for offline viewing, editing, or archival. Handles various formats and quality options.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,12 +11,11 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.604410",
+    "created": "2026-02-12T05:42:41.805345Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [],
     "use_cases": [
-      "**User**: \"Download this YouTube video: https://youtube.com/watch?v=abc123\"",
-      "s"
+      "**User**: \"Download this YouTube video: https://youtube.com/watch?v=abc123\""
     ]
   },
   "steps": [

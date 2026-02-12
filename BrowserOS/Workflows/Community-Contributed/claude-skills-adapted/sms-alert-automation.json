@@ -1,5 +1,6 @@
 {
   "name": "sms_alert_automation",
+  "id": "sms_alert_automation",
   "description": "Automate SMS Alert tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.531042",
+    "created": "2026-02-12T05:42:41.739243Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

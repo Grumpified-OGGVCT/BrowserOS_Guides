@@ -1,5 +1,6 @@
 {
   "name": "Dynamics 365 Automation",
+  "id": "dynamics 365 automation",
   "description": "Dynamics 365 Automation: manage CRM contacts, accounts, leads, opportunities, sales orders, invoices, and cases via the Dynamics CRM Web API",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,16 +11,13 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.867571",
+    "created": "2026-02-12T05:42:41.138481Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
     "use_cases": [
-      "**",
       ".com\"",
-      "**",
-      "**",
       ".com\""
     ]
   },

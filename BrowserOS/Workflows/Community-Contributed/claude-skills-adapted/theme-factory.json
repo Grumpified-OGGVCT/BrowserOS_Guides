@@ -1,5 +1,6 @@
 {
   "name": "theme_factory",
+  "id": "theme_factory",
   "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.569922",
+    "created": "2026-02-12T05:42:41.774108Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [],
     "use_cases": []

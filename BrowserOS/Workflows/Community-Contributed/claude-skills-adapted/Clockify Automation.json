@@ -1,5 +1,6 @@
 {
   "name": "Clockify Automation",
+  "id": "clockify automation",
   "description": "Automate time tracking workflows in Clockify -- create and manage time entries, workspaces, and users through natural language commands.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.861369",
+    "created": "2026-02-12T05:42:41.132838Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

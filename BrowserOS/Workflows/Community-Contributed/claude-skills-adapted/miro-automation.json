@@ -1,5 +1,6 @@
 {
   "name": "miro_automation",
+  "id": "miro_automation",
   "description": "Automate Miro tasks via Rube MCP (Composio): boards, items, sticky notes, frames, sharing, connectors. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.360705",
+    "created": "2026-02-12T05:42:41.589587Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

@@ -1,5 +1,6 @@
 {
   "name": "figma_automation",
+  "id": "figma_automation",
   "description": "Automate Figma tasks via Rube MCP (Composio): files, components, design tokens, comments, exports. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.171282",
+    "created": "2026-02-12T05:42:41.425209Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

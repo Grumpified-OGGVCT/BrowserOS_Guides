@@ -1,5 +1,6 @@
 {
   "name": "basecamp_automation",
+  "id": "basecamp_automation",
   "description": "Automate Basecamp project management, to-dos, messages, people, and to-do list organization via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.981237",
+    "created": "2026-02-12T05:42:41.244685Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

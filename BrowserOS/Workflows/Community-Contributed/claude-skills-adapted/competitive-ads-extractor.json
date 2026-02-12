@@ -1,5 +1,6 @@
 {
   "name": "competitive_ads_extractor",
+  "id": "competitive_ads_extractor",
   "description": "Extracts and analyzes competitors' ads from ad libraries (Facebook, LinkedIn, etc.) to understand what messaging, problems, and creative approaches are working. Helps inspire and improve your own ad campaigns.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.081797",
+    "created": "2026-02-12T05:42:41.347057Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [],
     "use_cases": [

@@ -1,5 +1,6 @@
 {
   "name": "monday_automation",
+  "id": "monday_automation",
   "description": "Automate Monday.com work management including boards, items, columns, groups, subitems, and updates via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.368134",
+    "created": "2026-02-12T05:42:41.596495Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

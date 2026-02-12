@@ -1,5 +1,6 @@
 {
   "name": "Eventbrite Automation",
+  "id": "eventbrite automation",
   "description": "Automate Eventbrite event management, attendee tracking, organization discovery, and category browsing through natural language commands",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.869421",
+    "created": "2026-02-12T05:42:41.140213Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

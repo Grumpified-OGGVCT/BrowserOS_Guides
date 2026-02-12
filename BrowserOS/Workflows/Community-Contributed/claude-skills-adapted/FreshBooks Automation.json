@@ -1,5 +1,6 @@
 {
   "name": "FreshBooks Automation",
+  "id": "freshbooks automation",
   "description": "FreshBooks Automation: manage businesses, projects, time tracking, and billing in FreshBooks cloud accounting",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,16 +11,13 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.873845",
+    "created": "2026-02-12T05:42:41.144471Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
     "use_cases": [
-      "**",
-      "**",
-      "s:**",
-      "**"
+      "s:**"
     ]
   },
   "steps": [

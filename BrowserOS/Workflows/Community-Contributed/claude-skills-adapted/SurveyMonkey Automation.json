@@ -1,5 +1,6 @@
 {
   "name": "SurveyMonkey Automation",
+  "id": "surveymonkey automation",
   "description": "Automate SurveyMonkey survey creation, response collection, collector management, and survey discovery through natural language commands",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.910513",
+    "created": "2026-02-12T05:42:41.179496Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

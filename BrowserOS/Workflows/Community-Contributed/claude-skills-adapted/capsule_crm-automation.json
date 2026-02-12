@@ -1,5 +1,6 @@
 {
   "name": "capsule_crm_automation",
+  "id": "capsule_crm_automation",
   "description": "Automate Capsule CRM tasks via Rube MCP (Composio): contacts, opportunities, cases, tasks, and pipeline management. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,13 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.050016",
+    "created": "2026-02-12T05:42:41.318381Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
     "use_cases": [
-      "2. Execute prerequisite steps first (e.g., fetch before update)",
-      "|"
+      "2. Execute prerequisite steps first (e.g., fetch before update)"
     ]
   },
   "steps": [

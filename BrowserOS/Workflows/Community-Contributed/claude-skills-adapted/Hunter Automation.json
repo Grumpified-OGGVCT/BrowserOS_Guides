@@ -1,5 +1,6 @@
 {
   "name": "Hunter Automation",
+  "id": "hunter automation",
   "description": "Automate Hunter.io email intelligence -- search domains for email addresses, find specific contacts, verify email deliverability, manage leads, and monitor account usage -- using natural language through the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.881997",
+    "created": "2026-02-12T05:42:41.150811Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

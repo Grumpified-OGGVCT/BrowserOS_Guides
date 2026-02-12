@@ -1,5 +1,6 @@
 {
   "name": "coda_automation",
+  "id": "coda_automation",
   "description": "Automate Coda tasks via Rube MCP (Composio): manage docs, pages, tables, rows, formulas, permissions, and publishing. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.074936",
+    "created": "2026-02-12T05:42:41.341138Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

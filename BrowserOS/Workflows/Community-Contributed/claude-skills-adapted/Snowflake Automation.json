@@ -1,5 +1,6 @@
 {
   "name": "Snowflake Automation",
+  "id": "snowflake automation",
   "description": "Automate Snowflake data warehouse operations -- list databases, schemas, and tables, execute SQL statements, and manage data workflows via the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.908254",
+    "created": "2026-02-12T05:42:41.177308Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

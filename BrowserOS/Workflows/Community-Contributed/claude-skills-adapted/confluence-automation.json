@@ -1,5 +1,6 @@
 {
   "name": "confluence_automation",
+  "id": "confluence_automation",
   "description": "Automate Confluence page creation, content search, space management, labels, and hierarchy navigation via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.085314",
+    "created": "2026-02-12T05:42:41.350167Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

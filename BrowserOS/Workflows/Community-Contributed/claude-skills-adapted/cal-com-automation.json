@@ -1,5 +1,6 @@
 {
   "name": "cal_com_automation",
+  "id": "cal_com_automation",
   "description": "Automate Cal.com tasks via Rube MCP (Composio): manage bookings, check availability, configure webhooks, and handle teams. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.039914",
+    "created": "2026-02-12T05:42:41.309180Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

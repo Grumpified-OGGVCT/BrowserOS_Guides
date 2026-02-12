@@ -1,5 +1,6 @@
 {
   "name": "google_admin_automation",
+  "id": "google_admin_automation",
   "description": "Automate Google Workspace Admin tasks via Rube MCP (Composio): manage users, groups, memberships, suspend accounts, create users, add aliases. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.223888",
+    "created": "2026-02-12T05:42:41.470745Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

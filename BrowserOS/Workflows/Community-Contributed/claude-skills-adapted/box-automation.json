@@ -1,5 +1,6 @@
 {
   "name": "box_automation",
+  "id": "box_automation",
   "description": "Automate Box cloud storage operations including file upload/download, search, folder management, sharing, collaborations, and metadata queries via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.016748",
+    "created": "2026-02-12T05:42:41.289814Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

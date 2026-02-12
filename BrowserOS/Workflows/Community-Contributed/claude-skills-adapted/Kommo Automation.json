@@ -1,5 +1,6 @@
 {
   "name": "Kommo Automation",
+  "id": "kommo automation",
   "description": "Automate Kommo CRM operations -- manage leads, pipelines, pipeline stages, tasks, and custom fields -- using natural language through the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.885047",
+    "created": "2026-02-12T05:42:41.153729Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

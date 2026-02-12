@@ -1,5 +1,6 @@
 {
   "name": "linkedin_automation",
+  "id": "linkedin_automation",
   "description": "Automate LinkedIn tasks via Rube MCP (Composio): create posts, manage profile, company info, comments, and image uploads. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.326904",
+    "created": "2026-02-12T05:42:41.558706Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

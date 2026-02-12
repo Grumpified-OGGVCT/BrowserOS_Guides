@@ -1,5 +1,6 @@
 {
   "name": "github_automation",
+  "id": "github_automation",
   "description": "Automate GitHub repositories, issues, pull requests, branches, CI/CD, and permissions via Rube MCP (Composio). Manage code workflows, review PRs, search code, and handle deployments programmatically.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.211139",
+    "created": "2026-02-12T05:42:41.459690Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

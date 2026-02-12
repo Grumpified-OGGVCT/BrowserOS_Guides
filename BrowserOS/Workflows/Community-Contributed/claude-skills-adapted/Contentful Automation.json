@@ -1,5 +1,6 @@
 {
   "name": "Contentful Automation",
+  "id": "contentful automation",
   "description": "Automate headless CMS operations in Contentful -- list spaces, retrieve space metadata, and update space configurations through the Composio Contentful integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.864409",
+    "created": "2026-02-12T05:42:41.135494Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

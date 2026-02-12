@@ -1,5 +1,6 @@
 {
   "name": "shopify_automation",
+  "id": "shopify_automation",
   "description": "Automate Shopify tasks via Rube MCP (Composio): products, orders, customers, inventory, collections. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.513301",
+    "created": "2026-02-12T05:42:41.724217Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

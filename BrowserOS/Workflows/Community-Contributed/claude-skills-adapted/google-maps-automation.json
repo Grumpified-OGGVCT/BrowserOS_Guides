@@ -1,5 +1,6 @@
 {
   "name": "google_maps_automation",
+  "id": "google_maps_automation",
   "description": "Automate Google Maps tasks via Rube MCP (Composio): geocode addresses, search places, get directions, compute route matrices, reverse geocode, autocomplete, get place details. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.231069",
+    "created": "2026-02-12T05:42:41.477191Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

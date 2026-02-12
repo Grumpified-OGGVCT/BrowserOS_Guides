@@ -1,5 +1,6 @@
 {
   "name": "Docker Hub Automation",
+  "id": "docker hub automation",
   "description": "Automate Docker Hub operations -- manage organizations, repositories, teams, members, and webhooks via the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.866338",
+    "created": "2026-02-12T05:42:41.137302Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

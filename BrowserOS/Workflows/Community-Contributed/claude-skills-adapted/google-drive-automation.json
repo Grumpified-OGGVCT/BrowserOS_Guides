@@ -1,5 +1,6 @@
 {
   "name": "google_drive_automation",
+  "id": "google_drive_automation",
   "description": "Automate Google Drive file operations (upload, download, search, share, organize) via Rube MCP (Composio). Upload/download files, manage folders, share with permissions, and search across drives programmatically.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.229681",
+    "created": "2026-02-12T05:42:41.475894Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

@@ -1,5 +1,6 @@
 {
   "name": "Omnisend Automation",
+  "id": "omnisend automation",
   "description": "Automate ecommerce marketing workflows including contact management, bulk operations, and subscriber segmentation through Omnisend via Composio",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.895518",
+    "created": "2026-02-12T05:42:41.165115Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

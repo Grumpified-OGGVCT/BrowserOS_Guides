@@ -1,5 +1,6 @@
 {
   "name": "ngrok_automation",
+  "id": "ngrok_automation",
   "description": "Automate Ngrok tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.385518",
+    "created": "2026-02-12T05:42:41.612321Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

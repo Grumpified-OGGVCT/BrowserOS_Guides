@@ -1,5 +1,6 @@
 {
   "name": "artifacts_builder",
+  "id": "artifacts_builder",
   "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.964891",
+    "created": "2026-02-12T05:42:41.228987Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [],
     "use_cases": []

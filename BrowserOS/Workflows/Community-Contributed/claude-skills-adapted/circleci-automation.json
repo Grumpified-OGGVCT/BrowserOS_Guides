@@ -1,5 +1,6 @@
 {
   "name": "circleci_automation",
+  "id": "circleci_automation",
   "description": "Automate CircleCI tasks via Rube MCP (Composio): trigger pipelines, monitor workflows/jobs, retrieve artifacts and test metadata. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.062050",
+    "created": "2026-02-12T05:42:41.329356Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

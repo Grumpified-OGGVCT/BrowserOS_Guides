@@ -1,5 +1,6 @@
 {
   "name": "googlesheets_automation",
+  "id": "googlesheets_automation",
   "description": "Automate Google Sheets operations (read, write, format, filter, manage spreadsheets) via Rube MCP (Composio). Read/write data, manage tabs, apply formatting, and search rows programmatically.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.245880",
+    "created": "2026-02-12T05:42:41.490195Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "s"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

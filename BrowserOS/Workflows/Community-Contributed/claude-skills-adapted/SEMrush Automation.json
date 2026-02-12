@@ -1,5 +1,6 @@
 {
   "name": "SEMrush Automation",
+  "id": "semrush automation",
   "description": "Automate SEO analysis with SEMrush -- research keywords, analyze domain organic rankings, audit backlinks, assess keyword difficulty, and discover related terms through the Composio SEMrush integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.905196",
+    "created": "2026-02-12T05:42:41.174344Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

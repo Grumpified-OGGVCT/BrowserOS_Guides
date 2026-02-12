@@ -1,5 +1,6 @@
 {
   "name": "ElevenLabs Automation",
+  "id": "elevenlabs automation",
   "description": "Automate ElevenLabs text-to-speech workflows -- generate speech from text, browse and inspect voices, check subscription limits, list models, stream audio, and retrieve history via the Composio MCP integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.868535",
+    "created": "2026-02-12T05:42:41.139351Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

@@ -1,5 +1,6 @@
 {
   "name": "MailerLite Automation",
+  "id": "mailerlite automation",
   "description": "Automate email marketing workflows including subscriber management, campaign analytics, group segmentation, and account monitoring through MailerLite via Composio",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.889690",
+    "created": "2026-02-12T05:42:41.159454Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

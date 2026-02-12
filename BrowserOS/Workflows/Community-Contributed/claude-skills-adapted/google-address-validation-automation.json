@@ -1,5 +1,6 @@
 {
   "name": "google_address_validation_automation",
+  "id": "google_address_validation_automation",
   "description": "Automate Google Address Validation tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.222465",
+    "created": "2026-02-12T05:42:41.469554Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

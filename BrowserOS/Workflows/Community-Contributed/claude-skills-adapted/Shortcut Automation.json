@@ -1,5 +1,6 @@
 {
   "name": "Shortcut Automation",
+  "id": "shortcut automation",
   "description": "Automate project management workflows in Shortcut -- create stories, manage tasks, track epics, and organize workflows through natural language commands.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.907386",
+    "created": "2026-02-12T05:42:41.176488Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

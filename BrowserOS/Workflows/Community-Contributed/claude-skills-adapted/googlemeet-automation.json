@@ -1,5 +1,6 @@
 {
   "name": "googlemeet_automation",
+  "id": "googlemeet_automation",
   "description": "Automate Google Meet tasks via Rube MCP (Composio): create Meet spaces, schedule video conferences via Calendar events, manage meeting access. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.242915",
+    "created": "2026-02-12T05:42:41.487561Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

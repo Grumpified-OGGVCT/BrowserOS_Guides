@@ -1,5 +1,6 @@
 {
   "name": "googlephotos_automation",
+  "id": "googlephotos_automation",
   "description": "Automate Google Photos tasks via Rube MCP (Composio): upload media, manage albums, search photos, batch add items, create and update albums. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.244111",
+    "created": "2026-02-12T05:42:41.488609Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

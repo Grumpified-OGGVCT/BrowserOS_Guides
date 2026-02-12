@@ -1,5 +1,6 @@
 {
   "name": "meeting_insights_analyzer",
+  "id": "meeting_insights_analyzer",
   "description": "Analyzes meeting transcripts and recordings to uncover behavioral patterns, communication insights, and actionable feedback. Identifies when you avoid conflict, use filler words, dominate conversations, or miss opportunities to listen. Perfect for professionals seeking to improve their communication and leadership skills.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,15 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.349997",
+    "created": "2026-02-12T05:42:41.579488Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [],
     "use_cases": [
-      "s",
       "s with:",
-      "s",
-      "s of good active listening",
-      "s**"
+      "s of good active listening"
     ]
   },
   "steps": [

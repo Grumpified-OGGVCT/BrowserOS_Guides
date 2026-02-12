@@ -1,5 +1,6 @@
 {
   "name": "Ahrefs Automation",
+  "id": "ahrefs automation",
   "description": "Automate SEO research with Ahrefs -- analyze backlink profiles, research keywords, track domain metrics history, audit organic rankings, and perform batch URL analysis through the Composio Ahrefs integration.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.854312",
+    "created": "2026-02-12T05:42:41.126007Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

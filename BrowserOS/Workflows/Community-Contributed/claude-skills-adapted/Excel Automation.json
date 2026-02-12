@@ -1,5 +1,6 @@
 {
   "name": "Excel Automation",
+  "id": "excel automation",
   "description": "Excel Automation: create workbooks, manage worksheets, read/write cell data, and format spreadsheets via Microsoft Excel and Google Sheets integration",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,17 +11,14 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:10.870622",
+    "created": "2026-02-12T05:42:41.141392Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
     "use_cases": [
-      "**",
-      "**",
       ".com\",\"555-0101\",\"Active\"],[\"jane@example.com\",\"555-0102\",\"Pending\"]]",
-      "(bold header row with blue background):**",
-      "**"
+      "(bold header row with blue background):**"
     ]
   },
   "steps": [

@@ -1,5 +1,6 @@
 {
   "name": "telegram_automation",
+  "id": "telegram_automation",
   "description": "Automate Telegram tasks via Rube MCP (Composio): send messages, manage chats, share photos/documents, and handle bot commands. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.561705",
+    "created": "2026-02-12T05:42:41.766840Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

@@ -1,5 +1,6 @@
 {
   "name": "zoom_automation",
+  "id": "zoom_automation",
   "description": "Automate Zoom meeting creation, management, recordings, webinars, and participant tracking via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.649410",
+    "created": "2026-02-12T05:42:41.844523Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

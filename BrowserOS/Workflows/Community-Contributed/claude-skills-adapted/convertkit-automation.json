@@ -1,5 +1,6 @@
 {
   "name": "convertkit_automation",
+  "id": "convertkit_automation",
   "description": "Automate ConvertKit (Kit) tasks via Rube MCP (Composio): manage subscribers, tags, broadcasts, and broadcast stats. Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,7 +11,7 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.093101",
+    "created": "2026-02-12T05:42:41.357367Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"

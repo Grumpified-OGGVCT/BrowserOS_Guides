@@ -1,5 +1,6 @@
 {
   "name": "webscraping_ai_automation",
+  "id": "webscraping_ai_automation",
   "description": "Automate Webscraping AI tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.614300",
+    "created": "2026-02-12T05:42:41.814451Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {

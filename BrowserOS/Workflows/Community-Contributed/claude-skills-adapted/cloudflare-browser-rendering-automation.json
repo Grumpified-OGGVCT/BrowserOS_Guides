@@ -1,5 +1,6 @@
 {
   "name": "cloudflare_browser_rendering_automation",
+  "id": "cloudflare_browser_rendering_automation",
   "description": "Automate Cloudflare Browser Rendering tasks via Rube MCP (Composio). Always search tools first for current schemas.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
@@ -10,14 +11,12 @@
     "community"
   ],
   "metadata": {
-    "created": "2026-02-12T05:21:11.071199",
+    "created": "2026-02-12T05:42:41.337636Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [
       "rube"
     ],
-    "use_cases": [
-      "|"
-    ]
+    "use_cases": []
   },
   "steps": [
     {
