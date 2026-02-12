@@ -164,46 +164,67 @@
     </section>
 
     <!-- Repository Browser Section -->
-    <section id="repo-browser-promo" class="repo-browser-promo" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 80px 0; color: white;">
+    <section id="repo-browser-promo" style="background: var(--bg-secondary); padding: var(--space-12) 0; border-top: 1px solid var(--border-primary); border-bottom: 1px solid var(--border-primary);">
         <div class="container">
-            <div class="section-header" style="color: white;">
-                <span class="section-badge" style="background: rgba(255,255,255,0.2); color: white;">🆕 New Feature</span>
-                <h2 style="color: white;">Browse This Repository</h2>
-                <p style="color: rgba(255,255,255,0.9);">Explore the complete BrowserOS_Guides repository structure with our interactive browser</p>
+            <div class="section-header">
+                <span class="section-badge">🆕 New Feature</span>
+                <h2>Browse This Repository</h2>
+                <p>Explore the complete BrowserOS_Guides repository structure with our interactive browser</p>
             </div>
             
-            <div style="background: white; border-radius: 16px; padding: 40px; margin-top: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
+            <div style="background: var(--bg-tertiary); border: 1px solid var(--border-primary); border-radius: var(--radius-2xl); padding: var(--space-10); margin-top: var(--space-10); box-shadow: var(--shadow-xl);">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-10); align-items: center;">
                     <div>
-                        <h3 style="color: #1a1a2e; font-size: 28px; margin-bottom: 20px;">📂 Interactive File Browser</h3>
-                        <p style="color: #666; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                        <h3 style="color: var(--text-primary); font-size: 1.75rem; margin-bottom: var(--space-5); display: flex; align-items: center; gap: var(--space-3);">
+                            <span style="font-size: 2rem;">📂</span>
+                            Interactive File Browser
+                        </h3>
+                        <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.7; margin-bottom: var(--space-5);">
                             Navigate through all the files and folders in this repository with our beautiful, interactive browser. 
                             Perfect for understanding the repository structure and finding specific files quickly.
                         </p>
-                        <ul style="color: #666; margin-bottom: 30px; line-height: 1.8;">
-                            <li>✅ Browse all files and folders</li>
-                            <li>🔍 Real-time search functionality</li>
-                            <li>📄 Quick file previews and descriptions</li>
-                            <li>🔗 Direct links to GitHub and raw files</li>
-                            <li>📊 Repository statistics at a glance</li>
+                        <ul style="color: var(--text-secondary); margin-bottom: var(--space-8); line-height: 1.9; list-style: none; padding-left: 0;">
+                            <li style="padding-left: var(--space-6); position: relative; margin-bottom: var(--space-2);">
+                                <span style="position: absolute; left: 0; color: var(--browseros-orange);">✅</span>
+                                Browse all files and folders
+                            </li>
+                            <li style="padding-left: var(--space-6); position: relative; margin-bottom: var(--space-2);">
+                                <span style="position: absolute; left: 0; color: var(--browseros-orange);">🔍</span>
+                                Real-time search functionality
+                            </li>
+                            <li style="padding-left: var(--space-6); position: relative; margin-bottom: var(--space-2);">
+                                <span style="position: absolute; left: 0; color: var(--browseros-orange);">📄</span>
+                                Quick file previews and descriptions
+                            </li>
+                            <li style="padding-left: var(--space-6); position: relative; margin-bottom: var(--space-2);">
+                                <span style="position: absolute; left: 0; color: var(--browseros-orange);">🔗</span>
+                                Direct links to GitHub and raw files
+                            </li>
+                            <li style="padding-left: var(--space-6); position: relative;">
+                                <span style="position: absolute; left: 0; color: var(--browseros-orange);">📊</span>
+                                Repository statistics at a glance
+                            </li>
                         </ul>
-                        <a href="repo-browser.html" class="btn btn-primary" style="display: inline-block; padding: 15px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.2s;">
-                            Open Repository Browser →
+                        <a href="repo-browser.html" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: var(--space-2);">
+                            Open Repository Browser
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" style="margin-left: var(--space-1);">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                            </svg>
                         </a>
                     </div>
-                    <div style="background: #f8f9fa; border-radius: 12px; padding: 30px; border: 2px solid #e0e0e0;">
+                    <div style="background: var(--bg-secondary); border: 1px solid var(--border-secondary); border-radius: var(--radius-xl); padding: var(--space-8);">
                         <!-- TODO: Update these statistics when repository grows significantly -->
-                        <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #ddd;">
-                            <div style="font-size: 32px; font-weight: 700; color: #667eea;">50+</div>
-                            <div style="color: #666; font-size: 14px;">Total Files</div>
+                        <div style="margin-bottom: var(--space-6); padding-bottom: var(--space-6); border-bottom: 1px solid var(--border-primary);">
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--browseros-orange); margin-bottom: var(--space-2);">50+</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem; font-weight: 500;">Total Files</div>
                         </div>
-                        <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #ddd;">
-                            <div style="font-size: 32px; font-weight: 700; color: #667eea;">15+</div>
-                            <div style="color: #666; font-size: 14px;">Folders & Categories</div>
+                        <div style="margin-bottom: var(--space-6); padding-bottom: var(--space-6); border-bottom: 1px solid var(--border-primary);">
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--browseros-orange); margin-bottom: var(--space-2);">15+</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem; font-weight: 500;">Folders & Categories</div>
                         </div>
                         <div>
-                            <div style="font-size: 32px; font-weight: 700; color: #667eea;">20+</div>
-                            <div style="color: #666; font-size: 14px;">Documentation Files</div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--browseros-orange); margin-bottom: var(--space-2);">20+</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem; font-weight: 500;">Documentation Files</div>
                         </div>
                     </div>
                 </div>

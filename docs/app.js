@@ -7,14 +7,24 @@
 let searchIndex = null;
 let searchIndexLoaded = false;
 
-// Initialize on page load
+// Initialize on page load with error boundary
 document.addEventListener('DOMContentLoaded', function() {
-    loadSearchIndex();
-    initializeSearch();
-    initializeNavigation();
-    initializeAnimations();
-    initializeMobileMenu();
-    initializeCategoryNavigation();
+    try {
+        loadSearchIndex();
+        initializeSearch();
+        initializeNavigation();
+        initializeAnimations();
+        initializeMobileMenu();
+        initializeCategoryNavigation();
+    } catch (error) {
+        console.error('Initialization error:', error);
+        // Display user-friendly error message
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: var(--error); color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 9999; box-shadow: var(--shadow-lg);';
+        errorDiv.textContent = 'An error occurred during page initialization. Some features may not work correctly.';
+        document.body.appendChild(errorDiv);
+        setTimeout(() => errorDiv.remove(), 5000);
+    }
 });
 
 // ============================================================================
@@ -79,9 +89,15 @@ function performSearch(query, filter) {
     
     if (!searchIndexLoaded || !searchIndex) {
         searchResults.innerHTML = `
-            <div style="text-align: center; padding: 2rem; color: var(--gray-500);">
+            <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                <div style="display: inline-block; width: 40px; height: 40px; border: 3px solid var(--border-secondary); border-top-color: var(--browseros-orange); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem;"></div>
                 <p>⏳ Loading search index...</p>
             </div>
+            <style>
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
+                }
+            </style>
         `;
         return;
     }
