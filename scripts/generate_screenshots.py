@@ -75,7 +75,16 @@ def setup_driver():
         sys.exit(1)
 
 def take_screenshot(driver, url, output_path, wait_selector=None, wait_time=2):
-    """Take a screenshot of a webpage"""
+    """
+    Take a screenshot of a webpage
+    
+    Args:
+        driver: Selenium WebDriver instance
+        url (str): URL to navigate to
+        output_path (str): Path where screenshot will be saved
+        wait_selector (str, optional): CSS selector to wait for before taking screenshot
+        wait_time (int, optional): Additional time to wait in seconds (default: 2)
+    """
     print(f"Navigating to: {url}")
     driver.get(url)
     

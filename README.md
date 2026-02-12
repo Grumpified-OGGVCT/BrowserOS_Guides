@@ -5,9 +5,11 @@
 
 <div align="center">
 
-## 🌐 **[VIEW LIVE WEBSITE →](https://grumpified-oggvct.github.io/BrowserOS_Guides/)**
+## 🌐 Explore the Live Website
 
 **Interactive knowledge hub with 500+ use cases, 130+ workflows, and AI-powered tools**
+
+**👉 [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/) 👈**
 
 [![GitHub Actions](https://img.shields.io/badge/automation-GitHub%20Actions-blue)](/.github/workflows/update-kb.yml)
 [![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://www.python.org/)
@@ -543,7 +545,7 @@ It helps others discover this resource and shows appreciation for the automation
 **Built with ❤️ by the community**  
 **Celebrating the incredible work of the BrowserOS team 🎉**
 
-### 🌐 **[EXPLORE THE LIVE WEBSITE](https://grumpified-oggvct.github.io/BrowserOS_Guides/)** 🌐
+### 🌐 [Explore the Live Website](https://grumpified-oggvct.github.io/BrowserOS_Guides/)
 
 [⭐ Star this repo](../../stargazers) • [🔀 Fork it](../../fork) • [🌐 Visit Website](https://grumpified-oggvct.github.io/BrowserOS_Guides/) • [📖 Read the KB](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
 
