@@ -1,0 +1,370 @@
+#!/bin/bash
+# ============================================================================
+# BrowserOS Knowledge Base - Main Execution Script (Unix)
+# ============================================================================
+# Works on: macOS, Linux
+# ============================================================================
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Detect Python command
+if command -v python3 &> /dev/null; then
+    PYTHON_CMD="python3"
+elif command -v python &> /dev/null; then
+    PYTHON_CMD="python"
+else
+    echo -e "${RED}✗ Python not found${NC}"
+    exit 1
+fi
+
+# Auto-Update Check (runs once per session)
+if [ -z "$UPDATE_CHECKED" ]; then
+    export UPDATE_CHECKED=1
+    echo -e "${BLUE}================================================================================${NC}"
+    echo -e "${BLUE}   Checking for and installing updates...${NC}"
+    echo -e "${BLUE}================================================================================${NC}"
+    echo
+    
+    $PYTHON_CMD scripts/auto_update.py
+    
+    if [ $? -ne 0 ]; then
+        echo
+        echo -e "${YELLOW}⚠ Auto-update encountered an issue${NC}"
+        echo "The system will continue to run normally"
+        echo
+        sleep 3
+    fi
+    
+    echo
+fi
+
+# Main Menu Loop
+while true; do
+    clear
+    echo -e "${BLUE}================================================================================${NC}"
+    echo -e "${BLUE}   BrowserOS Knowledge Base - Main Menu${NC}"
+    echo -e "${BLUE}================================================================================${NC}"
+    echo
+
+    # Check if configuration exists
+    if [ ! -f .env ]; then
+        echo -e "${RED}ERROR: Configuration not found!${NC}"
+        echo
+        echo "Please run the installation and setup first:"
+        echo "  1. Run ./install.sh to install dependencies"
+        echo "  2. Complete the setup wizard"
+        echo
+        read -p "Press Enter to exit..."
+        exit 1
+    fi
+
+    # Display current configuration summary
+    echo "Current Configuration:"
+    echo
+
+    # Read key settings from .env
+    while IFS='=' read -r key value; do
+        # Skip comments and empty lines
+        [[ $key =~ ^#.*$ ]] && continue
+        [[ -z $key ]] && continue
+        
+        case $key in
+            AGENT_MODE)
+                echo "  Agent Mode:        $value"
+                ;;
+            LOG_LEVEL)
+                echo "  Log Level:         $value"
+                ;;
+            OLLAMA_API_KEY)
+                if [ -n "$value" ] && [ "$value" != "your-ollama-api-key-here" ]; then
+                    echo "  Ollama API:        Configured"
+                else
+                    echo "  Ollama API:        Not set"
+                fi
+                ;;
+            OPENROUTER_API_KEY)
+                if [ -n "$value" ] && [ "$value" != "your-openrouter-api-key-here" ]; then
+                    echo "  OpenRouter API:    Configured"
+                else
+                    echo "  OpenRouter API:    Not set"
+                fi
+                ;;
+        esac
+    done < .env
+
+    echo
+    echo -e "${BLUE}================================================================================${NC}"
+    echo
+    echo "What would you like to do?"
+    echo
+    echo "  1. Update Knowledge Base (research pipeline)"
+    echo "  2. Run Self-Test"
+    echo "  3. Generate Workflow"
+    echo "  4. Validate Knowledge Base"
+    echo "  5. Extract Claude Skills"
+    echo "  6. Generate Repository Structure"
+    echo "  7. Security Scan"
+    echo "  8. Check for and Install System Updates"
+    echo "  9. Configure Settings"
+    echo "  A. View Documentation"
+    echo "  0. Exit"
+    echo
+    read -p "Enter your choice [0-9,A]: " CHOICE
+
+    case $CHOICE in
+        1)
+            # Update Knowledge Base
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Update Knowledge Base${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "This will run the automated research pipeline to update the knowledge base"
+            echo "with the latest information from BrowserOS documentation and community."
+            echo
+            echo "This may take several minutes depending on your configuration."
+            echo
+            read -p "Press Enter to continue..."
+
+            $PYTHON_CMD scripts/research_pipeline.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Research pipeline failed${NC}"
+                echo "Check the logs for details"
+            else
+                echo
+                echo -e "${GREEN}✓ SUCCESS: Knowledge Base updated successfully${NC}"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        2)
+            # Run Self-Test
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Self-Test${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Running comprehensive self-test to verify system integrity..."
+            echo
+
+            $PYTHON_CMD scripts/self_test.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${YELLOW}⚠ WARNING: Some tests failed${NC}"
+                echo "Check the output above for details"
+            else
+                echo
+                echo -e "${GREEN}✓ SUCCESS: All tests passed${NC}"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        3)
+            # Generate Workflow
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Workflow Generator${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "This tool generates new workflow JSON files using AI."
+            echo
+
+            read -p "Enter workflow description (or press Enter to skip): " DESC
+            if [ -n "$DESC" ]; then
+                $PYTHON_CMD scripts/workflow_generator.py --description "$DESC"
+                if [ $? -ne 0 ]; then
+                    echo
+                    echo -e "${RED}✗ ERROR: Workflow generation failed${NC}"
+                else
+                    echo
+                    echo -e "${GREEN}✓ SUCCESS: Workflow generated${NC}"
+                fi
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        4)
+            # Validate Knowledge Base
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Validate Knowledge Base${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Checking knowledge base for completeness and accuracy..."
+            echo
+
+            $PYTHON_CMD scripts/validate_kb.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${YELLOW}⚠ WARNING: Validation issues found${NC}"
+                echo "Check the output above for details"
+            else
+                echo
+                echo -e "${GREEN}✓ SUCCESS: Knowledge Base is valid${NC}"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        5)
+            # Extract Claude Skills
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Extract Claude Skills${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Extracting and adapting Claude skills from community repositories..."
+            echo
+
+            $PYTHON_CMD scripts/extract_claude_skills.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Skill extraction failed${NC}"
+            else
+                echo
+                echo -e "${GREEN}✓ SUCCESS: Skills extracted${NC}"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        6)
+            # Generate Repository Structure
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Generate Repository Structure${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Generating repo-structure.json for the repository browser..."
+            echo
+
+            $PYTHON_CMD scripts/generate_repo_structure.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Structure generation failed${NC}"
+            else
+                echo
+                echo -e "${GREEN}✓ SUCCESS: Repository structure generated${NC}"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        7)
+            # Security Scan
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Security Scanner${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Scanning code for potential security vulnerabilities..."
+            echo
+
+            $PYTHON_CMD scripts/security_scanner.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${YELLOW}⚠ WARNING: Security issues found${NC}"
+                echo "Check the security report for details"
+            else
+                echo
+                echo -e "${GREEN}✓ SUCCESS: No critical security issues found${NC}"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        8)
+            # Check for System Updates
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Check for and Install System Updates${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Checking for updates to BrowserOS Knowledge Base from GitHub..."
+            echo "Updates will be installed automatically if available."
+            echo
+
+            $PYTHON_CMD scripts/auto_update.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Update check failed${NC}"
+            else
+                echo
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        9)
+            # Configure Settings
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Configuration Manager${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Launching interactive configuration manager..."
+            echo
+            read -p "Press Enter to continue..."
+
+            $PYTHON_CMD scripts/config_manager.py
+            ;;
+
+        [Aa])
+            # View Documentation
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Documentation${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Available Documentation:"
+            echo
+            echo "  README.md                         - Main repository documentation"
+            echo "  AUTOMATION_QUICKSTART.md          - Quick start guide for automation"
+            echo "  DEPLOYMENT.md                     - Deployment guide"
+            echo "  WORKFLOW_TESTING_COMPLETE.md      - Workflow testing documentation"
+            echo "  SECURITY-POLICY.md                - Security policy"
+            echo "  WINDOWS_SETUP.md                  - Windows setup guide"
+            echo "  CROSS_PLATFORM_SETUP.md           - Cross-platform setup guide"
+            echo
+            echo "Documentation is available in the repository root directory."
+            echo
+            
+            # Try to open README.md with default viewer
+            if command -v xdg-open &> /dev/null; then
+                echo "Opening README.md with default viewer..."
+                xdg-open README.md &
+            elif command -v open &> /dev/null; then
+                echo "Opening README.md with default viewer..."
+                open README.md
+            else
+                echo "To view documentation, open the files in your preferred text editor"
+            fi
+            
+            echo
+            read -p "Press Enter to continue..."
+            ;;
+
+        0)
+            # Exit
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Exiting BrowserOS Knowledge Base${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Thank you for using BrowserOS Knowledge Base!"
+            echo
+            echo "For issues or questions, visit:"
+            echo "  https://github.com/Grumpified-OGGVCT/BrowserOS_Guides"
+            echo
+            sleep 2
+            exit 0
+            ;;
+
+        *)
+            echo -e "${RED}Invalid choice. Please try again.${NC}"
+            sleep 2
+            ;;
+    esac
+done

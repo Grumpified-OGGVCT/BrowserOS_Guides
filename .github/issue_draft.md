@@ -2,7 +2,7 @@
 
 ## Self-Test Found Issues Requiring Manual Review
 
-**Test Run:** 2026-02-12 05:25:22 UTC
+**Test Run:** 2026-02-12 18:47:19 UTC
 **Total Issues:** 2
 
 ### ollama_key [HIGH]
@@ -15,7 +15,7 @@
 
 ### doc_links [LOW]
 
-**Issue:** Broken internal links: README.md -> ../../actions, README.md -> ../../issues, README.md -> ../../discussions, README.md -> ../../stargazers, README.md -> ../../fork
+**Issue:** Broken internal links: README.md -> ../../actions, README.md -> .github/workflows/README.md#-how-to-trigger-workflows, README.md -> ../../issues, README.md -> ../../discussions, README.md -> ../../stargazers
 
 **Suggested Fix:** Fix broken links in documentation
 

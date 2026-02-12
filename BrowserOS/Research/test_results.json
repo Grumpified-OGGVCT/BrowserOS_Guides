@@ -1,7 +1,7 @@
 {
   "test_run": {
-    "timestamp": "2026-02-12T05:25:22.656396",
-    "duration_seconds": 0.066261,
+    "timestamp": "2026-02-12T18:47:19.824917",
+    "duration_seconds": 0.075468,
     "total_tests": 13,
     "passed": 9,
     "failed": 4,
@@ -32,7 +32,7 @@
     },
     {
       "test": "doc_links",
-      "issue": "Broken internal links: README.md -> ../../actions, README.md -> ../../issues, README.md -> ../../discussions, README.md -> ../../stargazers, README.md -> ../../fork",
+      "issue": "Broken internal links: README.md -> ../../actions, README.md -> .github/workflows/README.md#-how-to-trigger-workflows, README.md -> ../../issues, README.md -> ../../discussions, README.md -> ../../stargazers",
       "severity": "low",
       "suggested_fix": "Fix broken links in documentation"
     }
