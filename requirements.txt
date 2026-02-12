@@ -27,8 +27,7 @@ openai>=1.0.0          # OpenAI/OpenRouter SDK
 # JSON Schema validation
 jsonschema>=4.20.0     # For workflow validation
 
-# Hashing and content integrity
-hashlib-wrapper>=1.0.0 # For SHA-256 content hashing (built-in fallback available)
+# Note: hashlib is part of Python standard library (no package needed for SHA-256 hashing)
 
 # Optional: Additional web scraping tools
 selenium>=4.15.0        # Required for screenshot generation (scripts/generate_screenshots.py)
