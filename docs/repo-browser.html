@@ -414,13 +414,12 @@
     </section>
 
     <script>
-        // Repository structure data
-        // TODO: This structure is hardcoded and will become stale as files change.
-        // Consider one of these approaches for production:
-        // 1. Generate this JSON at build-time using a CI script that scans the repo
-        // 2. Fetch the live tree from GitHub API at runtime (with caching/fallback)
-        // 3. Use GitHub Pages' built-in file listing capabilities
-        const repoStructure = {
+        // Repository structure data - loaded dynamically from generated JSON
+        let repoStructure = null;
+        let repoMetadata = null;
+        
+        // Fallback structure in case JSON fails to load
+        const fallbackStructure = {
             name: 'BrowserOS_Guides',
             type: 'folder',
             children: [
@@ -777,6 +776,27 @@
             infoUl.appendChild(typeLi);
             infoUl.appendChild(locationLi);
             
+            // Add size if available
+            if (file.size !== undefined) {
+                const sizeLi = document.createElement('li');
+                const sizeStrong = document.createElement('strong');
+                sizeStrong.textContent = 'Size:';
+                sizeLi.appendChild(sizeStrong);
+                sizeLi.appendChild(document.createTextNode(' ' + formatFileSize(file.size)));
+                infoUl.appendChild(sizeLi);
+            }
+            
+            // Add modified date if available
+            if (file.modified) {
+                const modifiedLi = document.createElement('li');
+                const modifiedStrong = document.createElement('strong');
+                modifiedStrong.textContent = 'Last Modified:';
+                modifiedLi.appendChild(modifiedStrong);
+                const modDate = new Date(file.modified);
+                modifiedLi.appendChild(document.createTextNode(' ' + modDate.toLocaleString()));
+                infoUl.appendChild(modifiedLi);
+            }
+            
             // Assemble everything
             contentDiv.appendChild(descH2);
             contentDiv.appendChild(descP);
@@ -821,6 +841,14 @@
             };
             return types[ext] || ext + ' File';
         }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+        }
 
         // Search functionality
         document.getElementById('search-box').addEventListener('input', (e) => {
@@ -840,14 +868,72 @@
             });
         });
 
-        // Initialize
-        countItems(repoStructure);
-        document.getElementById('file-count').textContent = fileCount;
-        document.getElementById('folder-count').textContent = folderCount;
-        document.getElementById('doc-count').textContent = docCount;
+        // Load repository structure from JSON
+        async function loadRepoStructure() {
+            try {
+                const response = await fetch('repo-structure.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                repoStructure = data.structure;
+                repoMetadata = {
+                    generated_at: data.generated_at,
+                    repository: data.repository,
+                    stats: data.stats
+                };
+                
+                console.log('✅ Loaded live repository structure:', repoMetadata);
+                
+                // Use actual stats from generated data
+                if (repoMetadata.stats) {
+                    document.getElementById('file-count').textContent = repoMetadata.stats.files;
+                    document.getElementById('folder-count').textContent = repoMetadata.stats.folders;
+                    document.getElementById('doc-count').textContent = repoMetadata.stats.docs;
+                }
+                
+                // Render the tree
+                const treeContainer = document.getElementById('file-tree-container');
+                treeContainer.innerHTML = '';
+                renderFileTree(repoStructure, treeContainer);
+                
+                // Add generation timestamp to page
+                updateGenerationInfo(data.generated_at);
+                
+            } catch (error) {
+                console.error('Failed to load repository structure:', error);
+                console.warn('⚠️ Falling back to static structure');
+                
+                // Fall back to static structure
+                repoStructure = fallbackStructure;
+                
+                // Calculate stats from fallback
+                countItems(repoStructure);
+                document.getElementById('file-count').textContent = fileCount;
+                document.getElementById('folder-count').textContent = folderCount;
+                document.getElementById('doc-count').textContent = docCount;
+                
+                // Render the tree
+                const treeContainer = document.getElementById('file-tree-container');
+                renderFileTree(repoStructure, treeContainer);
+            }
+        }
+        
+        function updateGenerationInfo(timestamp) {
+            // Add a timestamp indicator to show when data was generated
+            const browserHeader = document.querySelector('.browser-header');
+            if (browserHeader && timestamp) {
+                const genDate = new Date(timestamp);
+                const infoDiv = document.createElement('div');
+                infoDiv.style.cssText = 'margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-primary); font-size: 0.875rem; color: var(--text-secondary);';
+                infoDiv.innerHTML = `<span title="${genDate.toLocaleString()}">📊 Structure generated: ${genDate.toLocaleDateString()} at ${genDate.toLocaleTimeString()}</span> <span style="margin-left: 1rem;">🔄 Auto-updated by workflows</span>`;
+                browserHeader.appendChild(infoDiv);
+            }
+        }
 
-        const treeContainer = document.getElementById('file-tree-container');
-        renderFileTree(repoStructure, treeContainer);
+        // Initialize - load structure on page load
+        document.addEventListener('DOMContentLoaded', loadRepoStructure);
     </script>
 </body>
 </html>

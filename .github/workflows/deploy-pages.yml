@@ -6,11 +6,13 @@ on:
       - main
     paths:
       - 'docs/**'
+      - 'BrowserOS/**'
+      - 'scripts/**'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -19,14 +21,43 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Generate repository structure
+        run: |
+          echo "🔍 Generating live repository structure..."
+          python scripts/generate_repo_structure.py --verbose
+          
+      - name: Generate search index
+        run: |
+          echo "📊 Generating search index..."
+          python scripts/generate_search_index.py || echo "⚠️ Search index generation skipped"
+        continue-on-error: true
+      
+      - name: Commit updated data files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          if [ -n "$(git status --porcelain docs/repo-structure.json docs/search-index.json)" ]; then
+            git add docs/repo-structure.json docs/search-index.json
+            git commit -m "🤖 Auto-update: Repository structure and search index [skip ci]"
+            git push
+          else
+            echo "ℹ️ No changes to data files"
+          fi
+        continue-on-error: true
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -36,6 +67,14 @@ jobs:
         with:
           path: 'docs'
 
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
