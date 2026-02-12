@@ -1,9 +1,9 @@
 {
-  "scan_timestamp": "2026-02-11T23:53:32.635917",
-  "files_scanned": 35,
-  "critical_alerts": 12,
-  "high_alerts": 35,
-  "medium_alerts": 15,
+  "scan_timestamp": "2026-02-12T01:01:46.188753",
+  "files_scanned": 38,
+  "critical_alerts": 29,
+  "high_alerts": 51,
+  "medium_alerts": 19,
   "low_alerts": 12,
   "alerts": [
     {
@@ -69,6 +69,125 @@
       "pattern": "\\bexec\\s*\\(",
       "description": "exec() can execute arbitrary code",
       "code_snippet": "(r'\\bexec\\s*\\(', \"CRITICAL\", \"exec() can execute arbitrary code\"),"
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 78,
+      "severity": "CRITICAL",
+      "description": "Script tag in JSON - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"- \\u2705 Script injection (`<script>`, `javascript:`)\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 85,
+      "severity": "CRITICAL",
+      "description": "Script tag in JSON - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"content = re.sub(r'<script[^>]*>.*?</script>', '', content)\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 92,
+      "severity": "CRITICAL",
+      "description": "Script tag in JSON - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"- `<script>` tags\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 99,
+      "severity": "CRITICAL",
+      "description": "Script tag in JSON - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"r'<script[^>]*>.*?</script>',\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 219,
+      "severity": "CRITICAL",
+      "description": "Script tag in JSON - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"- \\u2705 Script injection (`<script>`, `javascript:`)\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 14,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"description\": \"eval() can execute arbitrary code\","
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 15,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"code_snippet\": \"(r'\\\\beval\\\\s*\\\\(', \\\"eval() execution\\\"),\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 30,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"description\": \"eval() can execute arbitrary code\","
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 31,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"code_snippet\": \"(r'\\\\beval\\\\s*\\\\(', \\\"CRITICAL\\\", \\\"eval() can execute arbitrary code\\\"),\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 38,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"description\": \"eval() can execute arbitrary code\","
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 39,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"code_snippet\": \"(r'eval\\\\(f[\\\\'\\\"]', \\\"CRITICAL\\\", \\\"F-string in eval() - code execution\\\"),\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 46,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"description\": \"eval() can execute arbitrary code\","
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 47,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"code_snippet\": \"(r'eval\\\\s*\\\\(', \\\"CRITICAL\\\", \\\"eval() in JSON\\\"),\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 54,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"description\": \"eval() can execute arbitrary code\","
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 55,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"code_snippet\": \"(r'eval\\\\s*\\\\(', \\\"CRITICAL\\\", \\\"eval() in JavaScript\\\"),\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 62,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"description\": \"eval() can execute arbitrary code\","
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 63,
+      "severity": "CRITICAL",
+      "description": "eval() in JSON",
+      "code_snippet": "\"code_snippet\": \"(r'\\\\beval\\\\s*\\\\(', \\\"CRITICAL\\\", \\\"eval() can execute arbitrary code\\\"),\""
     },
     {
       "file": "SECURITY-POLICY.md",
@@ -205,6 +324,118 @@
       "code_snippet": "with open(issue_file, 'w') as f:"
     },
     {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 78,
+      "severity": "HIGH",
+      "description": "JavaScript protocol - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"- \\u2705 Script injection (`<script>`, `javascript:`)\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 219,
+      "severity": "HIGH",
+      "description": "JavaScript protocol - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"- \\u2705 Script injection (`<script>`, `javascript:`)\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 226,
+      "severity": "HIGH",
+      "description": "JavaScript protocol - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"# Remove javascript: protocols\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 233,
+      "severity": "HIGH",
+      "description": "JavaScript protocol - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"content = re.sub(r'javascript:', '', content)\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 240,
+      "severity": "HIGH",
+      "description": "JavaScript protocol - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"- `javascript:` protocol\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 254,
+      "severity": "HIGH",
+      "description": "JavaScript protocol - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"r'javascript:',\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 85,
+      "severity": "HIGH",
+      "description": "Event handler - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"content = re.sub(r'<script[^>]*>.*?</script>', '', content)\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 233,
+      "severity": "HIGH",
+      "description": "Event handler - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"content = re.sub(r'javascript:', '', content)\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 268,
+      "severity": "HIGH",
+      "description": "Event handler - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"<meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1.0\\\">\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 275,
+      "severity": "HIGH",
+      "description": "Event handler - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"<meta name=\\\"description\\\" content=\\\"The Ultimate BrowserOS Knowledge Hub - Comprehensive workflows, guides, and AI-powered tools for browser automation\\\">\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 282,
+      "severity": "HIGH",
+      "description": "Event handler - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"<meta name=\\\"keywords\\\" content=\\\"BrowserOS, automation, workflows, AI, Kimi, browser, web scraping, testing\\\">\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 289,
+      "severity": "HIGH",
+      "description": "Event handler - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"<meta property=\\\"og:title\\\" content=\\\"BrowserOS Knowledge Hub - Ultimate Resource\\\">\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 296,
+      "severity": "HIGH",
+      "description": "Event handler - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"<meta property=\\\"og:description\\\" content=\\\"500+ use cases, 130+ workflows, AI-powered generation, self-expanding knowledge base\\\">\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 303,
+      "severity": "HIGH",
+      "description": "Event handler - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"<meta property=\\\"og:type\\\" content=\\\"website\\\">\""
+    },
+    {
+      "file": "SECURITY-SCAN-REPORT.json",
+      "line": 310,
+      "severity": "HIGH",
+      "description": "Event handler - XSS attempt",
+      "code_snippet": "\"code_snippet\": \"<button class=\\\"copy-btn\\\" onclick=\\\"copyCode(this)\\\">Copy</button>\""
+    },
+    {
+      "file": "COMPLETE_IMPLEMENTATION.md",
+      "line": 345,
+      "severity": "HIGH",
+      "description": "JavaScript protocol",
+      "code_snippet": "- **JavaScript:** eval, Function, setTimeout"
+    },
+    {
       "file": "SECURITY-POLICY.md",
       "line": 123,
       "severity": "HIGH",
@@ -304,10 +535,38 @@
     },
     {
       "file": "docs/index.html",
-      "line": 498,
+      "line": 554,
       "severity": "MEDIUM",
       "description": "Inline event handler",
       "code_snippet": "<button class=\"copy-btn\" onclick=\"copyCode(this)\">Copy</button>"
+    },
+    {
+      "file": "docs/repo-browser.html",
+      "line": 554,
+      "severity": "MEDIUM",
+      "description": "innerHTML assignment - potential XSS",
+      "code_snippet": "item.innerHTML = `"
+    },
+    {
+      "file": "docs/repo-browser.html",
+      "line": 583,
+      "severity": "MEDIUM",
+      "description": "innerHTML assignment - potential XSS",
+      "code_snippet": "item.innerHTML = `"
+    },
+    {
+      "file": "docs/repo-browser.html",
+      "line": 610,
+      "severity": "MEDIUM",
+      "description": "innerHTML assignment - potential XSS",
+      "code_snippet": "preview.innerHTML = `"
+    },
+    {
+      "file": "docs/repo-browser.html",
+      "line": 5,
+      "severity": "MEDIUM",
+      "description": "Inline event handler",
+      "code_snippet": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
     },
     {
       "file": "docs/app.js",
