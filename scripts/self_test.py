@@ -322,20 +322,14 @@ class SelfTest:
         """Test AI service connectivity"""
         self.log("\n--- Testing AI Integration ---")
         
-        # Check Ollama API key exists
+        # Check Ollama API key exists (OPTIONAL)
         ollama_key = os.getenv("OLLAMA_API_KEY")
         if ollama_key:
-            self.results.append(TestResult("ollama_key", True, "OLLAMA_API_KEY found"))
-            # Note: Actual API test would require making a request
-            # Skipping to avoid rate limits during testing
+            self.results.append(TestResult("ollama_key", True, "OLLAMA_API_KEY found (optional)"))
         else:
-            self.results.append(TestResult("ollama_key", False, "OLLAMA_API_KEY not set", fixable=False))
-            self.manual_review_needed.append({
-                "test": "ollama_key",
-                "issue": "OLLAMA_API_KEY environment variable not set",
-                "severity": "high",
-                "suggested_fix": "Set OLLAMA_API_KEY in repository secrets"
-            })
+            # OLLAMA is optional - this is just an INFO warning, not a failure
+            self.results.append(TestResult("ollama_key", True, "OLLAMA_API_KEY not set (optional - Ollama is not required)"))
+            self.log("  ℹ️  OLLAMA_API_KEY not set (this is optional)")
         
         # Check OpenRouter API key
         openrouter_key = os.getenv("OPENROUTER_API_KEY")

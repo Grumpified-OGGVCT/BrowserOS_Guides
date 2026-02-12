@@ -62,18 +62,24 @@ This knowledge base provides a comprehensive technical reference for BrowserOS W
 | **navigate** | Navigate to a URL | `url`, `wait_until` | Navigate to login page |
 | **click** | Click on an element | `selector`, `button`, `modifiers` | Click submit button |
 | **input** | Type text into a field | `selector`, `value`, `slowly`, `submit` | Fill username field |
+| **type** | Type text (alias for input) | `selector`, `text`, `delay` | Type with custom delay |
 | **extract** | Extract data from page | `selector`, `attribute`, `store` | Extract product prices |
 | **wait** | Wait for condition | `selector`, `text`, `time` | Wait for loading spinner to disappear |
-| **conditional** | Branch based on condition | `condition`, `if_steps`, `else_steps` | Check if user is logged in |
-| **loop** | Iterate over items | `iterator`, `steps` | Process each search result |
-| **parallel** | Execute steps concurrently | `steps`, `join` | Scrape multiple pages simultaneously |
+| **scroll** | Scroll page or element | `selector`, `direction`, `amount` | Scroll to load more items |
 | **screenshot** | Capture page image | `element`, `fullPage`, `path` | Take screenshot of dashboard |
+| **script** | Execute JavaScript in browser | `code`, `args`, `return_value` | Run custom browser script |
 | **execute_code** | Run Python code | `code`, `context` | Process extracted data with pandas |
 | **read_file** | Read from local workspace | `path`, `encoding` | Load CSV data |
 | **write_file** | Write to local workspace | `path`, `data`, `format` | Save results to Excel |
 | **shell** | Execute shell command | `command`, `cwd` | Run notification script |
-| **api_call** | Make HTTP request | `url`, `method`, `headers`, `body` | POST data to webhook |
+| **http** | Make HTTP request (low-level) | `url`, `method`, `headers`, `body` | Direct HTTP call |
+| **api_call** | Make HTTP request (high-level) | `url`, `method`, `headers`, `body` | POST data to webhook |
+| **conditional** | Branch based on condition | `condition`, `if_steps`, `else_steps` | Check if user is logged in |
+| **loop** | Iterate over items | `iterator`, `steps` | Process each search result |
+| **parallel** | Execute steps concurrently | `steps`, `join` | Scrape multiple pages simultaneously |
 | **sub_workflow** | Call another workflow | `workflow_id`, `inputs` | Reuse login workflow |
+| **comment** | Documentation/annotation | `text` | Add notes for maintainers |
+| **report** | Generate structured report | `template`, `data`, `format` | Create execution summary |
 
 **Configuration Schema Examples:**
 

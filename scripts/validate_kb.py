@@ -133,7 +133,12 @@ def validate_ground_truth() -> list:
     # Extract step types from table format in KB
     # Format: | **step_name** | description | config | example |
     step_type_pattern = r'\|\s*\*\*(\w+)\*\*\s*\|'
-    kb_step_types = set(re.findall(step_type_pattern, kb_content))
+    all_types = set(re.findall(step_type_pattern, kb_content))
+    
+    # Exclude trigger mechanism types (these are not step types)
+    # Trigger types are documented in a separate section
+    trigger_types = {'Manual', 'Scheduled', 'API', 'Webhook', 'Event'}
+    kb_step_types = all_types - trigger_types
     
     if not kb_step_types:
         return ["No step types found in KB"]

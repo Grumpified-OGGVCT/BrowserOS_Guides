@@ -336,9 +336,9 @@ sudo systemctl start browseros-guides.service
 - [WhatsApp Monitoring](./WHATSAPP_MONITORING_STATUS.md)
 
 ### Community
-- GitHub Issues: [Report bugs or request features](../../issues)
-- Discussions: [Ask questions](../../discussions)
-- Pull Requests: [Contribute improvements](../../pulls)
+- GitHub Issues: [Report bugs or request features](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/issues)
+- Discussions: [Ask questions](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/discussions)
+- Pull Requests: [Contribute improvements](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/pulls)
 
 ### Official BrowserOS Resources
 - [BrowserOS Repository](https://github.com/browseros-ai/BrowserOS)

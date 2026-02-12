@@ -1,21 +1,13 @@
-# [Self-Test] 2 Issues Require Manual Attention
+# [Self-Test] 1 Issues Require Manual Attention
 
 ## Self-Test Found Issues Requiring Manual Review
 
-**Test Run:** 2026-02-12 21:31:19 UTC
-**Total Issues:** 2
-
-### ollama_key [HIGH]
-
-**Issue:** OLLAMA_API_KEY environment variable not set
-
-**Suggested Fix:** Set OLLAMA_API_KEY in repository secrets
-
----
+**Test Run:** 2026-02-12 21:43:17 UTC
+**Total Issues:** 1
 
 ### doc_links [LOW]
 
-**Issue:** Broken internal links: README.md -> ../../actions, README.md -> .github/workflows/README.md#-how-to-trigger-workflows, README.md -> ../../issues, README.md -> ../../discussions, README.md -> ../../stargazers
+**Issue:** Broken internal links: README.md -> .github/workflows/README.md#-how-to-trigger-workflows, MCP_AGENTIC_GUIDE.md -> BrowserOS_Workflows_KnowledgeBase.md, MCP_AGENTIC_GUIDE.md -> ADVANCED_TECHNIQUES.md, MCP_AGENTIC_GUIDE.md -> ../USE_CASE_MATRIX.md, MCP_AGENTIC_GUIDE.md -> ../Workflows/
 
 **Suggested Fix:** Fix broken links in documentation
 

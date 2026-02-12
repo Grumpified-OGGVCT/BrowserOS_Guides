@@ -591,7 +591,7 @@ We welcome contributions to improve the knowledge base!
 - **👤 Manual**: Via GitHub Actions UI (workflow_dispatch)
 - **🏷️ Versioning**: Tagged as `kb-YYYY.MM.DD`
 
-**Next scheduled update**: Check the [Actions tab](../../actions) for countdown
+**Next scheduled update**: Check the [Actions tab](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/actions) for countdown
 
 ---
 
@@ -698,8 +698,8 @@ This repository uses GitHub Actions to automate maintenance and updates:
 - **📖 Full Documentation**: [AUTOMATION_QUICKSTART.md](AUTOMATION_QUICKSTART.md)
 - **🔧 Automation Details**: [.github/ACTIONS_SETUP.md](.github/ACTIONS_SETUP.md)
 - **🔄 Workflow Guide**: [WORKFLOW_TRIGGER_GUIDE.md](WORKFLOW_TRIGGER_GUIDE.md)
-- **🐛 Issues**: [GitHub Issues](../../issues)
-- **💡 Discussions**: [GitHub Discussions](../../discussions)
+- **🐛 Issues**: [GitHub Issues](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/issues)
+- **💡 Discussions**: [GitHub Discussions](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/discussions)
 
 ---
 
@@ -713,6 +713,6 @@ This repository uses GitHub Actions to automate maintenance and updates:
 View locally: `python3 -m http.server 8000 --directory docs`  
 Deploy to Pages: Merge PR + enable in Settings → Pages
 
-[⭐ Star this repo](../../stargazers) • [🔀 Fork it](../../fork) • [📖 Read the KB](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
+[⭐ Star this repo](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/stargazers) • [🔀 Fork it](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/fork) • [📖 Read the KB](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
 
 </div>
