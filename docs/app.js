@@ -665,3 +665,180 @@ window.addEventListener('load', function() {
         console.log(`Page loaded in ${pageLoadTime}ms`);
     }
 });
+
+// ============================================================================
+// Workflow Generator Form Handler
+// ============================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('workflow-generator-form');
+    const generateBtn = document.getElementById('generate-btn');
+    const loadingState = document.getElementById('loading-state');
+    const resultsContainer = document.getElementById('results-container');
+    const errorContainer = document.getElementById('error-container');
+    
+    if (!form) return; // Form not on this page
+    
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = new FormData(form);
+        const useCase = formData.get('use_case');
+        const industry = formData.get('industry');
+        const complexity = formData.get('complexity');
+        
+        // Validate
+        if (!useCase || useCase.trim().length < 10) {
+            alert('Please provide a more detailed use case (at least 10 characters)');
+            return;
+        }
+        
+        // Hide previous results/errors
+        resultsContainer.style.display = 'none';
+        errorContainer.style.display = 'none';
+        
+        // Show loading state
+        loadingState.style.display = 'block';
+        generateBtn.disabled = true;
+        
+        try {
+            // Call the API
+            const response = await fetch('http://localhost:3100/api/generate-workflow', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    use_case: useCase,
+                    industry: industry,
+                    complexity: complexity
+                })
+            });
+            
+            const data = await response.json();
+            
+            // Hide loading
+            loadingState.style.display = 'none';
+            generateBtn.disabled = false;
+            
+            if (data.rejected || (data.success === false && data.rejected)) {
+                // Safety rejection
+                showError(
+                    'Request Rejected - Safety Filter',
+                    data.message || data.reason || 'This use case was rejected by safety filters.',
+                    data.details
+                );
+                return;
+            }
+            
+            if (!data.success) {
+                // Other error
+                showError(
+                    'Generation Failed',
+                    data.error || 'Failed to generate workflow',
+                    data.details || data.note
+                );
+                return;
+            }
+            
+            // Success! Display the workflow
+            displayWorkflow(data.workflow, data.metadata);
+            
+        } catch (error) {
+            loadingState.style.display = 'none';
+            generateBtn.disabled = false;
+            
+            console.error('Error:', error);
+            showError(
+                'Connection Error',
+                'Could not connect to the workflow generator API.',
+                'Make sure the MCP server is running on port 3100: npm run mcp-server'
+            );
+        }
+    });
+    
+    function showError(title, message, details) {
+        const errorTitle = document.getElementById('error-title');
+        const errorMessage = document.getElementById('error-message');
+        
+        errorTitle.textContent = title;
+        errorMessage.innerHTML = `
+            <p>${escapeHtml(message)}</p>
+            ${details ? `<p style="margin-top: var(--space-3); font-size: 0.85rem; color: var(--text-tertiary);">${escapeHtml(details)}</p>` : ''}
+        `;
+        
+        errorContainer.style.display = 'block';
+        errorContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    function displayWorkflow(workflow, metadata) {
+        // Update title
+        const workflowTitle = document.getElementById('workflow-title');
+        workflowTitle.textContent = workflow.name || 'Workflow Generated!';
+        
+        // Update metadata
+        const metadataContainer = document.getElementById('workflow-metadata');
+        metadataContainer.innerHTML = `
+            <div><strong>Steps:</strong> ${workflow.steps ? workflow.steps.length : 'N/A'}</div>
+            <div><strong>Difficulty:</strong> ${workflow.metadata?.difficulty || 'N/A'}</div>
+            <div><strong>Category:</strong> ${workflow.metadata?.category || 'N/A'}</div>
+            <div><strong>Model:</strong> ${metadata?.model || 'kimi-k2.5:cloud'}</div>
+        `;
+        
+        // Display JSON
+        const workflowJson = document.getElementById('workflow-json');
+        workflowJson.querySelector('code').textContent = JSON.stringify(workflow, null, 2);
+        
+        // Store workflow data for download/copy
+        workflowJson.dataset.workflow = JSON.stringify(workflow);
+        
+        // Show results
+        resultsContainer.style.display = 'block';
+        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Setup copy and download buttons
+        setupResultButtons(workflow);
+    }
+    
+    function setupResultButtons(workflow) {
+        // Copy button
+        const copyBtn = document.getElementById('copy-workflow-btn');
+        copyBtn.onclick = function() {
+            const jsonText = JSON.stringify(workflow, null, 2);
+            navigator.clipboard.writeText(jsonText).then(() => {
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            });
+        };
+        
+        // Download button
+        const downloadBtn = document.getElementById('download-workflow-btn');
+        downloadBtn.onclick = function() {
+            const jsonText = JSON.stringify(workflow, null, 2);
+            const blob = new Blob([jsonText], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${workflow.name || 'workflow'}.json`.replace(/[^a-z0-9_-]/gi, '_');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+    }
+    
+    // Button hover effects
+    generateBtn.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-2px)';
+        this.style.boxShadow = '0 6px 20px rgba(255, 121, 0, 0.4)';
+    });
+    
+    generateBtn.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = 'var(--shadow-orange)';
+    });
+});

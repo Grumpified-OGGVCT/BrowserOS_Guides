@@ -16,6 +16,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -606,6 +611,173 @@ python scripts/workflow_generator.py full \
                         <div class="tool-icon">🔄</div>
                         <h3>Auto-Expansion</h3>
                         <p>Weekly automated workflow generation. New workflows added to the library every Sunday via GitHub Actions.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Interactive Workflow Generator -->
+            <div class="generator-section" style="margin-top: var(--space-12);">
+                <div class="section-header">
+                    <h2>🚀 Try It Now - Generate Your Custom Workflow</h2>
+                    <p>Describe your use case and let AI create a complete, production-ready workflow</p>
+                </div>
+                
+                <div class="generator-container" style="background: var(--bg-elevated); border: 2px solid var(--border-primary); border-radius: 12px; padding: var(--space-8); margin-top: var(--space-6);">
+                    <!-- Safety Disclaimer -->
+                    <div class="safety-disclaimer" style="background: var(--bg-tertiary); border-left: 4px solid var(--info); padding: var(--space-4); margin-bottom: var(--space-6); border-radius: 6px;">
+                        <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                            <strong>ℹ️ Safety Notice:</strong> This public generator includes safety filters for NSFW and illegal content. 
+                            Private instances can be configured differently. 
+                            <a href="SAFETY_POLICY.html" style="color: var(--browseros-orange); text-decoration: none;">Learn more →</a>
+                        </p>
+                    </div>
+                    
+                    <form id="workflow-generator-form">
+                        <!-- Use Case Input -->
+                        <div class="form-group" style="margin-bottom: var(--space-6);">
+                            <label for="use-case" style="display: block; font-weight: 600; margin-bottom: var(--space-2); color: var(--text-primary);">
+                                What do you want to automate? <span style="color: var(--error);">*</span>
+                            </label>
+                            <textarea 
+                                id="use-case" 
+                                name="use_case" 
+                                required
+                                rows="3"
+                                placeholder="Example: Monitor competitor prices across 5 e-commerce websites and alert me when prices drop by more than 10%"
+                                style="width: 100%; padding: var(--space-4); background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 6px; color: var(--text-primary); font-family: inherit; font-size: 1rem; resize: vertical;"
+                            ></textarea>
+                            <p style="margin-top: var(--space-2); font-size: 0.875rem; color: var(--text-tertiary);">
+                                Be specific! The more detail you provide, the better the workflow.
+                            </p>
+                        </div>
+                        
+                        <!-- Industry Selector -->
+                        <div class="form-group" style="margin-bottom: var(--space-6);">
+                            <label for="industry" style="display: block; font-weight: 600; margin-bottom: var(--space-2); color: var(--text-primary);">
+                                Industry / Context
+                            </label>
+                            <select 
+                                id="industry" 
+                                name="industry"
+                                style="width: 100%; padding: var(--space-4); background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 6px; color: var(--text-primary); font-family: inherit; font-size: 1rem;"
+                            >
+                                <option value="general">General</option>
+                                <option value="e-commerce">E-Commerce</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="sales">Sales</option>
+                                <option value="finance">Finance</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="education">Education</option>
+                                <option value="real-estate">Real Estate</option>
+                                <option value="travel">Travel & Hospitality</option>
+                                <option value="tech">Technology / SaaS</option>
+                                <option value="media">Media & Publishing</option>
+                                <option value="legal">Legal</option>
+                                <option value="hr">Human Resources</option>
+                                <option value="research">Research & Data</option>
+                                <option value="qa">QA & Testing</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Complexity Radio Buttons -->
+                        <div class="form-group" style="margin-bottom: var(--space-8);">
+                            <label style="display: block; font-weight: 600; margin-bottom: var(--space-3); color: var(--text-primary);">
+                                Complexity Level
+                            </label>
+                            <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
+                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer;">
+                                    <input type="radio" name="complexity" value="low" style="margin-right: var(--space-2);">
+                                    <span>Beginner</span>
+                                </label>
+                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer;">
+                                    <input type="radio" name="complexity" value="medium" checked style="margin-right: var(--space-2);">
+                                    <span>Intermediate</span>
+                                </label>
+                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer;">
+                                    <input type="radio" name="complexity" value="high" style="margin-right: var(--space-2);">
+                                    <span>Advanced</span>
+                                </label>
+                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer;">
+                                    <input type="radio" name="complexity" value="expert" style="margin-right: var(--space-2);">
+                                    <span>Expert</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <button 
+                            type="submit" 
+                            id="generate-btn"
+                            style="width: 100%; padding: var(--space-4) var(--space-6); background: linear-gradient(135deg, var(--browseros-orange), var(--browseros-orange-dark)); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-orange);"
+                        >
+                            🚀 Generate My Workflow
+                        </button>
+                    </form>
+                    
+                    <!-- Loading State -->
+                    <div id="loading-state" style="display: none; text-align: center; margin-top: var(--space-8); padding: var(--space-8);">
+                        <div class="spinner" style="border: 4px solid var(--border-primary); border-top: 4px solid var(--browseros-orange); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                        <p style="margin-top: var(--space-4); color: var(--text-secondary); font-size: 1.1rem;">
+                            <span id="loading-message">Generating your workflow with Kimi AI...</span>
+                        </p>
+                        <p style="margin-top: var(--space-2); color: var(--text-tertiary); font-size: 0.9rem;">
+                            This may take 10-15 seconds
+                        </p>
+                    </div>
+                    
+                    <!-- Results Display -->
+                    <div id="results-container" style="display: none; margin-top: var(--space-8);">
+                        <div style="background: var(--bg-secondary); border: 2px solid var(--success); border-radius: 8px; padding: var(--space-6);">
+                            <h3 style="color: var(--success); margin: 0 0 var(--space-4) 0; display: flex; align-items: center; gap: var(--space-2);">
+                                <span>✅</span>
+                                <span id="workflow-title">Workflow Generated Successfully!</span>
+                            </h3>
+                            
+                            <div id="workflow-metadata" style="display: flex; gap: var(--space-6); margin-bottom: var(--space-6); flex-wrap: wrap; font-size: 0.9rem; color: var(--text-secondary);">
+                                <!-- Metadata will be inserted here -->
+                            </div>
+                            
+                            <div style="margin-bottom: var(--space-4);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                    <h4 style="margin: 0; color: var(--text-primary);">Generated Workflow JSON</h4>
+                                    <div style="display: flex; gap: var(--space-2);">
+                                        <button 
+                                            id="copy-workflow-btn"
+                                            style="padding: var(--space-2) var(--space-4); background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border-primary); border-radius: 6px; cursor: pointer; font-size: 0.875rem;"
+                                        >
+                                            📋 Copy
+                                        </button>
+                                        <button 
+                                            id="download-workflow-btn"
+                                            style="padding: var(--space-2) var(--space-4); background: var(--browseros-orange); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem;"
+                                        >
+                                            ⬇️ Download JSON
+                                        </button>
+                                    </div>
+                                </div>
+                                <pre id="workflow-json" style="background: var(--bg-primary); border: 1px solid var(--border-primary); border-radius: 6px; padding: var(--space-4); overflow-x: auto; max-height: 500px; overflow-y: auto; font-size: 0.875rem; line-height: 1.5;"><code></code></pre>
+                            </div>
+                            
+                            <div style="background: var(--bg-tertiary); border-left: 4px solid var(--warning); padding: var(--space-4); border-radius: 6px; font-size: 0.875rem;">
+                                <strong>⚠️ Disclaimer:</strong> This workflow was generated by AI. Please review before use:
+                                <ul style="margin: var(--space-2) 0 0 var(--space-4); padding-left: var(--space-4);">
+                                    <li>Verify it complies with target website's Terms of Service</li>
+                                    <li>Ensure it respects robots.txt and rate limits</li>
+                                    <li>Test in a safe environment before production use</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Error Display -->
+                    <div id="error-container" style="display: none; margin-top: var(--space-8);">
+                        <div style="background: var(--bg-secondary); border: 2px solid var(--error); border-radius: 8px; padding: var(--space-6);">
+                            <h3 style="color: var(--error); margin: 0 0 var(--space-4) 0; display: flex; align-items: center; gap: var(--space-2);">
+                                <span>❌</span>
+                                <span id="error-title">Generation Failed</span>
+                            </h3>
+                            <p id="error-message" style="color: var(--text-secondary); margin: 0;"></p>
+                        </div>
                     </div>
                 </div>
             </div>
