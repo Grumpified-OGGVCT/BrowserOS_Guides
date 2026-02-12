@@ -1,0 +1,621 @@
+{
+  "generated_at": "2026-02-12T04:58:42.659365",
+  "repository": "BrowserOS_Guides",
+  "stats": {
+    "files": 69,
+    "folders": 10,
+    "docs": 23
+  },
+  "structure": {
+    "name": "BrowserOS_Guides",
+    "type": "folder",
+    "children": [
+      {
+        "name": ".github",
+        "type": "folder",
+        "children": [
+          {
+            "name": "workflows",
+            "type": "folder",
+            "children": [
+              {
+                "name": "deploy-pages.yml",
+                "type": "file",
+                "description": "YAML configuration",
+                "path": "../.github/workflows/deploy-pages.yml",
+                "size": 2153,
+                "modified": "2026-02-12T04:58:17.135719"
+              },
+              {
+                "name": "self-test.yml",
+                "type": "file",
+                "description": "Automated self-test workflow",
+                "path": "../.github/workflows/self-test.yml",
+                "size": 4504,
+                "modified": "2026-02-12T04:58:17.135719"
+              },
+              {
+                "name": "update-kb.yml",
+                "type": "file",
+                "description": "Knowledge base update automation",
+                "path": "../.github/workflows/update-kb.yml",
+                "size": 5931,
+                "modified": "2026-02-12T04:58:17.135719"
+              }
+            ]
+          },
+          {
+            "name": "ACTIONS_SETUP.md",
+            "type": "file",
+            "description": "Markdown documentation",
+            "path": "../.github/ACTIONS_SETUP.md",
+            "size": 6020,
+            "modified": "2026-02-12T04:58:17.134719"
+          },
+          {
+            "name": "issue_draft.md",
+            "type": "file",
+            "description": "Markdown documentation",
+            "path": "../.github/issue_draft.md",
+            "size": 723,
+            "modified": "2026-02-12T04:58:17.134719"
+          }
+        ]
+      },
+      {
+        "name": "BrowserOS",
+        "type": "folder",
+        "children": [
+          {
+            "name": "Research",
+            "type": "folder",
+            "children": [
+              {
+                "name": "ADVANCED_TECHNIQUES.md",
+                "type": "file",
+                "description": "Advanced and expert-level techniques",
+                "path": "../BrowserOS/Research/ADVANCED_TECHNIQUES.md",
+                "size": 21774,
+                "modified": "2026-02-12T04:58:17.135719"
+              },
+              {
+                "name": "BrowserOS_Workflows_KnowledgeBase.md",
+                "type": "file",
+                "description": "Comprehensive workflows knowledge base",
+                "path": "../BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
+                "size": 23889,
+                "modified": "2026-02-12T04:58:17.135719"
+              },
+              {
+                "name": "BrowserOS_Workflows_KnowledgeBase.md.checksum",
+                "type": "file",
+                "description": "CHECKSUM file",
+                "path": "../BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md.checksum",
+                "size": 64,
+                "modified": "2026-02-12T04:58:17.135719"
+              },
+              {
+                "name": "repo_state.json",
+                "type": "file",
+                "description": "JSON data",
+                "path": "../BrowserOS/Research/repo_state.json",
+                "size": 268,
+                "modified": "2026-02-12T04:58:17.135719"
+              },
+              {
+                "name": "sources.json",
+                "type": "file",
+                "description": "JSON data",
+                "path": "../BrowserOS/Research/sources.json",
+                "size": 3286,
+                "modified": "2026-02-12T04:58:17.135719"
+              },
+              {
+                "name": "test_results.json",
+                "type": "file",
+                "description": "JSON data",
+                "path": "../BrowserOS/Research/test_results.json",
+                "size": 1118,
+                "modified": "2026-02-12T04:58:17.136719"
+              },
+              {
+                "name": "verify_kb_completeness.ps1",
+                "type": "file",
+                "description": "PowerShell script",
+                "path": "../BrowserOS/Research/verify_kb_completeness.ps1",
+                "size": 15526,
+                "modified": "2026-02-12T04:58:17.136719"
+              }
+            ]
+          },
+          {
+            "name": "Workflows",
+            "type": "folder",
+            "children": [
+              {
+                "name": "E-Commerce",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "amazon_price_tracker.json",
+                    "type": "file",
+                    "description": "JSON data",
+                    "path": "../BrowserOS/Workflows/E-Commerce/amazon_price_tracker.json",
+                    "size": 10052,
+                    "modified": "2026-02-12T04:58:17.136719"
+                  },
+                  {
+                    "name": "README.md",
+                    "type": "file",
+                    "description": "Markdown documentation",
+                    "path": "../BrowserOS/Workflows/E-Commerce/README.md",
+                    "size": 7487,
+                    "modified": "2026-02-12T04:58:17.136719"
+                  }
+                ]
+              },
+              {
+                "name": "README.md",
+                "type": "file",
+                "description": "Markdown documentation",
+                "path": "../BrowserOS/Workflows/README.md",
+                "size": 11919,
+                "modified": "2026-02-12T04:58:17.136719"
+              }
+            ]
+          },
+          {
+            "name": "MCP_AGENTIC_GUIDE.md",
+            "type": "file",
+            "description": "MCP and agentic AI integration guide",
+            "path": "../BrowserOS/MCP_AGENTIC_GUIDE.md",
+            "size": 24536,
+            "modified": "2026-02-12T04:58:17.135719"
+          },
+          {
+            "name": "README.md",
+            "type": "file",
+            "description": "Markdown documentation",
+            "path": "../BrowserOS/README.md",
+            "size": 6628,
+            "modified": "2026-02-12T04:58:17.135719"
+          },
+          {
+            "name": "structure.md",
+            "type": "file",
+            "description": "Primary repository index and structure",
+            "path": "../BrowserOS/structure.md",
+            "size": 4778,
+            "modified": "2026-02-12T04:58:17.136719"
+          },
+          {
+            "name": "USE_CASE_MATRIX.md",
+            "type": "file",
+            "description": "500+ use cases across 25+ industries",
+            "path": "../BrowserOS/USE_CASE_MATRIX.md",
+            "size": 15944,
+            "modified": "2026-02-12T04:58:17.136719"
+          }
+        ]
+      },
+      {
+        "name": "docs",
+        "type": "folder",
+        "children": [
+          {
+            "name": "screenshots",
+            "type": "folder",
+            "children": [
+              {
+                "name": "01-hero-section.png",
+                "type": "file",
+                "description": "PNG file",
+                "path": "screenshots/01-hero-section.png",
+                "size": 241506,
+                "modified": "2026-02-12T04:58:17.139719"
+              },
+              {
+                "name": "01-hero-section.webp",
+                "type": "file",
+                "description": "WEBP file",
+                "path": "screenshots/01-hero-section.webp",
+                "size": 41980,
+                "modified": "2026-02-12T04:58:17.139719"
+              },
+              {
+                "name": "02-workflows-section.png",
+                "type": "file",
+                "description": "PNG file",
+                "path": "screenshots/02-workflows-section.png",
+                "size": 85765,
+                "modified": "2026-02-12T04:58:17.139719"
+              },
+              {
+                "name": "02-workflows-section.webp",
+                "type": "file",
+                "description": "WEBP file",
+                "path": "screenshots/02-workflows-section.webp",
+                "size": 33108,
+                "modified": "2026-02-12T04:58:17.140719"
+              },
+              {
+                "name": "03-use-cases-section.png",
+                "type": "file",
+                "description": "PNG file",
+                "path": "screenshots/03-use-cases-section.png",
+                "size": 144077,
+                "modified": "2026-02-12T04:58:17.140719"
+              },
+              {
+                "name": "03-use-cases-section.webp",
+                "type": "file",
+                "description": "WEBP file",
+                "path": "screenshots/03-use-cases-section.webp",
+                "size": 65060,
+                "modified": "2026-02-12T04:58:17.140719"
+              },
+              {
+                "name": "04-mcp-agentic-section.png",
+                "type": "file",
+                "description": "PNG file",
+                "path": "screenshots/04-mcp-agentic-section.png",
+                "size": 159938,
+                "modified": "2026-02-12T04:58:17.141719"
+              },
+              {
+                "name": "04-mcp-agentic-section.webp",
+                "type": "file",
+                "description": "WEBP file",
+                "path": "screenshots/04-mcp-agentic-section.webp",
+                "size": 78248,
+                "modified": "2026-02-12T04:58:17.141719"
+              },
+              {
+                "name": "05-repo-browser.png",
+                "type": "file",
+                "description": "PNG file",
+                "path": "screenshots/05-repo-browser.png",
+                "size": 121163,
+                "modified": "2026-02-12T04:58:17.142719"
+              },
+              {
+                "name": "05-repo-browser.webp",
+                "type": "file",
+                "description": "WEBP file",
+                "path": "screenshots/05-repo-browser.webp",
+                "size": 33800,
+                "modified": "2026-02-12T04:58:17.142719"
+              },
+              {
+                "name": "06-search-section.png",
+                "type": "file",
+                "description": "PNG file",
+                "path": "screenshots/06-search-section.png",
+                "size": 92109,
+                "modified": "2026-02-12T04:58:17.143719"
+              },
+              {
+                "name": "06-search-section.webp",
+                "type": "file",
+                "description": "WEBP file",
+                "path": "screenshots/06-search-section.webp",
+                "size": 36998,
+                "modified": "2026-02-12T04:58:17.143719"
+              },
+              {
+                "name": "README.md",
+                "type": "file",
+                "description": "Markdown documentation",
+                "path": "screenshots/README.md",
+                "size": 999,
+                "modified": "2026-02-12T04:58:17.143719"
+              }
+            ]
+          },
+          {
+            "name": "_config.yml",
+            "type": "file",
+            "description": "YAML configuration",
+            "path": "_config.yml",
+            "size": 850,
+            "modified": "2026-02-12T04:58:17.137719"
+          },
+          {
+            "name": "app.js",
+            "type": "file",
+            "description": "JavaScript",
+            "path": "app.js",
+            "size": 24612,
+            "modified": "2026-02-12T04:58:17.137719"
+          },
+          {
+            "name": "index.html",
+            "type": "file",
+            "description": "HTML page",
+            "path": "index.html",
+            "size": 44068,
+            "modified": "2026-02-12T04:58:17.137719"
+          },
+          {
+            "name": "repo-browser.html",
+            "type": "file",
+            "description": "HTML page",
+            "path": "repo-browser.html",
+            "size": 44341,
+            "modified": "2026-02-12T04:58:17.137719"
+          },
+          {
+            "name": "repo-structure.json",
+            "type": "file",
+            "description": "JSON data",
+            "path": "repo-structure.json",
+            "size": 20735,
+            "modified": "2026-02-12T04:58:17.138719"
+          },
+          {
+            "name": "search-index.json",
+            "type": "file",
+            "description": "JSON data",
+            "path": "search-index.json",
+            "size": 33968,
+            "modified": "2026-02-12T04:58:17.143719"
+          },
+          {
+            "name": "styles.css",
+            "type": "file",
+            "description": "Stylesheet",
+            "path": "styles.css",
+            "size": 19383,
+            "modified": "2026-02-12T04:58:17.143719"
+          }
+        ]
+      },
+      {
+        "name": "scripts",
+        "type": "folder",
+        "children": [
+          {
+            "name": "agent_connectors.py",
+            "type": "file",
+            "description": "Python script",
+            "path": "../scripts/agent_connectors.py",
+            "size": 12811,
+            "modified": "2026-02-12T04:58:17.143719"
+          },
+          {
+            "name": "config_loader.py",
+            "type": "file",
+            "description": "Python script",
+            "path": "../scripts/config_loader.py",
+            "size": 7551,
+            "modified": "2026-02-12T04:58:17.143719"
+          },
+          {
+            "name": "convert_screenshots_webp.py",
+            "type": "file",
+            "description": "Python script",
+            "path": "../scripts/convert_screenshots_webp.py",
+            "size": 2354,
+            "modified": "2026-02-12T04:58:17.143719"
+          },
+          {
+            "name": "extract_claude_skills.py",
+            "type": "file",
+            "description": "Python script",
+            "path": "../scripts/extract_claude_skills.py",
+            "size": 13074,
+            "modified": "2026-02-12T04:58:17.143719"
+          },
+          {
+            "name": "generate_repo_structure.py",
+            "type": "file",
+            "description": "Python script",
+            "path": "../scripts/generate_repo_structure.py",
+            "size": 9160,
+            "modified": "2026-02-12T04:58:17.143719"
+          },
+          {
+            "name": "generate_screenshots.py",
+            "type": "file",
+            "description": "Python script",
+            "path": "../scripts/generate_screenshots.py",
+            "size": 7257,
+            "modified": "2026-02-12T04:58:17.143719"
+          },
+          {
+            "name": "generate_search_index.py",
+            "type": "file",
+            "description": "Search index generation",
+            "path": "../scripts/generate_search_index.py",
+            "size": 5769,
+            "modified": "2026-02-12T04:58:17.144719"
+          },
+          {
+            "name": "repo_tracker.py",
+            "type": "file",
+            "description": "Repository tracking system",
+            "path": "../scripts/repo_tracker.py",
+            "size": 14180,
+            "modified": "2026-02-12T04:58:17.144719"
+          },
+          {
+            "name": "research_pipeline.py",
+            "type": "file",
+            "description": "Automated research pipeline",
+            "path": "../scripts/research_pipeline.py",
+            "size": 15637,
+            "modified": "2026-02-12T04:58:17.144719"
+          },
+          {
+            "name": "security_scanner.py",
+            "type": "file",
+            "description": "Security vulnerability scanner",
+            "path": "../scripts/security_scanner.py",
+            "size": 21050,
+            "modified": "2026-02-12T04:58:17.144719"
+          },
+          {
+            "name": "self_test.py",
+            "type": "file",
+            "description": "Self-test automation (42 tests)",
+            "path": "../scripts/self_test.py",
+            "size": 24408,
+            "modified": "2026-02-12T04:58:17.144719"
+          },
+          {
+            "name": "validate_kb.py",
+            "type": "file",
+            "description": "Python script",
+            "path": "../scripts/validate_kb.py",
+            "size": 4893,
+            "modified": "2026-02-12T04:58:17.144719"
+          },
+          {
+            "name": "workflow_generator.py",
+            "type": "file",
+            "description": "AI-powered workflow generation",
+            "path": "../scripts/workflow_generator.py",
+            "size": 20166,
+            "modified": "2026-02-12T04:58:17.144719"
+          }
+        ]
+      },
+      {
+        "name": ".env.template",
+        "type": "file",
+        "description": "TEMPLATE file",
+        "path": "../.env.template",
+        "size": 4753,
+        "modified": "2026-02-12T04:58:17.134719"
+      },
+      {
+        "name": ".gitignore",
+        "type": "file",
+        "description": "File",
+        "path": "../.gitignore",
+        "size": 5759,
+        "modified": "2026-02-12T04:58:17.135719"
+      },
+      {
+        "name": "AUTOMATION_QUICKSTART.md",
+        "type": "file",
+        "description": "Quick start guide for automation",
+        "path": "../AUTOMATION_QUICKSTART.md",
+        "size": 7090,
+        "modified": "2026-02-12T04:58:17.135719"
+      },
+      {
+        "name": "COMPLETE_IMPLEMENTATION.md",
+        "type": "file",
+        "description": "Markdown documentation",
+        "path": "../COMPLETE_IMPLEMENTATION.md",
+        "size": 14321,
+        "modified": "2026-02-12T04:58:17.136719"
+      },
+      {
+        "name": "config.yml",
+        "type": "file",
+        "description": "Main configuration (500+ parameters)",
+        "path": "../config.yml",
+        "size": 12816,
+        "modified": "2026-02-12T04:58:17.137719"
+      },
+      {
+        "name": "DEPLOYMENT.md",
+        "type": "file",
+        "description": "Deployment guide (6 connection types)",
+        "path": "../DEPLOYMENT.md",
+        "size": 9407,
+        "modified": "2026-02-12T04:58:17.136719"
+      },
+      {
+        "name": "docker-compose.yml",
+        "type": "file",
+        "description": "YAML configuration",
+        "path": "../docker-compose.yml",
+        "size": 5236,
+        "modified": "2026-02-12T04:58:17.137719"
+      },
+      {
+        "name": "Dockerfile",
+        "type": "file",
+        "description": "Docker container definition",
+        "path": "../Dockerfile",
+        "size": 3257,
+        "modified": "2026-02-12T04:58:17.136719"
+      },
+      {
+        "name": "FINAL_SUMMARY.md",
+        "type": "file",
+        "description": "Markdown documentation",
+        "path": "../FINAL_SUMMARY.md",
+        "size": 6682,
+        "modified": "2026-02-12T04:58:17.136719"
+      },
+      {
+        "name": "LICENSE",
+        "type": "file",
+        "description": "File",
+        "path": "../LICENSE",
+        "size": 1074,
+        "modified": "2026-02-12T04:58:17.136719"
+      },
+      {
+        "name": "README.md",
+        "type": "file",
+        "description": "Markdown documentation",
+        "path": "../README.md",
+        "size": 23448,
+        "modified": "2026-02-12T04:58:17.136719"
+      },
+      {
+        "name": "REPO_TRACKING.md",
+        "type": "file",
+        "description": "Repository tracking documentation",
+        "path": "../REPO_TRACKING.md",
+        "size": 9420,
+        "modified": "2026-02-12T04:58:17.137719"
+      },
+      {
+        "name": "requirements.txt",
+        "type": "file",
+        "description": "Text file",
+        "path": "../requirements.txt",
+        "size": 737,
+        "modified": "2026-02-12T04:58:17.143719"
+      },
+      {
+        "name": "SECURITY-POLICY.md",
+        "type": "file",
+        "description": "Security policy and guidelines",
+        "path": "../SECURITY-POLICY.md",
+        "size": 7478,
+        "modified": "2026-02-12T04:58:17.137719"
+      },
+      {
+        "name": "SECURITY_AUDIT.md",
+        "type": "file",
+        "description": "Security audit report",
+        "path": "../SECURITY_AUDIT.md",
+        "size": 5263,
+        "modified": "2026-02-12T04:58:17.137719"
+      },
+      {
+        "name": "TRANSFORMATION_SUMMARY.md",
+        "type": "file",
+        "description": "Markdown documentation",
+        "path": "../TRANSFORMATION_SUMMARY.md",
+        "size": 10125,
+        "modified": "2026-02-12T04:58:17.137719"
+      },
+      {
+        "name": "update_kb.ps1",
+        "type": "file",
+        "description": "PowerShell script",
+        "path": "../update_kb.ps1",
+        "size": 6370,
+        "modified": "2026-02-12T04:58:17.144719"
+      }
+    ]
+  }
+}
