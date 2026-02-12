@@ -25,7 +25,7 @@ Successfully transformed the BrowserOS_Guides repository from a documentation sy
 - Performance: <100ms query response time
 
 **Integration**:
-- BrowserOS: "Add Custom App" → `http://localhost:3000/mcp`
+- BrowserOS: "Add Custom App" → `http://localhost:3100/mcp`
 - Claude Desktop: HTTP transport in config
 - Universal: Works with any MCP HTTP client
 
@@ -236,7 +236,7 @@ npm run mcp-server
 ### 2. Connect to BrowserOS
 1. Open BrowserOS
 2. Settings → Connected Apps → Add Custom App
-3. URL: `http://localhost:3000/mcp`
+3. URL: `http://localhost:3100/mcp`
 4. Name: `BrowserOS Workflows KB`
 
 ### 3. Query from Agent
@@ -249,7 +249,7 @@ npm run mcp-server
 
 ### 4. Direct API Call
 ```bash
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:3100/mcp \
   -H "Content-Type: application/json" \
   -d '{
     "tool": "search_workflows",
@@ -321,7 +321,7 @@ curl -X POST http://localhost:3000/mcp \
 - Documentation (for new features)
 
 ### Monitoring
-- Health check: `curl http://localhost:3000/mcp/health`
+- Health check: `curl http://localhost:3100/mcp/health`
 - Validation: `npm run validate-kb`
 - Source freshness: MCP tool `check_source_freshness`
 

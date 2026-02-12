@@ -445,7 +445,7 @@ What would you like to configure?
             self.modified = True
             
             if enable:
-                port = get_input("Metrics port", default=self.config.get('METRICS_PORT', '9090'))
+                port = get_input("Metrics port", default=self.config.get('METRICS_PORT', '9091'))
                 self.config['METRICS_PORT'] = port
         
         input("\nPress Enter to continue...")

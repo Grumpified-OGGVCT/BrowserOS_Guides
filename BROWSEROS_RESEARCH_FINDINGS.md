@@ -74,7 +74,7 @@ feat: add MCP transport auto-detection for custom servers
 - Cache detection results per URL with 1-hour TTL
 ```
 
-**Impact**: Our HTTP MCP server at `http://localhost:3000/mcp` is **perfect** for BrowserOS. They auto-detect Streamable HTTP.
+**Impact**: Our HTTP MCP server at `http://localhost:3100/mcp` is **perfect** for BrowserOS. They auto-detect Streamable HTTP.
 
 **Ports**:
 - 9100: BrowserOS Server (MCP endpoints)

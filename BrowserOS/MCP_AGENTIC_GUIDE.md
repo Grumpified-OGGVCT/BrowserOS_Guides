@@ -212,7 +212,7 @@ browseros mcp-server --port 3000
     {
       "name": "browseros",
       "type": "mcp",
-      "endpoint": "http://localhost:3000",
+      "endpoint": "http://localhost:3100",
       "capabilities": [
         "navigate",
         "extract",
@@ -249,7 +249,7 @@ browseros mcp-server --port 3000
 **Usage**:
 - Just mention web tasks in your prompt
 - Cursor automatically uses BrowserOS when appropriate
-- Example: "Test the login form on localhost:3000"
+- Example: "Test the login form on localhost:3100"
 
 ---
 
@@ -284,7 +284,7 @@ Claude will automatically use BrowserOS tool.
 
 - **Name**: BrowserOS
 - **Type**: HTTP
-- **URL**: `http://localhost:3000`
+- **URL**: `http://localhost:3100`
 - **Auth**: None (or API key if configured)
 
 **Usage**:
@@ -299,7 +299,7 @@ Use natural language - MSTY routes to BrowserOS automatically.
 ```yaml
 name: browseros
 description: Browser automation and web interaction
-endpoint: http://localhost:3000/mcp
+endpoint: http://localhost:3100/mcp
 methods:
   - navigate
   - extract
@@ -342,7 +342,7 @@ from ollama import Client
 import requests
 
 ollama = Client(host='http://localhost:11434')
-browseros_api = 'http://localhost:3000'
+browseros_api = 'http://localhost:3100'
 
 def chat_with_browseros(prompt):
     # Get AI response
@@ -836,7 +836,7 @@ except BrowserError as e:
 **Problem**: AI responds with text instead of taking action
 
 **Solutions**:
-- ✅ Verify MCP server is running: `curl http://localhost:3000/health`
+- ✅ Verify MCP server is running: `curl http://localhost:3100/health`
 - ✅ Check tool is in AI's available tools list
 - ✅ Be explicit in prompt: "Use the browser tool to..."
 - ✅ Restart AI application to reload MCP config

@@ -7,7 +7,6 @@
     "start": "node server/mcp-server.js",
     "mcp-server": "MCP_SERVER_PORT=3100 node server/mcp-server.js",
     "mcp-server:dev": "LOG_LEVEL=debug MCP_SERVER_PORT=3100 node server/mcp-server.js",
-    "mcp-server:3000": "MCP_SERVER_PORT=3000 node server/mcp-server.js",
     "generate-library": "python3 scripts/generate_library.py",
     "enhance-sources": "python3 scripts/enhance_sources.py",
     "validate-kb": "python3 scripts/validate_kb.py",

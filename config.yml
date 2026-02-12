@@ -45,7 +45,7 @@ OLLAMA:
   
   # MCP Server Configuration
   mcp:
-    server_url: "mcp://localhost:3000/ollama"
+    server_url: "mcp://localhost:3100/ollama"
     protocol_version: "2024-11-05"
     transport: "stdio"  # stdio, http, websocket
     capabilities:
@@ -216,11 +216,11 @@ DOCKER:
     image: "modelcontextprotocol/server:latest"
     container_name: "mcp-server"
     ports:
-      - "3000:3000"
+      - "3100:3100"
     networks:
       - "browseros-network"
     environment:
-      MCP_PORT: "3000"
+      MCP_PORT: "3100"
       MCP_HOST: "0.0.0.0"
 
 # ============================================================================
@@ -232,7 +232,7 @@ MCP:
   # Server Configuration
   server:
     host: "localhost"
-    port: 3000
+    port: 3100
     protocol: "2024-11-05"
     transport: "stdio"  # stdio, http, websocket
   
@@ -350,7 +350,7 @@ MONITORING:
   # Metrics
   metrics:
     provider: "prometheus"  # prometheus, statsd, datadog
-    port: 9090
+    port: 9091
     endpoint: "/metrics"
   
   # Tracing

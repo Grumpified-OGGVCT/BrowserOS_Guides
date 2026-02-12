@@ -68,7 +68,7 @@ feat: add MCP transport auto-detection for custom servers
 - 1-hour cache per URL
 ```
 
-**Impact**: Our HTTP MCP server at `localhost:3000/mcp` is **perfectly compatible**.
+**Impact**: Our HTTP MCP server at `localhost:3100/mcp` is **perfectly compatible**.
 
 ---
 

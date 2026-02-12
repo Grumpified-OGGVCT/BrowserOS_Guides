@@ -8,7 +8,7 @@ This document describes how to connect the BrowserOS_Guides knowledge base as an
 
 ### HTTP Endpoint
 ```
-http://localhost:3000/mcp
+http://localhost:3100/mcp
 ```
 
 **Production (when deployed)**:
@@ -215,7 +215,7 @@ The MCP server exposes the following tools that agents can use:
 3. Click "Add Custom App"
 4. Enter the following:
    - **Name**: `BrowserOS Workflows KB`
-   - **URL**: `http://localhost:3000/mcp` (or your deployed URL)
+   - **URL**: `http://localhost:3100/mcp` (or your deployed URL)
    - **Description**: `BrowserOS Workflows Knowledge Base - Self-aware intelligence layer providing workflow documentation, executable templates, anti-patterns catalog, and ground truth validation.`
 5. Click "Add Server"
 
@@ -254,7 +254,7 @@ Add to `claude_desktop_config.json`:
       "command": "node",
       "args": ["path/to/browseros-guides/server/mcp-server.js"],
       "transport": "http",
-      "url": "http://localhost:3000/mcp"
+      "url": "http://localhost:3100/mcp"
     }
   }
 }
@@ -355,13 +355,13 @@ All MCP tools return responses in this format:
 ```bash
 npm install
 npm run mcp-server
-# Server starts on http://localhost:3000/mcp
+# Server starts on http://localhost:3100/mcp
 ```
 
 ### Option 2: Docker
 ```bash
 docker-compose up mcp-server
-# Server starts on http://localhost:3000/mcp
+# Server starts on http://localhost:3100/mcp
 ```
 
 ### Option 3: Cloud Deployment
@@ -372,7 +372,7 @@ Deploy to any Node.js hosting service (Heroku, Render, Railway, etc.)
 ## Troubleshooting
 
 ### BrowserOS can't connect
-- Verify server is running: `curl http://localhost:3000/mcp/health`
+- Verify server is running: `curl http://localhost:3100/mcp/health`
 - Check firewall rules allow port 3000
 - Ensure URL in BrowserOS matches server address
 

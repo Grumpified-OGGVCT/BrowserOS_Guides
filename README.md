@@ -11,7 +11,7 @@
 
 ```bash
 npm run mcp-server
-# Server starts at http://localhost:3000/mcp
+# Server starts at http://localhost:3100/mcp
 ```
 
 **📖 [Quick Start Guide](./QUICKSTART_MCP.md)** | **🏗️ [Architecture](./ARCHITECTURE.md)** | **📡 [MCP Integration](./MCP_SERVER_INTEGRATION.md)**
@@ -42,7 +42,7 @@ This repository has evolved into an **operational intelligence layer** for Brows
 **Option 1: MCP Server (Recommended for BrowserOS)**
 ```bash
 npm run mcp-server
-# Add to BrowserOS: http://localhost:3000/mcp
+# Add to BrowserOS: http://localhost:3100/mcp
 ```
 
 **Option 2: Interactive Website**

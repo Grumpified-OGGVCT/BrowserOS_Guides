@@ -6,7 +6,7 @@
 
 const http = require('http');
 
-const MCP_URL = process.env.MCP_URL || 'http://localhost:3000';
+const MCP_URL = process.env.MCP_URL || 'http://localhost:3100';
 
 function makeRequest(path, method = 'GET', body = null) {
   return new Promise((resolve, reject) => {

@@ -187,7 +187,7 @@ function autoFixWorkflow(workflow, breakingChange) {
 | **Deployment** | Browser restart | ✅ 5s hot-swap (`npm restart`) |
 | **Storage** | Browser profile | ✅ Isolated 150MB process |
 | **Language** | TypeScript only | ✅ Node.js + Python (ML) |
-| **Scope** | Global | ✅ Multi-tenant (port 8000, 8001, 8002) |
+| **Scope** | Global | ✅ Multi-tenant (port 8100, 8101, 8102) |
 | **Updates** | Browser cycle | ✅ Event-driven webhooks |
 | **Security** | Affects core | ✅ Sandboxed, explicit consent |
 | **Performance** | Shares RAM | ✅ 0% browser CPU |

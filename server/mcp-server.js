@@ -15,7 +15,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 // Configuration
-const PORT = process.env.BROWSEROS_GUIDES_PORT || 3000;
+const PORT = process.env.BROWSEROS_GUIDES_PORT || 3100;
 const HOST = process.env.BROWSEROS_GUIDES_HOST || 'localhost';
 const ENABLE_CACHE = process.env.BROWSEROS_GUIDES_ENABLE_CACHE === 'true';
 const LOG_LEVEL = process.env.BROWSEROS_GUIDES_LOG_LEVEL || 'info';
