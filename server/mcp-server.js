@@ -515,6 +515,50 @@ const server = http.createServer(async (req, res) => {
   if (req.url === '/api/generate-workflow' && req.method === 'POST') {
     let body = '';
     
+    // FIX H04: Rate limiting check
+    const clientIP = req.socket.remoteAddress || req.connection.remoteAddress || 'unknown';
+    
+    // Check concurrent generations
+    const currentActive = activeGenerations.get(clientIP) || 0;
+    if (currentActive >= MAX_CONCURRENT_PER_IP) {
+      res.writeHead(429, { 
+        'Content-Type': 'application/json',
+        'Retry-After': '30'
+      });
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Too many concurrent requests',
+        details: `You can have a maximum of ${MAX_CONCURRENT_PER_IP} workflow generations running at once. Please wait for your current request to complete.`,
+        retry_after: 30
+      }));
+      return;
+    }
+    
+    // Check hourly limit
+    const requestTimes = generationHistory.get(clientIP) || [];
+    const oneHourAgo = Date.now() - (60 * 60 * 1000);
+    const recentRequests = requestTimes.filter(time => time > oneHourAgo);
+    
+    if (recentRequests.length >= MAX_REQUESTS_PER_HOUR) {
+      res.writeHead(429, { 
+        'Content-Type': 'application/json',
+        'Retry-After': '3600'
+      });
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Hourly rate limit exceeded',
+        details: `You can generate a maximum of ${MAX_REQUESTS_PER_HOUR} workflows per hour. Please try again later.`,
+        retry_after: 3600,
+        requests_remaining: 0
+      }));
+      return;
+    }
+    
+    // Track this request
+    recentRequests.push(Date.now());
+    generationHistory.set(clientIP, recentRequests);
+    activeGenerations.set(clientIP, currentActive + 1);
+    
     req.on('data', chunk => {
       body += chunk.toString();
     });
@@ -558,7 +602,19 @@ const server = http.createServer(async (req, res) => {
           log.debug('Workflow generator error:', data.toString());
         });
         
+        // FIX: Add subprocess timeout
+        const processTimeout = setTimeout(() => {
+          python.kill('SIGTERM');
+          log.error('Workflow generator process timed out after 60s');
+        }, GENERATION_TIMEOUT);
+        
         python.on('close', (code) => {
+          clearTimeout(processTimeout);
+          
+          // FIX H04: Decrement active count
+          const currentActive = activeGenerations.get(clientIP) || 1;
+          activeGenerations.set(clientIP, Math.max(0, currentActive - 1));
+          
           if (code !== 0) {
             log.error(`Workflow generator exited with code ${code}`);
             log.error(`stderr: ${stderr}`);
@@ -629,6 +685,10 @@ const server = http.createServer(async (req, res) => {
         
       } catch (error) {
         log.error('Generate workflow error:', error.message);
+        
+        // FIX H04: Decrement active count on error
+        const currentActive = activeGenerations.get(clientIP) || 1;
+        activeGenerations.set(clientIP, Math.max(0, currentActive - 1));
         
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({

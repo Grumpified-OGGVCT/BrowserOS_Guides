@@ -658,12 +658,18 @@ python scripts/workflow_generator.py full \
                                 id="use-case" 
                                 name="use_case" 
                                 required
+                                maxlength="5000"
                                 rows="3"
                                 placeholder="Example: Monitor competitor prices across 5 e-commerce websites and alert me when prices drop by more than 10%"
                                 style="width: 100%; padding: var(--space-4); background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 6px; color: var(--text-primary); font-family: inherit; font-size: 1rem; resize: vertical;"
+                                aria-label="Describe the workflow you want to automate"
+                                aria-describedby="use-case-hint"
                             ></textarea>
-                            <p style="margin-top: var(--space-2); font-size: 0.875rem; color: var(--text-tertiary);">
-                                Be specific! The more detail you provide, the better the workflow.
+                            <p id="use-case-hint" style="margin-top: var(--space-2); font-size: 0.875rem; color: var(--text-tertiary);">
+                                Be specific! The more detail you provide, the better the workflow. Maximum 5000 characters.
+                            </p>
+                            <p style="margin-top: var(--space-1); font-size: 0.75rem; color: var(--warning);">
+                                ⚠️ Do not include confidential or personal information in your request.
                             </p>
                         </div>
                         
@@ -676,6 +682,7 @@ python scripts/workflow_generator.py full \
                                 id="industry" 
                                 name="industry"
                                 style="width: 100%; padding: var(--space-4); background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 6px; color: var(--text-primary); font-family: inherit; font-size: 1rem;"
+                                aria-label="Select your industry or business context"
                             >
                                 <option value="general">General</option>
                                 <option value="e-commerce">E-Commerce</option>
@@ -700,21 +707,21 @@ python scripts/workflow_generator.py full \
                             <label style="display: block; font-weight: 600; margin-bottom: var(--space-3); color: var(--text-primary);">
                                 Complexity Level
                             </label>
-                            <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
-                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer;">
-                                    <input type="radio" name="complexity" value="low" style="margin-right: var(--space-2);">
+                            <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;" role="radiogroup" aria-label="Workflow complexity level">
+                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer; padding: var(--space-3); min-width: 44px; min-height: 44px;">
+                                    <input type="radio" name="complexity" value="low" style="margin-right: var(--space-2); width: 20px; height: 20px;" aria-label="Beginner complexity">
                                     <span>Beginner</span>
                                 </label>
-                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer;">
-                                    <input type="radio" name="complexity" value="medium" checked style="margin-right: var(--space-2);">
+                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer; padding: var(--space-3); min-width: 44px; min-height: 44px;">
+                                    <input type="radio" name="complexity" value="medium" checked style="margin-right: var(--space-2); width: 20px; height: 20px;" aria-label="Intermediate complexity">
                                     <span>Intermediate</span>
                                 </label>
-                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer;">
-                                    <input type="radio" name="complexity" value="high" style="margin-right: var(--space-2);">
+                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer; padding: var(--space-3); min-width: 44px; min-height: 44px;">
+                                    <input type="radio" name="complexity" value="high" style="margin-right: var(--space-2); width: 20px; height: 20px;" aria-label="Advanced complexity">
                                     <span>Advanced</span>
                                 </label>
-                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer;">
-                                    <input type="radio" name="complexity" value="expert" style="margin-right: var(--space-2);">
+                                <label class="radio-label" style="display: flex; align-items: center; cursor: pointer; padding: var(--space-3); min-width: 44px; min-height: 44px;">
+                                    <input type="radio" name="complexity" value="expert" style="margin-right: var(--space-2); width: 20px; height: 20px;" aria-label="Expert complexity">
                                     <span>Expert</span>
                                 </label>
                             </div>
@@ -724,21 +731,32 @@ python scripts/workflow_generator.py full \
                         <button 
                             type="submit" 
                             id="generate-btn"
+                            aria-label="Generate workflow using AI"
                             style="width: 100%; padding: var(--space-4) var(--space-6); background: linear-gradient(135deg, var(--browseros-orange), var(--browseros-orange-dark)); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-orange);"
                         >
                             🚀 Generate My Workflow
                         </button>
+                        <p style="margin-top: var(--space-2); font-size: 0.75rem; color: var(--text-tertiary); text-align: center;">
+                            💡 Tip: Press Ctrl+Enter (or Cmd+Enter on Mac) to submit
+                        </p>
                     </form>
                     
                     <!-- Loading State -->
-                    <div id="loading-state" style="display: none; text-align: center; margin-top: var(--space-8); padding: var(--space-8);">
-                        <div class="spinner" style="border: 4px solid var(--border-primary); border-top: 4px solid var(--browseros-orange); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                    <div id="loading-state" style="display: none; text-align: center; margin-top: var(--space-8); padding: var(--space-8);" role="status" aria-live="polite" aria-atomic="true">
+                        <div class="spinner" style="border: 4px solid var(--border-primary); border-top: 4px solid var(--browseros-orange); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto;" aria-hidden="true"></div>
                         <p style="margin-top: var(--space-4); color: var(--text-secondary); font-size: 1.1rem;">
                             <span id="loading-message">Generating your workflow with Kimi AI...</span>
                         </p>
                         <p style="margin-top: var(--space-2); color: var(--text-tertiary); font-size: 0.9rem;">
                             This may take 10-15 seconds
                         </p>
+                        <button 
+                            id="cancel-generation-btn"
+                            style="margin-top: var(--space-4); padding: var(--space-2) var(--space-4); background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border-primary); border-radius: 6px; cursor: pointer; font-size: 0.875rem;"
+                            aria-label="Cancel workflow generation"
+                        >
+                            ✕ Cancel
+                        </button>
                     </div>
                     
                     <!-- Results Display -->
@@ -786,13 +804,13 @@ python scripts/workflow_generator.py full \
                     </div>
                     
                     <!-- Error Display -->
-                    <div id="error-container" style="display: none; margin-top: var(--space-8);">
+                    <div id="error-container" style="display: none; margin-top: var(--space-8);" role="alert" aria-live="assertive">
                         <div style="background: var(--bg-secondary); border: 2px solid var(--error); border-radius: 8px; padding: var(--space-6);">
                             <h3 style="color: var(--error); margin: 0 0 var(--space-4) 0; display: flex; align-items: center; gap: var(--space-2);">
                                 <span>❌</span>
                                 <span id="error-title">Generation Failed</span>
                             </h3>
-                            <p id="error-message" style="color: var(--text-secondary); margin: 0;"></p>
+                            <div id="error-message" style="color: var(--text-secondary);"></div>
                         </div>
                     </div>
                 </div>
