@@ -285,6 +285,34 @@ This is a **living, self-maintaining knowledge base** that:
 
 ## 🚀 Quick Start
 
+### 🪟 Windows Installation (Complete Setup System)
+
+**NEW! Full Windows installation with wizard and auto-update:**
+
+```batch
+# Clone repository
+git clone https://github.com/Grumpified-OGGVCT/BrowserOS_Guides.git
+cd BrowserOS_Guides
+
+# Run installation (checks Python, installs dependencies, launches setup wizard)
+install.bat
+
+# After setup, run the system
+run.bat
+```
+
+**Features:**
+- ✅ **install.bat** - Checks prerequisites, installs dependencies
+- ✅ **Interactive Setup Wizard** - Guides through ALL configuration options
+- ✅ **Auto-Update System** - Checks and installs updates on every startup (bulletproof!)
+- ✅ **Configuration Manager** - Modify settings anytime
+- ✅ **run.bat** - Main menu for all operations
+- ✅ **Comprehensive Error Handling** - Backups, rollbacks, validation
+
+📖 **Full Guide**: [WINDOWS_SETUP.md](WINDOWS_SETUP.md) - Complete installation, configuration, and troubleshooting
+
+---
+
 ### 🌐 View the Interactive Website
 
 The website exists in the `docs/` directory and can be viewed:
@@ -383,9 +411,19 @@ BrowserOS_Guides/
 │
 ├── 🐍 scripts/
 │   ├── research_pipeline.py           # AI-powered research engine
-│   └── validate_kb.py                 # KB validation (C01-C05)
+│   ├── validate_kb.py                 # KB validation (C01-C05)
+│   ├── setup_wizard.py                # Interactive first-run configuration (Windows)
+│   ├── config_manager.py              # Post-setup configuration tool (Windows)
+│   ├── auto_update.py                 # Bulletproof auto-update system (Windows)
+│   ├── workflow_generator.py          # AI-powered workflow creation
+│   ├── self_test.py                   # Comprehensive system tests
+│   └── security_scanner.py            # Security vulnerability scanner
 │
+├── 🪟 install.bat                     # Windows installation script
+├── 🪟 run.bat                         # Windows main execution menu
 ├── 📦 requirements.txt                # Python dependencies
+├── 🔧 config.yml                      # Universal configuration
+├── 📝 .env.template                   # Environment variables template
 ├── 🔧 update_kb.ps1                   # PowerShell automation script
 └── 🙈 .gitignore                      # Comprehensive exclusions
 ```
