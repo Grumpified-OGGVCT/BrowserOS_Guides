@@ -63,7 +63,7 @@ def search_code_in_repo(owner: str, repo: str, query: str, token: Optional[str] 
     }
     headers = {}
     if token:
-        headers["Authorization"] = f"token {token}"
+        headers["Authorization"] = f"Bearer {token}"
     
     try:
         response = requests.get(url, params=params, headers=headers, timeout=30)
@@ -79,7 +79,7 @@ def get_file_content(owner: str, repo: str, path: str, token: Optional[str] = No
     url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
     headers = {}
     if token:
-        headers["Authorization"] = f"token {token}"
+        headers["Authorization"] = f"Bearer {token}"
     
     try:
         response = requests.get(url, headers=headers, timeout=30)

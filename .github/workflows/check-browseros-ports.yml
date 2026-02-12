@@ -104,7 +104,7 @@ jobs:
                 title: '⚠️  BrowserOS Port Configuration Mismatch Detected',
                 labels: ['port-configuration', 'automated-check'],
                 body: `## BrowserOS Port Configuration Check\n\n` +
-                      `**Timestamp:** ${results.summary?.timestamp || new Date().toISOString()}\n\n` +
+                      `**Timestamp:** ${results.timestamp || new Date().toISOString()}\n\n` +
                       `**Summary:**\n` +
                       `- BrowserOS MCP Ports Found: ${(results.summary?.mcp_ports_found || []).join(', ') || 'None'}\n` +
                       `- Our Configured Port: ${results.summary?.our_port || 3100}\n\n` +
