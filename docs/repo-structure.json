@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-02-12T04:58:42.659365",
+  "generated_at": "2026-02-12T05:09:18.518522",
   "repository": "BrowserOS_Guides",
   "stats": {
     "files": 69,
@@ -24,7 +24,7 @@
                 "description": "YAML configuration",
                 "path": "../.github/workflows/deploy-pages.yml",
                 "size": 2153,
-                "modified": "2026-02-12T04:58:17.135719"
+                "modified": "2026-02-12T05:09:17.796767"
               },
               {
                 "name": "self-test.yml",
@@ -32,7 +32,7 @@
                 "description": "Automated self-test workflow",
                 "path": "../.github/workflows/self-test.yml",
                 "size": 4504,
-                "modified": "2026-02-12T04:58:17.135719"
+                "modified": "2026-02-12T05:09:17.796767"
               },
               {
                 "name": "update-kb.yml",
@@ -40,7 +40,7 @@
                 "description": "Knowledge base update automation",
                 "path": "../.github/workflows/update-kb.yml",
                 "size": 5931,
-                "modified": "2026-02-12T04:58:17.135719"
+                "modified": "2026-02-12T05:09:17.796767"
               }
             ]
           },
@@ -50,7 +50,7 @@
             "description": "Markdown documentation",
             "path": "../.github/ACTIONS_SETUP.md",
             "size": 6020,
-            "modified": "2026-02-12T04:58:17.134719"
+            "modified": "2026-02-12T05:09:17.796767"
           },
           {
             "name": "issue_draft.md",
@@ -58,7 +58,7 @@
             "description": "Markdown documentation",
             "path": "../.github/issue_draft.md",
             "size": 723,
-            "modified": "2026-02-12T04:58:17.134719"
+            "modified": "2026-02-12T05:09:17.796767"
           }
         ]
       },
@@ -76,7 +76,7 @@
                 "description": "Advanced and expert-level techniques",
                 "path": "../BrowserOS/Research/ADVANCED_TECHNIQUES.md",
                 "size": 21774,
-                "modified": "2026-02-12T04:58:17.135719"
+                "modified": "2026-02-12T05:09:17.797766"
               },
               {
                 "name": "BrowserOS_Workflows_KnowledgeBase.md",
@@ -84,7 +84,7 @@
                 "description": "Comprehensive workflows knowledge base",
                 "path": "../BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md",
                 "size": 23889,
-                "modified": "2026-02-12T04:58:17.135719"
+                "modified": "2026-02-12T05:09:17.797766"
               },
               {
                 "name": "BrowserOS_Workflows_KnowledgeBase.md.checksum",
@@ -92,7 +92,7 @@
                 "description": "CHECKSUM file",
                 "path": "../BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md.checksum",
                 "size": 64,
-                "modified": "2026-02-12T04:58:17.135719"
+                "modified": "2026-02-12T05:09:17.797766"
               },
               {
                 "name": "repo_state.json",
@@ -100,7 +100,7 @@
                 "description": "JSON data",
                 "path": "../BrowserOS/Research/repo_state.json",
                 "size": 268,
-                "modified": "2026-02-12T04:58:17.135719"
+                "modified": "2026-02-12T05:09:17.797766"
               },
               {
                 "name": "sources.json",
@@ -108,7 +108,7 @@
                 "description": "JSON data",
                 "path": "../BrowserOS/Research/sources.json",
                 "size": 3286,
-                "modified": "2026-02-12T04:58:17.135719"
+                "modified": "2026-02-12T05:09:17.797766"
               },
               {
                 "name": "test_results.json",
@@ -116,7 +116,7 @@
                 "description": "JSON data",
                 "path": "../BrowserOS/Research/test_results.json",
                 "size": 1118,
-                "modified": "2026-02-12T04:58:17.136719"
+                "modified": "2026-02-12T05:09:17.797766"
               },
               {
                 "name": "verify_kb_completeness.ps1",
@@ -124,7 +124,7 @@
                 "description": "PowerShell script",
                 "path": "../BrowserOS/Research/verify_kb_completeness.ps1",
                 "size": 15526,
-                "modified": "2026-02-12T04:58:17.136719"
+                "modified": "2026-02-12T05:09:17.797766"
               }
             ]
           },
@@ -142,7 +142,7 @@
                     "description": "JSON data",
                     "path": "../BrowserOS/Workflows/E-Commerce/amazon_price_tracker.json",
                     "size": 10052,
-                    "modified": "2026-02-12T04:58:17.136719"
+                    "modified": "2026-02-12T05:09:17.798766"
                   },
                   {
                     "name": "README.md",
@@ -150,7 +150,7 @@
                     "description": "Markdown documentation",
                     "path": "../BrowserOS/Workflows/E-Commerce/README.md",
                     "size": 7487,
-                    "modified": "2026-02-12T04:58:17.136719"
+                    "modified": "2026-02-12T05:09:17.798766"
                   }
                 ]
               },
@@ -160,7 +160,7 @@
                 "description": "Markdown documentation",
                 "path": "../BrowserOS/Workflows/README.md",
                 "size": 11919,
-                "modified": "2026-02-12T04:58:17.136719"
+                "modified": "2026-02-12T05:09:17.798766"
               }
             ]
           },
@@ -170,7 +170,7 @@
             "description": "MCP and agentic AI integration guide",
             "path": "../BrowserOS/MCP_AGENTIC_GUIDE.md",
             "size": 24536,
-            "modified": "2026-02-12T04:58:17.135719"
+            "modified": "2026-02-12T05:09:17.797766"
           },
           {
             "name": "README.md",
@@ -178,7 +178,7 @@
             "description": "Markdown documentation",
             "path": "../BrowserOS/README.md",
             "size": 6628,
-            "modified": "2026-02-12T04:58:17.135719"
+            "modified": "2026-02-12T05:09:17.797766"
           },
           {
             "name": "structure.md",
@@ -186,7 +186,7 @@
             "description": "Primary repository index and structure",
             "path": "../BrowserOS/structure.md",
             "size": 4778,
-            "modified": "2026-02-12T04:58:17.136719"
+            "modified": "2026-02-12T05:09:17.798766"
           },
           {
             "name": "USE_CASE_MATRIX.md",
@@ -194,7 +194,7 @@
             "description": "500+ use cases across 25+ industries",
             "path": "../BrowserOS/USE_CASE_MATRIX.md",
             "size": 15944,
-            "modified": "2026-02-12T04:58:17.136719"
+            "modified": "2026-02-12T05:09:17.798766"
           }
         ]
       },
@@ -212,7 +212,7 @@
                 "description": "PNG file",
                 "path": "screenshots/01-hero-section.png",
                 "size": 241506,
-                "modified": "2026-02-12T04:58:17.139719"
+                "modified": "2026-02-12T05:09:17.801766"
               },
               {
                 "name": "01-hero-section.webp",
@@ -220,7 +220,7 @@
                 "description": "WEBP file",
                 "path": "screenshots/01-hero-section.webp",
                 "size": 41980,
-                "modified": "2026-02-12T04:58:17.139719"
+                "modified": "2026-02-12T05:09:17.801766"
               },
               {
                 "name": "02-workflows-section.png",
@@ -228,7 +228,7 @@
                 "description": "PNG file",
                 "path": "screenshots/02-workflows-section.png",
                 "size": 85765,
-                "modified": "2026-02-12T04:58:17.139719"
+                "modified": "2026-02-12T05:09:17.801766"
               },
               {
                 "name": "02-workflows-section.webp",
@@ -236,7 +236,7 @@
                 "description": "WEBP file",
                 "path": "screenshots/02-workflows-section.webp",
                 "size": 33108,
-                "modified": "2026-02-12T04:58:17.140719"
+                "modified": "2026-02-12T05:09:17.801766"
               },
               {
                 "name": "03-use-cases-section.png",
@@ -244,7 +244,7 @@
                 "description": "PNG file",
                 "path": "screenshots/03-use-cases-section.png",
                 "size": 144077,
-                "modified": "2026-02-12T04:58:17.140719"
+                "modified": "2026-02-12T05:09:17.802767"
               },
               {
                 "name": "03-use-cases-section.webp",
@@ -252,7 +252,7 @@
                 "description": "WEBP file",
                 "path": "screenshots/03-use-cases-section.webp",
                 "size": 65060,
-                "modified": "2026-02-12T04:58:17.140719"
+                "modified": "2026-02-12T05:09:17.802767"
               },
               {
                 "name": "04-mcp-agentic-section.png",
@@ -260,7 +260,7 @@
                 "description": "PNG file",
                 "path": "screenshots/04-mcp-agentic-section.png",
                 "size": 159938,
-                "modified": "2026-02-12T04:58:17.141719"
+                "modified": "2026-02-12T05:09:17.803766"
               },
               {
                 "name": "04-mcp-agentic-section.webp",
@@ -268,7 +268,7 @@
                 "description": "WEBP file",
                 "path": "screenshots/04-mcp-agentic-section.webp",
                 "size": 78248,
-                "modified": "2026-02-12T04:58:17.141719"
+                "modified": "2026-02-12T05:09:17.803766"
               },
               {
                 "name": "05-repo-browser.png",
@@ -276,7 +276,7 @@
                 "description": "PNG file",
                 "path": "screenshots/05-repo-browser.png",
                 "size": 121163,
-                "modified": "2026-02-12T04:58:17.142719"
+                "modified": "2026-02-12T05:09:17.804766"
               },
               {
                 "name": "05-repo-browser.webp",
@@ -284,7 +284,7 @@
                 "description": "WEBP file",
                 "path": "screenshots/05-repo-browser.webp",
                 "size": 33800,
-                "modified": "2026-02-12T04:58:17.142719"
+                "modified": "2026-02-12T05:09:17.804766"
               },
               {
                 "name": "06-search-section.png",
@@ -292,7 +292,7 @@
                 "description": "PNG file",
                 "path": "screenshots/06-search-section.png",
                 "size": 92109,
-                "modified": "2026-02-12T04:58:17.143719"
+                "modified": "2026-02-12T05:09:17.804766"
               },
               {
                 "name": "06-search-section.webp",
@@ -300,7 +300,7 @@
                 "description": "WEBP file",
                 "path": "screenshots/06-search-section.webp",
                 "size": 36998,
-                "modified": "2026-02-12T04:58:17.143719"
+                "modified": "2026-02-12T05:09:17.805767"
               },
               {
                 "name": "README.md",
@@ -308,7 +308,7 @@
                 "description": "Markdown documentation",
                 "path": "screenshots/README.md",
                 "size": 999,
-                "modified": "2026-02-12T04:58:17.143719"
+                "modified": "2026-02-12T05:09:17.805767"
               }
             ]
           },
@@ -318,7 +318,7 @@
             "description": "YAML configuration",
             "path": "_config.yml",
             "size": 850,
-            "modified": "2026-02-12T04:58:17.137719"
+            "modified": "2026-02-12T05:09:17.799767"
           },
           {
             "name": "app.js",
@@ -326,7 +326,7 @@
             "description": "JavaScript",
             "path": "app.js",
             "size": 24612,
-            "modified": "2026-02-12T04:58:17.137719"
+            "modified": "2026-02-12T05:09:17.799767"
           },
           {
             "name": "index.html",
@@ -334,7 +334,7 @@
             "description": "HTML page",
             "path": "index.html",
             "size": 44068,
-            "modified": "2026-02-12T04:58:17.137719"
+            "modified": "2026-02-12T05:09:17.799767"
           },
           {
             "name": "repo-browser.html",
@@ -342,7 +342,7 @@
             "description": "HTML page",
             "path": "repo-browser.html",
             "size": 44341,
-            "modified": "2026-02-12T04:58:17.137719"
+            "modified": "2026-02-12T05:09:17.799767"
           },
           {
             "name": "repo-structure.json",
@@ -350,7 +350,7 @@
             "description": "JSON data",
             "path": "repo-structure.json",
             "size": 20735,
-            "modified": "2026-02-12T04:58:17.138719"
+            "modified": "2026-02-12T05:09:17.799767"
           },
           {
             "name": "search-index.json",
@@ -358,7 +358,7 @@
             "description": "JSON data",
             "path": "search-index.json",
             "size": 33968,
-            "modified": "2026-02-12T04:58:17.143719"
+            "modified": "2026-02-12T05:09:17.805767"
           },
           {
             "name": "styles.css",
@@ -366,7 +366,7 @@
             "description": "Stylesheet",
             "path": "styles.css",
             "size": 19383,
-            "modified": "2026-02-12T04:58:17.143719"
+            "modified": "2026-02-12T05:09:17.805767"
           }
         ]
       },
@@ -380,7 +380,7 @@
             "description": "Python script",
             "path": "../scripts/agent_connectors.py",
             "size": 12811,
-            "modified": "2026-02-12T04:58:17.143719"
+            "modified": "2026-02-12T05:09:17.805767"
           },
           {
             "name": "config_loader.py",
@@ -388,7 +388,7 @@
             "description": "Python script",
             "path": "../scripts/config_loader.py",
             "size": 7551,
-            "modified": "2026-02-12T04:58:17.143719"
+            "modified": "2026-02-12T05:09:17.805767"
           },
           {
             "name": "convert_screenshots_webp.py",
@@ -396,7 +396,7 @@
             "description": "Python script",
             "path": "../scripts/convert_screenshots_webp.py",
             "size": 2354,
-            "modified": "2026-02-12T04:58:17.143719"
+            "modified": "2026-02-12T05:09:17.805767"
           },
           {
             "name": "extract_claude_skills.py",
@@ -404,7 +404,7 @@
             "description": "Python script",
             "path": "../scripts/extract_claude_skills.py",
             "size": 13074,
-            "modified": "2026-02-12T04:58:17.143719"
+            "modified": "2026-02-12T05:09:17.805767"
           },
           {
             "name": "generate_repo_structure.py",
@@ -412,7 +412,7 @@
             "description": "Python script",
             "path": "../scripts/generate_repo_structure.py",
             "size": 9160,
-            "modified": "2026-02-12T04:58:17.143719"
+            "modified": "2026-02-12T05:09:17.805767"
           },
           {
             "name": "generate_screenshots.py",
@@ -420,7 +420,7 @@
             "description": "Python script",
             "path": "../scripts/generate_screenshots.py",
             "size": 7257,
-            "modified": "2026-02-12T04:58:17.143719"
+            "modified": "2026-02-12T05:09:17.805767"
           },
           {
             "name": "generate_search_index.py",
@@ -428,7 +428,7 @@
             "description": "Search index generation",
             "path": "../scripts/generate_search_index.py",
             "size": 5769,
-            "modified": "2026-02-12T04:58:17.144719"
+            "modified": "2026-02-12T05:09:17.805767"
           },
           {
             "name": "repo_tracker.py",
@@ -436,7 +436,7 @@
             "description": "Repository tracking system",
             "path": "../scripts/repo_tracker.py",
             "size": 14180,
-            "modified": "2026-02-12T04:58:17.144719"
+            "modified": "2026-02-12T05:09:17.805767"
           },
           {
             "name": "research_pipeline.py",
@@ -444,7 +444,7 @@
             "description": "Automated research pipeline",
             "path": "../scripts/research_pipeline.py",
             "size": 15637,
-            "modified": "2026-02-12T04:58:17.144719"
+            "modified": "2026-02-12T05:09:17.806767"
           },
           {
             "name": "security_scanner.py",
@@ -452,7 +452,7 @@
             "description": "Security vulnerability scanner",
             "path": "../scripts/security_scanner.py",
             "size": 21050,
-            "modified": "2026-02-12T04:58:17.144719"
+            "modified": "2026-02-12T05:09:17.806767"
           },
           {
             "name": "self_test.py",
@@ -460,7 +460,7 @@
             "description": "Self-test automation (42 tests)",
             "path": "../scripts/self_test.py",
             "size": 24408,
-            "modified": "2026-02-12T04:58:17.144719"
+            "modified": "2026-02-12T05:09:17.806767"
           },
           {
             "name": "validate_kb.py",
@@ -468,7 +468,7 @@
             "description": "Python script",
             "path": "../scripts/validate_kb.py",
             "size": 4893,
-            "modified": "2026-02-12T04:58:17.144719"
+            "modified": "2026-02-12T05:09:17.806767"
           },
           {
             "name": "workflow_generator.py",
@@ -476,7 +476,7 @@
             "description": "AI-powered workflow generation",
             "path": "../scripts/workflow_generator.py",
             "size": 20166,
-            "modified": "2026-02-12T04:58:17.144719"
+            "modified": "2026-02-12T05:09:17.806767"
           }
         ]
       },
@@ -486,7 +486,7 @@
         "description": "TEMPLATE file",
         "path": "../.env.template",
         "size": 4753,
-        "modified": "2026-02-12T04:58:17.134719"
+        "modified": "2026-02-12T05:09:17.796767"
       },
       {
         "name": ".gitignore",
@@ -494,7 +494,7 @@
         "description": "File",
         "path": "../.gitignore",
         "size": 5759,
-        "modified": "2026-02-12T04:58:17.135719"
+        "modified": "2026-02-12T05:09:17.797766"
       },
       {
         "name": "AUTOMATION_QUICKSTART.md",
@@ -502,7 +502,7 @@
         "description": "Quick start guide for automation",
         "path": "../AUTOMATION_QUICKSTART.md",
         "size": 7090,
-        "modified": "2026-02-12T04:58:17.135719"
+        "modified": "2026-02-12T05:09:17.797766"
       },
       {
         "name": "COMPLETE_IMPLEMENTATION.md",
@@ -510,7 +510,7 @@
         "description": "Markdown documentation",
         "path": "../COMPLETE_IMPLEMENTATION.md",
         "size": 14321,
-        "modified": "2026-02-12T04:58:17.136719"
+        "modified": "2026-02-12T05:09:17.798766"
       },
       {
         "name": "config.yml",
@@ -518,7 +518,7 @@
         "description": "Main configuration (500+ parameters)",
         "path": "../config.yml",
         "size": 12816,
-        "modified": "2026-02-12T04:58:17.137719"
+        "modified": "2026-02-12T05:09:17.799767"
       },
       {
         "name": "DEPLOYMENT.md",
@@ -526,7 +526,7 @@
         "description": "Deployment guide (6 connection types)",
         "path": "../DEPLOYMENT.md",
         "size": 9407,
-        "modified": "2026-02-12T04:58:17.136719"
+        "modified": "2026-02-12T05:09:17.798766"
       },
       {
         "name": "docker-compose.yml",
@@ -534,7 +534,7 @@
         "description": "YAML configuration",
         "path": "../docker-compose.yml",
         "size": 5236,
-        "modified": "2026-02-12T04:58:17.137719"
+        "modified": "2026-02-12T05:09:17.799767"
       },
       {
         "name": "Dockerfile",
@@ -542,7 +542,7 @@
         "description": "Docker container definition",
         "path": "../Dockerfile",
         "size": 3257,
-        "modified": "2026-02-12T04:58:17.136719"
+        "modified": "2026-02-12T05:09:17.798766"
       },
       {
         "name": "FINAL_SUMMARY.md",
@@ -550,7 +550,7 @@
         "description": "Markdown documentation",
         "path": "../FINAL_SUMMARY.md",
         "size": 6682,
-        "modified": "2026-02-12T04:58:17.136719"
+        "modified": "2026-02-12T05:09:17.798766"
       },
       {
         "name": "LICENSE",
@@ -558,7 +558,7 @@
         "description": "File",
         "path": "../LICENSE",
         "size": 1074,
-        "modified": "2026-02-12T04:58:17.136719"
+        "modified": "2026-02-12T05:09:17.798766"
       },
       {
         "name": "README.md",
@@ -566,7 +566,7 @@
         "description": "Markdown documentation",
         "path": "../README.md",
         "size": 23448,
-        "modified": "2026-02-12T04:58:17.136719"
+        "modified": "2026-02-12T05:09:17.798766"
       },
       {
         "name": "REPO_TRACKING.md",
@@ -574,7 +574,7 @@
         "description": "Repository tracking documentation",
         "path": "../REPO_TRACKING.md",
         "size": 9420,
-        "modified": "2026-02-12T04:58:17.137719"
+        "modified": "2026-02-12T05:09:17.798766"
       },
       {
         "name": "requirements.txt",
@@ -582,7 +582,7 @@
         "description": "Text file",
         "path": "../requirements.txt",
         "size": 737,
-        "modified": "2026-02-12T04:58:17.143719"
+        "modified": "2026-02-12T05:09:17.805767"
       },
       {
         "name": "SECURITY-POLICY.md",
@@ -590,7 +590,7 @@
         "description": "Security policy and guidelines",
         "path": "../SECURITY-POLICY.md",
         "size": 7478,
-        "modified": "2026-02-12T04:58:17.137719"
+        "modified": "2026-02-12T05:09:17.798766"
       },
       {
         "name": "SECURITY_AUDIT.md",
@@ -598,7 +598,7 @@
         "description": "Security audit report",
         "path": "../SECURITY_AUDIT.md",
         "size": 5263,
-        "modified": "2026-02-12T04:58:17.137719"
+        "modified": "2026-02-12T05:09:17.799767"
       },
       {
         "name": "TRANSFORMATION_SUMMARY.md",
@@ -606,7 +606,7 @@
         "description": "Markdown documentation",
         "path": "../TRANSFORMATION_SUMMARY.md",
         "size": 10125,
-        "modified": "2026-02-12T04:58:17.137719"
+        "modified": "2026-02-12T05:09:17.799767"
       },
       {
         "name": "update_kb.ps1",
@@ -614,7 +614,7 @@
         "description": "PowerShell script",
         "path": "../update_kb.ps1",
         "size": 6370,
-        "modified": "2026-02-12T04:58:17.144719"
+        "modified": "2026-02-12T05:09:17.806767"
       }
     ]
   }
