@@ -3,9 +3,31 @@
 > **A self-maintaining, AI-powered knowledge base for BrowserOS Workflows**  
 > Automatically compiled from the latest documentation, code, and community resources
 
+<div align="center">
+
+## 🌐 **[VIEW LIVE WEBSITE →](https://grumpified-oggvct.github.io/BrowserOS_Guides/)**
+
+**Interactive knowledge hub with 500+ use cases, 130+ workflows, and AI-powered tools**
+
 [![GitHub Actions](https://img.shields.io/badge/automation-GitHub%20Actions-blue)](/.github/workflows/update-kb.yml)
 [![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
+[![Live Site](https://img.shields.io/badge/🌐_Live_Site-Visit_Now-FF7900?style=for-the-badge)](https://grumpified-oggvct.github.io/BrowserOS_Guides/)
+
+</div>
+
+---
+
+## 📸 Live Website Preview
+
+<div align="center">
+
+### **Interactive Knowledge Hub**
+[![BrowserOS Knowledge Hub](docs/screenshots/01-hero-section.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/)
+
+**👆 Click the image above to explore the live site!**
+
+</div>
 
 ---
 
@@ -45,6 +67,60 @@ This is a **living, self-maintaining knowledge base** that:
 
 **Challenge**: Keeping up with BrowserOS's rapid development  
 **Solution**: Automated AI-powered knowledge compilation from official sources
+
+---
+
+## 🎨 Website Features in Action
+
+### 📚 130+ Workflows Organized by Category
+
+<div align="center">
+
+[![Workflows Section](docs/screenshots/02-workflows-section.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/#workflows)
+
+*E-Commerce, Data Extraction, Testing & QA, Social Media, Research, CRM, Content Creation, API Integration, and more!*
+
+</div>
+
+### 🎯 500+ Use Cases Across Industries
+
+<div align="center">
+
+[![Use Cases Section](docs/screenshots/03-use-cases-section.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/#use-cases)
+
+*Real-world examples from retail, healthcare, finance, logistics, marketing, customer service, and beyond*
+
+</div>
+
+### 🤖 MCP & Agentic AI Integration
+
+<div align="center">
+
+[![MCP Agentic Section](docs/screenshots/04-mcp-agentic-section.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/#mcp-agentic)
+
+*Use BrowserOS with VSCode, Cursor, Windsurf, Claude Desktop, MSTY, AnythingLLM, and 10+ AI tools*
+
+</div>
+
+### 📂 Interactive Repository Browser
+
+<div align="center">
+
+[![Repo Browser](docs/screenshots/05-repo-browser.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/repo-browser.html)
+
+*Browse the entire repository structure, search files, preview content, and navigate with ease*
+
+</div>
+
+### 🔍 Powerful Search Functionality
+
+<div align="center">
+
+[![Search Section](docs/screenshots/06-search-section.png)](https://grumpified-oggvct.github.io/BrowserOS_Guides/#search)
+
+*AI-powered search across 500+ use cases, 130+ workflows, and comprehensive documentation*
+
+</div>
 
 ---
 
@@ -187,9 +263,34 @@ This is a **living, self-maintaining knowledge base** that:
 
 ## 🚀 Quick Start
 
-### For Users: View the Knowledge Base
+### 🌐 Explore the Live Website
 
-📖 **Read the KB**: [BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
+<div align="center">
+
+**👉 [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/) 👈**
+
+*Interactive hub with searchable workflows, use cases, and comprehensive documentation*
+
+</div>
+
+### 📖 For Users: Access the Knowledge Base
+
+**Three ways to explore:**
+
+1. **🌐 Live Website** *(Recommended)*: [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/)
+   - Interactive navigation
+   - Real-time search
+   - Repository browser
+   - AI-powered tools
+
+2. **📂 Repository Browser**: [Browse files online](https://grumpified-oggvct.github.io/BrowserOS_Guides/repo-browser.html)
+   - Navigate folder structure
+   - Search across all files
+   - Preview markdown content
+
+3. **📄 Direct KB**: [BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
+   - Complete knowledge base markdown
+   - Downloadable for offline use
 
 ### For Maintainers: Enable Automation
 
@@ -373,6 +474,12 @@ We welcome contributions to improve the knowledge base!
 - **🔧 workflow-use**: [github.com/browser-use/workflow-use](https://github.com/browser-use/workflow-use)
 - **📖 Browser Use Docs**: [docs.browser-use.com](https://docs.browser-use.com)
 
+### This Repository's Resources
+
+- **🌐 Live Website**: [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/) ⭐
+- **📂 Repository Browser**: [Browse Files](https://grumpified-oggvct.github.io/BrowserOS_Guides/repo-browser.html)
+- **💻 GitHub Repo**: [github.com/Grumpified-OGGVCT/BrowserOS_Guides](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides)
+
 ### Community
 
 - **💬 Discussions**: [GitHub Discussions](https://github.com/browseros-ai/BrowserOS/discussions)
@@ -382,6 +489,9 @@ We welcome contributions to improve the knowledge base!
 ---
 
 ## ❓ FAQ
+
+### Q: Where is the live website?
+**A**: Visit [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/) to explore the interactive knowledge hub with searchable workflows, use cases, and documentation. The site is automatically deployed via GitHub Pages and updates with every commit.
 
 ### Q: Why automate this?
 **A**: BrowserOS is rapidly evolving. Automated compilation ensures the KB stays current without manual effort, capturing new features as they're released.
@@ -433,6 +543,8 @@ It helps others discover this resource and shows appreciation for the automation
 **Built with ❤️ by the community**  
 **Celebrating the incredible work of the BrowserOS team 🎉**
 
-[⭐ Star this repo](../../stargazers) • [🔀 Fork it](../../fork) • [📖 Read the KB](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
+### 🌐 **[EXPLORE THE LIVE WEBSITE](https://grumpified-oggvct.github.io/BrowserOS_Guides/)** 🌐
+
+[⭐ Star this repo](../../stargazers) • [🔀 Fork it](../../fork) • [🌐 Visit Website](https://grumpified-oggvct.github.io/BrowserOS_Guides/) • [📖 Read the KB](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
 
 </div>
