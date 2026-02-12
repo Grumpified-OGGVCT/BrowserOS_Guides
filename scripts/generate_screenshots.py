@@ -1,6 +1,19 @@
 #!/usr/bin/env python3
 """
 Generate screenshots of the static website for README documentation
+
+Requirements:
+    - Python 3.6+
+    - Selenium WebDriver
+    - Chrome/Chromium browser
+    - chromedriver
+
+Usage:
+    python3 scripts/generate_screenshots.py
+    
+Environment Variables (optional):
+    CHROME_BINARY: Path to Chrome/Chromium binary
+    CHROMEDRIVER_PATH: Path to chromedriver executable
 """
 import os
 import sys
