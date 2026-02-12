@@ -119,6 +119,22 @@ code {
     color: var(--text-inverse);
 }
 
+/* Focus Visible Styles for Accessibility */
+*:focus-visible {
+    outline: 2px solid var(--browseros-orange);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--browseros-orange);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(255, 121, 0, 0.2);
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;

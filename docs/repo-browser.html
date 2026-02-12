@@ -355,8 +355,8 @@
                 <li><a href="index.html#workflows">Workflows</a></li>
                 <li><a href="index.html#knowledge-base">Knowledge Base</a></li>
                 <li><a href="repo-browser.html" class="active">Repository Browser</a></li>
-                <li><a href="https://github.com/Grumpified-OGGVCT/BrowserOS_Guides" target="_blank" class="github-link">
-                    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+                <li><a href="https://github.com/Grumpified-OGGVCT/BrowserOS_Guides" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="View BrowserOS Guides on GitHub">
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" role="img" aria-label="GitHub logo">
                         <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
                     </svg>
                     GitHub
@@ -397,7 +397,7 @@
             
             <div class="browser-content">
                 <div class="file-tree">
-                    <input type="text" class="search-box" id="search-box" placeholder="Search files...">
+                    <input type="text" class="search-box" id="search-box" placeholder="Search files..." aria-label="Search repository files">
                     <div id="file-tree-container"></div>
                 </div>
                 
@@ -551,20 +551,42 @@
                 
                 if (child.type === 'folder') {
                     item.className = 'file-tree-item folder folder-toggle';
-                    item.innerHTML = `
-                        <span class="icon">📁</span>
-                        <span>${child.name}</span>
-                    `;
+                    
+                    // Use safer DOM methods instead of innerHTML
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'icon';
+                    iconSpan.textContent = '📁';
+                    iconSpan.setAttribute('aria-hidden', 'true');
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = child.name;
+                    
+                    item.appendChild(iconSpan);
+                    item.appendChild(nameSpan);
                     item.style.paddingLeft = `${level * 20 + 12}px`;
+                    item.setAttribute('role', 'button');
+                    item.setAttribute('aria-expanded', 'false');
+                    item.setAttribute('aria-label', `Folder: ${child.name}`);
+                    item.setAttribute('tabindex', '0');
                     
                     const folderContents = document.createElement('div');
                     folderContents.className = 'folder-contents';
+                    folderContents.setAttribute('role', 'group');
                     
-                    item.addEventListener('click', (e) => {
+                    const toggleFolder = (e) => {
                         e.stopPropagation();
                         folderContents.classList.toggle('collapsed');
-                        item.querySelector('.icon').textContent = 
-                            folderContents.classList.contains('collapsed') ? '📁' : '📂';
+                        const isExpanded = !folderContents.classList.contains('collapsed');
+                        iconSpan.textContent = isExpanded ? '📂' : '📁';
+                        item.setAttribute('aria-expanded', isExpanded.toString());
+                    };
+                    
+                    item.addEventListener('click', toggleFolder);
+                    item.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            toggleFolder(e);
+                        }
                     });
                     
                     container.appendChild(item);
@@ -580,21 +602,39 @@
                                 child.name.endsWith('.css') ? '🎨' : 
                                 child.name.endsWith('.js') ? '📜' : '📄';
                     
-                    item.innerHTML = `
-                        <span class="icon">${icon}</span>
-                        <span>${child.name}</span>
-                    `;
+                    // Use safer DOM methods instead of innerHTML
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'icon';
+                    iconSpan.textContent = icon;
+                    iconSpan.setAttribute('aria-hidden', 'true');
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = child.name;
+                    
+                    item.appendChild(iconSpan);
+                    item.appendChild(nameSpan);
                     item.style.paddingLeft = `${level * 20 + 12}px`;
                     item.dataset.path = child.path || '';
                     item.dataset.description = child.description || '';
                     item.dataset.name = child.name;
                     item.dataset.fullPath = fullPath;
+                    item.setAttribute('role', 'button');
+                    item.setAttribute('aria-label', `File: ${child.name}`);
+                    item.setAttribute('tabindex', '0');
                     
-                    item.addEventListener('click', () => {
+                    const selectFile = () => {
                         document.querySelectorAll('.file-tree-item').forEach(el => 
                             el.classList.remove('active'));
                         item.classList.add('active');
                         showFilePreview(child);
+                    };
+                    
+                    item.addEventListener('click', selectFile);
+                    item.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            selectFile();
+                        }
                     });
                     
                     container.appendChild(item);
@@ -607,42 +647,139 @@
             const githubUrl = `https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/blob/main/${file.path?.replace('../', '') || file.name}`;
             const rawUrl = `https://raw.githubusercontent.com/Grumpified-OGGVCT/BrowserOS_Guides/main/${file.path?.replace('../', '') || file.name}`;
             
-            preview.innerHTML = `
-                <div class="preview-header">
-                    <div class="preview-title">
-                        <span>${getFileIcon(file.name)}</span>
-                        ${file.name}
-                    </div>
-                    <div class="preview-meta">
-                        <span>📂 ${file.path?.split('/').slice(0, -1).join('/') || 'Root'}</span>
-                        <span>📝 ${getFileType(file.name)}</span>
-                    </div>
-                </div>
-                
-                <div class="preview-content">
-                    <h2>Description</h2>
-                    <p>${file.description || 'No description available'}</p>
-                    
-                    <h2>Actions</h2>
-                    <div class="action-buttons">
-                        <a href="${githubUrl}" target="_blank" class="btn-action btn-github">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-                            </svg>
-                            View on GitHub
-                        </a>
-                        ${file.path && !file.path.startsWith('../') ? `<a href="${file.path}" class="btn-action btn-raw">📄 View File</a>` : ''}
-                        <a href="${rawUrl}" target="_blank" class="btn-action btn-raw">⬇️ Download</a>
-                    </div>
-                    
-                    <h2>File Information</h2>
-                    <ul>
-                        <li><strong>Name:</strong> ${file.name}</li>
-                        <li><strong>Type:</strong> ${getFileType(file.name)}</li>
-                        <li><strong>Location:</strong> ${file.path || 'Root directory'}</li>
-                    </ul>
-                </div>
-            `;
+            // Clear existing content
+            preview.textContent = '';
+            
+            // Create preview header
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'preview-header';
+            
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'preview-title';
+            
+            const iconSpan = document.createElement('span');
+            iconSpan.textContent = getFileIcon(file.name);
+            iconSpan.setAttribute('aria-hidden', 'true');
+            
+            const fileName = document.createTextNode(file.name);
+            
+            titleDiv.appendChild(iconSpan);
+            titleDiv.appendChild(fileName);
+            
+            const metaDiv = document.createElement('div');
+            metaDiv.className = 'preview-meta';
+            
+            const locationSpan = document.createElement('span');
+            locationSpan.textContent = `📂 ${file.path?.split('/').slice(0, -1).join('/') || 'Root'}`;
+            
+            const typeSpan = document.createElement('span');
+            typeSpan.textContent = `📝 ${getFileType(file.name)}`;
+            
+            metaDiv.appendChild(locationSpan);
+            metaDiv.appendChild(typeSpan);
+            
+            headerDiv.appendChild(titleDiv);
+            headerDiv.appendChild(metaDiv);
+            
+            // Create preview content
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'preview-content';
+            
+            const descH2 = document.createElement('h2');
+            descH2.textContent = 'Description';
+            
+            const descP = document.createElement('p');
+            descP.textContent = file.description || 'No description available';
+            
+            const actionsH2 = document.createElement('h2');
+            actionsH2.textContent = 'Actions';
+            
+            const actionButtonsDiv = document.createElement('div');
+            actionButtonsDiv.className = 'action-buttons';
+            
+            // GitHub button
+            const githubLink = document.createElement('a');
+            githubLink.href = githubUrl;
+            githubLink.target = '_blank';
+            githubLink.rel = 'noopener noreferrer';
+            githubLink.className = 'btn-action btn-github';
+            githubLink.setAttribute('aria-label', 'View file on GitHub');
+            
+            const githubSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            githubSvg.setAttribute('width', '16');
+            githubSvg.setAttribute('height', '16');
+            githubSvg.setAttribute('viewBox', '0 0 16 16');
+            githubSvg.setAttribute('fill', 'currentColor');
+            githubSvg.setAttribute('role', 'img');
+            githubSvg.setAttribute('aria-label', 'GitHub logo');
+            
+            const githubPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            githubPath.setAttribute('d', 'M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z');
+            
+            githubSvg.appendChild(githubPath);
+            githubLink.appendChild(githubSvg);
+            githubLink.appendChild(document.createTextNode(' View on GitHub'));
+            
+            actionButtonsDiv.appendChild(githubLink);
+            
+            // View File button (only for docs folder)
+            if (file.path && !file.path.startsWith('../')) {
+                const viewFileLink = document.createElement('a');
+                viewFileLink.href = file.path;
+                viewFileLink.className = 'btn-action btn-raw';
+                viewFileLink.textContent = '📄 View File';
+                actionButtonsDiv.appendChild(viewFileLink);
+            }
+            
+            // Download button
+            const downloadLink = document.createElement('a');
+            downloadLink.href = rawUrl;
+            downloadLink.target = '_blank';
+            downloadLink.rel = 'noopener noreferrer';
+            downloadLink.className = 'btn-action btn-raw';
+            downloadLink.setAttribute('aria-label', 'Download file');
+            downloadLink.textContent = '⬇️ Download';
+            
+            actionButtonsDiv.appendChild(downloadLink);
+            
+            // File Information
+            const infoH2 = document.createElement('h2');
+            infoH2.textContent = 'File Information';
+            
+            const infoUl = document.createElement('ul');
+            
+            const nameLi = document.createElement('li');
+            const nameStrong = document.createElement('strong');
+            nameStrong.textContent = 'Name:';
+            nameLi.appendChild(nameStrong);
+            nameLi.appendChild(document.createTextNode(' ' + file.name));
+            
+            const typeLi = document.createElement('li');
+            const typeStrong = document.createElement('strong');
+            typeStrong.textContent = 'Type:';
+            typeLi.appendChild(typeStrong);
+            typeLi.appendChild(document.createTextNode(' ' + getFileType(file.name)));
+            
+            const locationLi = document.createElement('li');
+            const locationStrong = document.createElement('strong');
+            locationStrong.textContent = 'Location:';
+            locationLi.appendChild(locationStrong);
+            locationLi.appendChild(document.createTextNode(' ' + (file.path || 'Root directory')));
+            
+            infoUl.appendChild(nameLi);
+            infoUl.appendChild(typeLi);
+            infoUl.appendChild(locationLi);
+            
+            // Assemble everything
+            contentDiv.appendChild(descH2);
+            contentDiv.appendChild(descP);
+            contentDiv.appendChild(actionsH2);
+            contentDiv.appendChild(actionButtonsDiv);
+            contentDiv.appendChild(infoH2);
+            contentDiv.appendChild(infoUl);
+            
+            preview.appendChild(headerDiv);
+            preview.appendChild(contentDiv);
         }
 
         function getFileIcon(filename) {
