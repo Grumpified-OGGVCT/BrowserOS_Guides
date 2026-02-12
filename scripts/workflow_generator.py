@@ -291,87 +291,211 @@ class KimiWorkflowGenerator:
         
         industry_context = f" in the {industry} industry" if industry else ""
         
-        prompt = f"""Generate a creative and realistic workflow idea for BrowserOS.
+        prompt = f"""You are an expert BrowserOS workflow designer helping someone solve a real problem with browser automation.
 
+📋 THE REQUEST:
 Use Case: {use_case}{industry_context}
 Complexity Level: {complexity}
 
+🎯 YOUR MISSION:
+Create a thoughtful, detailed workflow idea that feels personal and actionable - not generic AI-speak. 
+Think like a helpful colleague explaining a solution over coffee, not a robot listing features.
+
+IMPORTANT: Write descriptions that:
+- Tell a micro-story: "Imagine you're..." or "Picture this scenario..."
+- Use concrete examples: specific websites, real data points, actual user pain points
+- Explain the "why" behind each step: "This matters because..."
+- Include relatable details: time savings, frustration solved, impact on daily work
+- Sound human: use natural language, avoid jargon unless explaining it
+
 Respond with ONLY a JSON object in this exact format:
 {{
-  "title": "Short descriptive title",
-  "description": "2-3 sentence description of what this workflow does",
-  "use_case": "The problem this solves",
-  "steps_overview": ["Step 1 summary", "Step 2 summary", "Step 3 summary"],
-  "input_required": ["What inputs the user needs to provide"],
-  "output_produced": ["What outputs the workflow generates"],
-  "estimated_duration": "Time to complete (e.g., '2-5 minutes')",
+  "title": "Compelling, specific title that describes the outcome",
+  "description": "3-4 sentences painting a vivid picture. Start with the user's pain point, describe the transformation, end with the value delivered. Use concrete numbers and real scenarios.",
+  "use_case": "The actual problem being solved - be specific about WHO faces this and WHEN",
+  "steps_overview": [
+    "Step 1: Detailed action with why it matters",
+    "Step 2: Next action explaining the technique used",
+    "Step 3: Outcome with specific result expected",
+    "Add 4-8 steps with personality and detail"
+  ],
+  "input_required": [
+    "Specific input #1: Why you need this and example format",
+    "Specific input #2: Context on where to find this",
+    "Be concrete: 'Your competitor's product page URL (e.g., https://competitor.com/products)'"
+  ],
+  "output_produced": [
+    "Tangible output #1: Format, location, and how to use it",
+    "Tangible output #2: What insights you'll gain",
+    "Be specific: 'CSV file with 50+ data points including prices, stock levels, and review counts'"
+  ],
+  "estimated_duration": "Realistic time with context (e.g., '3-5 minutes for 10 competitors, scales linearly')",
   "difficulty": "beginner|intermediate|advanced|expert",
-  "tags": ["tag1", "tag2", "tag3"],
-  "real_world_applications": ["Where this would be used in practice"],
-  "feasibility_notes": "Any technical considerations or limitations"
+  "tags": ["specific-tag1", "use-case-tag2", "industry-tag3"],
+  "real_world_applications": [
+    "Detailed scenario #1: Who, what, why, and business impact",
+    "Detailed scenario #2: Specific team, problem, and ROI",
+    "Use real examples: 'E-commerce managers tracking 50+ competitors save 15 hours/week'"
+  ],
+  "why_this_matters": "2-3 sentences explaining the bigger picture impact - career growth, business value, time reclaimed",
+  "success_looks_like": "Paint a vivid picture of using this workflow successfully - what does the user's day look like after implementing this?",
+  "feasibility_notes": "Honest technical considerations with workarounds and alternative approaches"
 }}
 
-Make sure this is a REALISTIC workflow that can actually be implemented with browser automation.
-Focus on practical, valuable use cases that solve real problems."""
+EXAMPLES OF GOOD vs BAD:
+❌ BAD (Generic): "This workflow automates data extraction from websites"
+✅ GOOD (Personal): "Picture spending 30 minutes every Monday manually copying competitor prices into a spreadsheet. This workflow does it in 90 seconds, letting you grab coffee while it runs - and it never misses a price change."
 
-        return prompt
+❌ BAD: "Extract product information"  
+✅ GOOD: "Capture 15 data points per product: price, availability, reviews (count + avg rating), shipping time, warranty details, and promotional badges - everything your pricing team needs to stay competitive"
+
+Make this feel like it was designed specifically for the user's problem, not a template filled in by AI.
     
     def _build_workflow_implementation_prompt(self, idea: Dict[str, Any]) -> str:
         """Build prompt for workflow implementation generation"""
         
-        prompt = f"""Generate a complete, working BrowserOS workflow implementation.
+        prompt = f"""You are crafting a production-ready BrowserOS workflow that someone will actually use in their daily work.
 
-Workflow Idea:
+📋 WORKFLOW TO IMPLEMENT:
 Title: {idea.get('title')}
 Description: {idea.get('description')}
 Use Case: {idea.get('use_case')}
+
+🎯 YOUR MISSION:
+Create a complete, thoughtful workflow implementation that feels like it was hand-crafted by an expert - not auto-generated.
+
+KEY PRINCIPLES:
+1. **Descriptive Step Names**: Instead of "Click button", write "Click 'Add to Cart' button to select product for comparison"
+2. **Realistic Selectors**: Use plausible CSS selectors based on common patterns (e.g., '[data-testid="product-price"]', '.product-card h2')
+3. **Helpful Comments**: Each step's "name" should explain WHY this step matters, not just WHAT it does
+4. **Smart Error Handling**: Include fallback selectors, wait conditions, and retry logic
+5. **Extractable Patterns**: Show where data is captured and how it's stored
+6. **Variable Names**: Use descriptive variables like 'competitor_prices' not 'data1'
+
+AVAILABLE STEP TYPES:
+- navigate: Go to URL (include wait_for: "load", "networkidle", or selector)
+- click: Click element (use wait_after for page transitions)
+- input: Type into fields (include wait_before for field focus)
+- extract: Grab data (specify output variable name and what data represents)
+- wait: Explicit waits (use for dynamic content, specify condition)
+- scroll: Scroll page (useful for lazy-loaded content)
+- conditional: If/then logic (check for element existence, text content)
+- loop: Repeat steps (for multiple items, pages, etc.)
+- script: Run custom JavaScript (for complex operations)
 
 Respond with ONLY a valid BrowserOS workflow JSON in this format:
 {{
   "name": "{idea.get('title', 'Workflow')}",
   "description": "{idea.get('description', '')}",
   "version": "1.0.0",
+  "author": "BrowserOS AI Generator",
   "steps": [
     {{
       "type": "navigate",
-      "name": "Open website",
-      "url": "https://example.com",
-      "wait_for": "load"
+      "name": "Navigate to competitor's product catalog page",
+      "url": "{{{{competitor_url}}}}/products",
+      "wait_for": "networkidle",
+      "timeout": 10000,
+      "comment": "Using networkidle ensures all product tiles have loaded"
     }},
     {{
-      "type": "click",
-      "name": "Click button",
-      "selector": "#button-id",
-      "wait_after": 1000
+      "type": "wait",
+      "name": "Wait for product grid to render",
+      "selector": ".product-grid, [data-testid='product-list']",
+      "timeout": 5000,
+      "comment": "Fallback selectors handle different site structures"
     }},
     {{
       "type": "extract",
-      "name": "Extract data",
-      "selector": ".data-class",
-      "output": "extracted_data"
+      "name": "Extract product names and prices from first page",
+      "selector": ".product-card",
+      "multiple": true,
+      "fields": {{
+        "name": ".product-title, h2.title",
+        "price": ".price-current, [data-price]",
+        "availability": ".stock-status"
+      }},
+      "output": "products_page_1",
+      "comment": "Captures structured data for each product found"
+    }},
+    {{
+      "type": "conditional",
+      "name": "Check if pagination exists",
+      "condition": "element_exists",
+      "selector": ".pagination .next-page",
+      "on_true": "continue",
+      "on_false": "skip_to_export",
+      "comment": "Only paginate if multiple pages exist"
     }}
   ],
+  "variables": {{
+    "competitor_url": {{
+      "type": "string",
+      "required": true,
+      "description": "Full URL to competitor's website (e.g., https://competitor.com)",
+      "example": "https://example-competitor.com"
+    }},
+    "max_pages": {{
+      "type": "number",
+      "required": false,
+      "default": 5,
+      "description": "Maximum number of product pages to scrape"
+    }}
+  }},
+  "outputs": {{
+    "products_page_1": {{
+      "type": "array",
+      "description": "Product data from first page",
+      "format": "Array of objects with name, price, availability"
+    }},
+    "total_products_found": {{
+      "type": "number",
+      "description": "Count of total products extracted"
+    }}
+  }},
   "error_handling": {{
     "retry_count": 3,
     "retry_delay": 2000,
-    "on_error": "continue"
+    "on_error": "continue",
+    "fallback_selectors": true,
+    "screenshot_on_error": true,
+    "comment": "Takes debug screenshots when steps fail"
+  }},
+  "performance": {{
+    "estimated_duration": "{idea.get('estimated_duration', '2-5 minutes')}",
+    "rate_limit": "1 request per 2 seconds",
+    "memory_usage": "low",
+    "comment": "Respectful crawling with delays between requests"
   }},
   "metadata": {{
     "category": "appropriate-category",
     "tags": {json.dumps(idea.get('tags', []))},
-    "difficulty": "{idea.get('difficulty', 'intermediate')}"
+    "difficulty": "{idea.get('difficulty', 'intermediate')}",
+    "use_cases": {json.dumps(idea.get('real_world_applications', []))[:200]},
+    "created_at": "{{{{timestamp}}}}",
+    "tested": false
   }}
 }}
 
-Requirements:
-1. Use realistic URLs and selectors (examples are fine, but make them plausible)
-2. Include proper error handling
-3. Add comments in step names explaining what each step does
-4. Include data extraction and output where appropriate
-5. Use appropriate step types: navigate, click, input, extract, wait, conditional, loop
-6. Make it COMPLETE and RUNNABLE (with minor customization by user)
+BEST PRACTICES TO FOLLOW:
+✅ Use multiple fallback selectors: ".selector1, .selector2, [data-attr]"
+✅ Add waits before interactions: wait_before, wait_after
+✅ Include timeout values: Be realistic (5-10 seconds for most operations)
+✅ Use variables for user inputs: {{{{variable_name}}}}
+✅ Comment complex steps: Explain the "why" in the comment field
+✅ Handle pagination: Loop through results, track page numbers
+✅ Extract structured data: Use fields object for related data points
+✅ Plan for errors: Retry logic, fallbacks, graceful degradation
+✅ Document outputs: What data is captured and in what format
+✅ Rate limiting: Respect target sites with delays
 
-Respond with ONLY the JSON, no additional text."""
+MAKE IT FEEL HANDCRAFTED:
+- Selectors should look like they came from inspecting real pages
+- Comments should sound like a senior developer explaining to a junior
+- Variable names should be self-documenting
+- Error handling should anticipate real-world failures
+
+Respond with ONLY the JSON, no additional text before or after."""
 
         return prompt
     
@@ -380,36 +504,112 @@ Respond with ONLY the JSON, no additional text."""
         
         workflow_json = json.dumps(workflow, indent=2)
         
-        prompt = f"""Validate this BrowserOS workflow for technical feasibility and real-world applicability.
+        prompt = f"""You are a senior BrowserOS engineer reviewing a workflow before it goes to production.
 
-Workflow:
+📋 WORKFLOW TO VALIDATE:
 {workflow_json}
 
-Analyze the workflow and respond with ONLY a JSON object in this format:
+🎯 YOUR MISSION:
+Provide an honest, detailed technical review that will actually help improve this workflow.
+Think like a code reviewer who cares about quality - be thorough but constructive.
+
+VALIDATION CHECKLIST:
+
+1. **Selector Reality Check**
+   - Are the CSS selectors realistic? (e.g., based on common patterns like .product-card, [data-testid], etc.)
+   - Are there fallback selectors for brittle elements?
+   - Will these selectors work across different site structures?
+
+2. **Error Handling Assessment**
+   - Is retry logic sufficient for flaky elements?
+   - Are timeouts realistic? (not too short to fail, not too long to hang)
+   - What happens if a step fails? Is there graceful degradation?
+   - Are screenshots captured on errors for debugging?
+
+3. **Step Logic & Flow**
+   - Are steps in the right order?
+   - Are waits placed appropriately (after navigation, before clicks)?
+   - Does pagination logic make sense?
+   - Are conditionals checking the right things?
+
+4. **Real-World Applicability**
+   - Would this actually work on modern websites?
+   - Does it handle dynamic content (SPAs, lazy loading)?
+   - Is it rate-limited to avoid bans?
+   - Will it work across different browsers?
+
+5. **Security & Ethics**
+   - Are there hardcoded credentials? (RED FLAG)
+   - Does it respect robots.txt?
+   - Is rate limiting respectful?
+   - Any data privacy concerns?
+
+6. **Data Quality**
+   - Are extracted fields comprehensive enough?
+   - Is the output format useful?
+   - Are variable names descriptive?
+   - Is data normalized/cleaned?
+
+7. **Performance & Reliability**
+   - Will this complete in reasonable time?
+   - Is memory usage reasonable?
+   - Can it run unattended?
+   - How often will it need maintenance?
+
+8. **User Experience**
+   - Are the required inputs clearly documented?
+   - Will the outputs be immediately useful?
+   - Are error messages helpful?
+   - Is the complexity appropriate for the claimed difficulty level?
+
+Respond with ONLY a JSON object in this format:
 {{
   "feasible": true/false,
   "feasibility_score": 0-100,
-  "issues": ["List of problems or concerns", "Another issue"],
-  "recommendations": ["Suggested improvements", "Another suggestion"],
-  "security_concerns": ["Any security issues"],
-  "performance_notes": ["Performance considerations"],
+  "confidence": "high|medium|low",
+  "issues": [
+    "Specific issue #1: What's wrong and why it matters",
+    "Specific issue #2: Concrete example of the problem",
+    "Be detailed: 'Selector .product-price is too generic and will break on PLP vs PDP pages'"
+  ],
+  "recommendations": [
+    "Actionable fix #1: Exactly what to change and why",
+    "Actionable fix #2: Include code example if relevant",
+    "Be specific: 'Add fallback selector: .product-price, [data-product-price], .price-wrapper .current'"
+  ],
+  "security_concerns": [
+    "Security issue #1: Severity level and mitigation",
+    "Note: Empty array if no issues"
+  ],
+  "performance_notes": [
+    "Performance insight #1: Impact and optimization suggestion",
+    "Example: 'Extracting 100+ products per page may timeout - consider batching'"
+  ],
+  "missing_edge_cases": [
+    "Edge case #1: Scenario not handled and how to fix",
+    "Example: 'No handling for 'Out of Stock' products - add conditional check'"
+  ],
   "estimated_reliability": "high|medium|low",
+  "reliability_explanation": "Why you rated it this way - what could go wrong?",
   "real_world_score": 0-100,
-  "verdict": "Short summary of overall assessment"
+  "real_world_explanation": "Will this actually work in production? Be honest.",
+  "maintenance_burden": "low|medium|high",
+  "maintenance_notes": "How often will this break? What requires updates?",
+  "verdict": "2-3 sentence summary: Is this production-ready? What's the biggest risk? Would you deploy this?",
+  "improvements_if_time": [
+    "Nice-to-have #1: Additional feature that would make this better",
+    "Nice-to-have #2: Quality-of-life improvement"
+  ]
 }}
 
-Check for:
-- Are the selectors realistic and likely to work?
-- Is the error handling adequate?
-- Are the steps in logical order?
-- Would this actually work on real websites?
-- Are there security issues (like hardcoded credentials)?
-- Is the workflow practical and useful?
-- Are there missing steps or edge cases?
+BE HONEST AND DETAILED:
+❌ Don't say: "Selectors might not work"
+✅ Do say: "Selector '.product' is too generic - most e-commerce sites use more specific patterns like '.product-card', '.product-tile', or '[data-component=ProductCard]'. This will likely grab unrelated elements."
 
-Be honest and critical. The goal is to ensure only high-quality workflows."""
+❌ Don't say: "Add error handling"
+✅ Do say: "Missing try-catch around network requests. If site returns 503, workflow will hang. Add timeout: 10000 and retry_count: 3 with exponential backoff."
 
-        return prompt
+Your goal is to ensure this workflow will actually work in production and make the user successful.
 
 
 def main():
