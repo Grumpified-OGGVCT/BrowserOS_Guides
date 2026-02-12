@@ -554,7 +554,7 @@
                             </svg>
                             View on GitHub
                         </a>
-                        ${file.path ? `<a href="${file.path}" class="btn-action btn-raw">📄 View File</a>` : ''}
+                        ${file.path && !file.path.startsWith('../') ? `<a href="${file.path}" class="btn-action btn-raw">📄 View File</a>` : ''}
                         <a href="${rawUrl}" target="_blank" class="btn-action btn-raw">⬇️ Download</a>
                     </div>
                     
@@ -581,6 +581,10 @@
         }
 
         function getFileType(filename) {
+            // Handle files without extensions (e.g., Dockerfile, LICENSE)
+            if (!filename.includes('.')) {
+                return filename.charAt(0).toUpperCase() + filename.slice(1);
+            }
             const ext = filename.split('.').pop().toUpperCase();
             const types = {
                 'MD': 'Markdown Documentation',
