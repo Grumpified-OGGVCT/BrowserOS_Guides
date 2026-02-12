@@ -181,7 +181,7 @@ code {
 }
 
 .brand-name {
-    color: var(--text-primary); /* Fallback color */
+    color: var(--text-primary); /* Fallback for browsers without gradient text support */
     background: linear-gradient(135deg, var(--text-primary) 0%, var(--browseros-orange) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -306,7 +306,7 @@ code {
 }
 
 .gradient-text {
-    color: var(--browseros-orange); /* Fallback color */
+    color: var(--browseros-orange); /* Fallback for browsers without gradient text support */
     background: linear-gradient(135deg, var(--text-primary) 0%, var(--browseros-orange) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
