@@ -1,0 +1,378 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WhatsApp Integration Tools for BrowserOS",
+  "description": "MCP tool definitions for WhatsApp Web integration with safety constraints and rate limiting",
+  "version": "1.0.0-beta",
+  "confidence": "experimental",
+  "release_target": "BrowserOS v2.1",
+  "tools": [
+    {
+      "name": "whatsapp_open_chat",
+      "description": "Open a WhatsApp chat with a specific contact or group",
+      "status": "beta",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "contact": {
+            "type": "string",
+            "description": "Contact name or phone number (with country code)"
+          },
+          "wait_for_load": {
+            "type": "boolean",
+            "default": true,
+            "description": "Wait for chat to fully load before returning"
+          }
+        },
+        "required": ["contact"]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "chat_id": {"type": "string"},
+          "chat_name": {"type": "string"}
+        }
+      },
+      "safety_constraints": {
+        "rate_limit": "10 requests per minute",
+        "concurrent_limit": 1,
+        "notes": "WhatsApp Web allows only one active chat at a time"
+      },
+      "dom_selectors": {
+        "chat_search": "[data-testid='chat-search-input']",
+        "chat_list_item": "[data-testid='cell-frame-container']",
+        "chat_window": "[data-testid='conversation-panel-wrapper']",
+        "version": "2.2412.54",
+        "last_verified": "2026-02-12"
+      }
+    },
+    {
+      "name": "whatsapp_send_message",
+      "description": "Send a text message in the currently open WhatsApp chat with rate limiting and safety checks",
+      "status": "beta",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Message text to send",
+            "maxLength": 65536
+          },
+          "wait_after": {
+            "type": "number",
+            "default": 3000,
+            "minimum": 2000,
+            "description": "Milliseconds to wait after sending (rate limiting)"
+          },
+          "verify_sent": {
+            "type": "boolean",
+            "default": true,
+            "description": "Verify message appears in chat after sending"
+          }
+        },
+        "required": ["message"]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "message_id": {"type": "string"},
+          "timestamp": {"type": "string"},
+          "verified": {"type": "boolean"}
+        }
+      },
+      "safety_constraints": {
+        "rate_limit": "20 messages per minute per chat",
+        "global_rate_limit": "50 messages per hour",
+        "message_length": "65536 characters maximum",
+        "duplicate_detection": "Rotate message wording for bulk sends",
+        "wait_minimum": "2000ms between messages",
+        "ban_risk": {
+          "low": "< 20 msgs/hr with 3s delays",
+          "medium": "20-50 msgs/hr",
+          "high": "> 50 msgs/hr or < 2s delays"
+        }
+      },
+      "dom_selectors": {
+        "message_input": "[data-testid='conversation-compose-box-input']",
+        "send_button": "[data-testid='send']",
+        "message_bubble": "[data-testid='msg-container']",
+        "version": "2.2412.54",
+        "last_verified": "2026-02-12"
+      },
+      "anti_patterns": [
+        {
+          "pattern": "Sending messages < 2s apart",
+          "risk": "Account suspension",
+          "fix": "Use wait_after >= 2000"
+        },
+        {
+          "pattern": "Identical messages to multiple contacts",
+          "risk": "Spam detection",
+          "fix": "Rotate message wording slightly"
+        },
+        {
+          "pattern": "More than 50 messages per hour",
+          "risk": "Rate limit ban",
+          "fix": "Batch sends across multiple hours"
+        }
+      ]
+    },
+    {
+      "name": "whatsapp_read_messages",
+      "description": "Read recent messages from the currently open WhatsApp chat",
+      "status": "beta",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of recent messages to read"
+          },
+          "include_media": {
+            "type": "boolean",
+            "default": false,
+            "description": "Include media file metadata"
+          },
+          "only_unread": {
+            "type": "boolean",
+            "default": false,
+            "description": "Only return unread messages"
+          }
+        }
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {"type": "string"},
+                "sender": {"type": "string"},
+                "text": {"type": "string"},
+                "timestamp": {"type": "string"},
+                "is_from_me": {"type": "boolean"},
+                "has_media": {"type": "boolean"},
+                "media_type": {"type": "string", "enum": ["image", "video", "audio", "document"]}
+              }
+            }
+          }
+        }
+      },
+      "safety_constraints": {
+        "rate_limit": "30 requests per minute",
+        "notes": "Reading is safer than writing, but still avoid excessive polling"
+      },
+      "dom_selectors": {
+        "message_list": "[data-testid='msg-container']",
+        "message_text": "[data-testid='quoted-text']",
+        "message_timestamp": "[data-testid='msg-meta']",
+        "media_indicator": "[data-testid='media-viewer']",
+        "version": "2.2412.54",
+        "last_verified": "2026-02-12"
+      }
+    },
+    {
+      "name": "whatsapp_send_media",
+      "description": "Send image, video, audio, or document in WhatsApp chat",
+      "status": "beta",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Local file path to media file"
+          },
+          "media_type": {
+            "type": "string",
+            "enum": ["image", "video", "audio", "document"],
+            "description": "Type of media being sent"
+          },
+          "caption": {
+            "type": "string",
+            "description": "Optional caption for media",
+            "maxLength": 1024
+          },
+          "wait_after": {
+            "type": "number",
+            "default": 5000,
+            "minimum": 3000,
+            "description": "Wait time after upload (media takes longer)"
+          }
+        },
+        "required": ["file_path", "media_type"]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "media_id": {"type": "string"},
+          "upload_time_ms": {"type": "number"}
+        }
+      },
+      "safety_constraints": {
+        "rate_limit": "10 media files per hour",
+        "file_size_limits": {
+          "image": "16 MB",
+          "video": "16 MB",
+          "audio": "16 MB",
+          "document": "100 MB"
+        },
+        "supported_formats": {
+          "image": ["jpg", "jpeg", "png", "gif", "webp"],
+          "video": ["mp4", "3gp", "avi", "mov"],
+          "audio": ["mp3", "ogg", "wav", "opus"],
+          "document": ["pdf", "doc", "docx", "xls", "xlsx", "txt"]
+        },
+        "wait_minimum": "3000ms for upload completion"
+      },
+      "dom_selectors": {
+        "attach_button": "[data-testid='clip']",
+        "media_input": "input[type='file'][accept*='image']",
+        "caption_input": "[data-testid='media-caption-input']",
+        "send_media_button": "[data-testid='send']",
+        "version": "2.2412.54",
+        "last_verified": "2026-02-12"
+      }
+    },
+    {
+      "name": "whatsapp_get_contact_info",
+      "description": "Get information about a contact or group",
+      "status": "beta",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "contact": {
+            "type": "string",
+            "description": "Contact name or phone number"
+          }
+        },
+        "required": ["contact"]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "phone": {"type": "string"},
+          "status": {"type": "string"},
+          "profile_picture_url": {"type": "string"},
+          "is_group": {"type": "boolean"},
+          "group_members": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "safety_constraints": {
+        "rate_limit": "20 requests per minute",
+        "privacy": "Respects WhatsApp privacy settings"
+      },
+      "dom_selectors": {
+        "contact_info_button": "[data-testid='menu']",
+        "contact_panel": "[data-testid='drawer-right']",
+        "contact_name": "[data-testid='contact-name']",
+        "version": "2.2412.54",
+        "last_verified": "2026-02-12"
+      }
+    },
+    {
+      "name": "whatsapp_broadcast_message",
+      "description": "Safely broadcast a message to multiple contacts with automatic rate limiting",
+      "status": "beta",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "contacts": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "List of contact names or phone numbers",
+            "maxItems": 50
+          },
+          "message_template": {
+            "type": "string",
+            "description": "Message with {{name}} placeholder for personalization"
+          },
+          "delay_range": {
+            "type": "object",
+            "properties": {
+              "min": {"type": "number", "default": 30000},
+              "max": {"type": "number", "default": 60000}
+            },
+            "description": "Random delay range between messages (ms)"
+          },
+          "rotate_wording": {
+            "type": "boolean",
+            "default": true,
+            "description": "Slightly vary message wording to avoid spam detection"
+          }
+        },
+        "required": ["contacts", "message_template"]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "sent": {"type": "number"},
+          "failed": {"type": "number"},
+          "total_time_ms": {"type": "number"},
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "contact": {"type": "string"},
+                "success": {"type": "boolean"},
+                "error": {"type": "string"}
+              }
+            }
+          }
+        }
+      },
+      "safety_constraints": {
+        "max_contacts": 50,
+        "min_delay": "30 seconds between messages",
+        "max_delay": "60 seconds recommended",
+        "message_rotation": "Enabled by default to avoid duplicate detection",
+        "ban_prevention": "Built-in randomization and delays",
+        "best_practices": [
+          "Personalize with {{name}} placeholder",
+          "Keep total recipients under 50 per batch",
+          "Wait 1 hour between broadcast batches",
+          "Use during business hours (9 AM - 6 PM)"
+        ]
+      },
+      "implementation_note": "This is a high-level tool that orchestrates whatsapp_open_chat and whatsapp_send_message with safety logic"
+    }
+  ],
+  "integration_notes": {
+    "browser_requirement": "BrowserOS v2.1+ with Controller Extension",
+    "whatsapp_web_version": "2.2412.54 (subject to change)",
+    "selector_tracking": "DOM selectors verified as of 2026-02-12",
+    "breaking_changes": "WhatsApp Web updates frequently - selectors may change",
+    "testing_recommendation": "Test with personal account first, not business account",
+    "rate_limiting_source": "Community-validated safe limits to avoid bans"
+  },
+  "safety_checklist": [
+    "Always use wait_after delays (minimum 2s for messages, 3s for media)",
+    "Never exceed 50 messages per hour globally",
+    "Rotate message wording for bulk sends",
+    "Test with personal account before production use",
+    "Monitor for WhatsApp ban warnings",
+    "Keep message content within WhatsApp's terms of service"
+  ],
+  "migration_guide": {
+    "from_manual_automation": {
+      "old": "Using raw click/input steps with hardcoded selectors",
+      "new": "Use whatsapp_* tools with built-in safety and selector management",
+      "benefit": "Automatic updates when WhatsApp Web changes UI"
+    },
+    "from_browser_use": {
+      "note": "These tools are designed to be compatible with browser-use patterns",
+      "mapping": {
+        "browser_use.navigate('web.whatsapp.com')": "whatsapp_open_chat(contact='...')",
+        "browser_use.type('message')": "whatsapp_send_message(message='...', wait_after=3000)"
+      }
+    }
+  }
+}

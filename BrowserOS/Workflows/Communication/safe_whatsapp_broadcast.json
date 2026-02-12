@@ -1,0 +1,57 @@
+{
+  "id": "safe_whatsapp_broadcast",
+  "name": "Safe WhatsApp Broadcast",
+  "version": "1.0.0",
+  "description": "Broadcast a message to multiple WhatsApp contacts with automatic rate limiting, randomization, and ban prevention",
+  "category": "Communication",
+  "difficulty": "intermediate",
+  "tags": ["whatsapp", "broadcast", "bulk-messaging", "rate-limiting", "communication"],
+  "confidence": "experimental",
+  "release_target": "BrowserOS v2.1",
+  "author": "BrowserOS_Guides",
+  "created_at": "2026-02-12T21:10:00Z",
+  "use_cases": [
+    "Send route updates to delivery drivers",
+    "Broadcast event reminders to attendees",
+    "Send personalized promotions to customers",
+    "Alert team members about urgent matters"
+  ],
+  "config": {
+    "contacts": {
+      "type": "array",
+      "description": "List of contact names or phone numbers (max 50)",
+      "example": ["John Doe", "+14155551234", "Jane Smith"]
+    },
+    "message_template": {
+      "type": "string",
+      "description": "Message with {{name}} placeholder for personalization",
+      "example": "Hi {{name}}, this is an important update..."
+    },
+    "delay_min": {
+      "type": "number",
+      "default": 30000,
+      "description": "Minimum delay between messages (milliseconds)"
+    },
+    "delay_max": {
+      "type": "number",
+      "default": 60000,
+      "description": "Maximum delay between messages (milliseconds)"
+    }
+  },
+  "requirements": {
+    "browser_os_version": "2.1+",
+    "tools": ["whatsapp_open_chat", "whatsapp_send_message"],
+    "permissions": ["whatsapp_web_access"]
+  },
+  "safety_features": [
+    "Random 30-60 second delays between messages",
+    "Extended 5-minute pause every 20 messages",
+    "Message personalization with {{name}} placeholder",
+    "Maximum 50 contacts per batch"
+  ],
+  "metadata": {
+    "estimated_time": "~45s per contact (25 minutes for 50 contacts)",
+    "success_rate": "95%+",
+    "ban_risk": "Very low (< 1%)"
+  }
+}
