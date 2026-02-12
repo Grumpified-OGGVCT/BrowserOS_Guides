@@ -285,31 +285,38 @@ This is a **living, self-maintaining knowledge base** that:
 
 ## 🚀 Quick Start
 
-### 🪟 Windows Installation (Complete Setup System)
+### 🌍 Cross-Platform Installation (Windows, macOS, Linux)
 
-**NEW! Full Windows installation with wizard and auto-update:**
+**Universal installation system with auto-update:**
 
+#### 🪟 Windows
 ```batch
-# Clone repository
 git clone https://github.com/Grumpified-OGGVCT/BrowserOS_Guides.git
 cd BrowserOS_Guides
+install.bat          # Install dependencies & launch wizard
+run.bat              # Run the system
+```
 
-# Run installation (checks Python, installs dependencies, launches setup wizard)
-install.bat
-
-# After setup, run the system
-run.bat
+#### 🍎 macOS / 🐧 Linux
+```bash
+git clone https://github.com/Grumpified-OGGVCT/BrowserOS_Guides.git
+cd BrowserOS_Guides
+chmod +x install.sh run.sh
+./install.sh         # Install dependencies & launch wizard
+./run.sh             # Run the system
 ```
 
 **Features:**
-- ✅ **install.bat** - Checks prerequisites, installs dependencies
-- ✅ **Interactive Setup Wizard** - Guides through ALL configuration options
-- ✅ **Auto-Update System** - Checks and installs updates on every startup (bulletproof!)
+- ✅ **Universal Installation** - Works on Windows, macOS, Linux
+- ✅ **Interactive Setup Wizard** - Guides through ALL configuration
+- ✅ **Auto-Update System** - Checks and installs updates on startup (bulletproof!)
 - ✅ **Configuration Manager** - Modify settings anytime
-- ✅ **run.bat** - Main menu for all operations
-- ✅ **Comprehensive Error Handling** - Backups, rollbacks, validation
+- ✅ **Main Menu** - All operations in one place
+- ✅ **Cross-Platform** - Same functionality everywhere
 
-📖 **Full Guide**: [WINDOWS_SETUP.md](WINDOWS_SETUP.md) - Complete installation, configuration, and troubleshooting
+📖 **Guides**:
+- [CROSS_PLATFORM_SETUP.md](CROSS_PLATFORM_SETUP.md) - Universal guide for all platforms
+- [WINDOWS_SETUP.md](WINDOWS_SETUP.md) - Windows-specific details
 
 ---
 
@@ -412,15 +419,17 @@ BrowserOS_Guides/
 ├── 🐍 scripts/
 │   ├── research_pipeline.py           # AI-powered research engine
 │   ├── validate_kb.py                 # KB validation (C01-C05)
-│   ├── setup_wizard.py                # Interactive first-run configuration (Windows)
-│   ├── config_manager.py              # Post-setup configuration tool (Windows)
-│   ├── auto_update.py                 # Bulletproof auto-update system (Windows)
+│   ├── setup_wizard.py                # Interactive first-run configuration (cross-platform)
+│   ├── config_manager.py              # Post-setup configuration tool (cross-platform)
+│   ├── auto_update.py                 # Bulletproof auto-update system (cross-platform)
 │   ├── workflow_generator.py          # AI-powered workflow creation
 │   ├── self_test.py                   # Comprehensive system tests
 │   └── security_scanner.py            # Security vulnerability scanner
 │
 ├── 🪟 install.bat                     # Windows installation script
 ├── 🪟 run.bat                         # Windows main execution menu
+├── 🐧 install.sh                      # Unix installation script (macOS/Linux)
+├── 🐧 run.sh                          # Unix main execution menu (macOS/Linux)
 ├── 📦 requirements.txt                # Python dependencies
 ├── 🔧 config.yml                      # Universal configuration
 ├── 📝 .env.template                   # Environment variables template
