@@ -1,0 +1,69 @@
+{
+  "timestamp": "2026-02-12T07:37:33.572650+00:00",
+  "workflows_tested": [
+    {
+      "file": "deploy-pages.yml",
+      "name": "Deploy to GitHub Pages",
+      "triggers": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "tests": {
+        "syntax": {
+          "passed": true,
+          "message": "Valid YAML syntax"
+        }
+      },
+      "trigger_instructions": [
+        "\u2705 Manual trigger available via GitHub UI",
+        "   \u2192 Actions tab \u2192 Deploy to GitHub Pages \u2192 Run workflow",
+        "\u2705 Triggered on push to specific paths"
+      ]
+    },
+    {
+      "file": "self-test.yml",
+      "name": "Self-Test & Quality Assurance",
+      "triggers": [
+        "workflow_run",
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "tests": {
+        "syntax": {
+          "passed": true,
+          "message": "Valid YAML syntax"
+        }
+      },
+      "trigger_instructions": [
+        "\u2705 Manual trigger available via GitHub UI",
+        "   \u2192 Actions tab \u2192 Self-Test & Quality Assurance \u2192 Run workflow",
+        "\u2705 Runs on schedule",
+        "\u2705 Triggered by other workflows"
+      ]
+    },
+    {
+      "file": "update-kb.yml",
+      "name": "Update BrowserOS Knowledge Base",
+      "triggers": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "tests": {
+        "syntax": {
+          "passed": true,
+          "message": "Valid YAML syntax"
+        }
+      },
+      "trigger_instructions": [
+        "\u2705 Manual trigger available via GitHub UI",
+        "   \u2192 Actions tab \u2192 Update BrowserOS Knowledge Base \u2192 Run workflow",
+        "\u2705 Runs on schedule"
+      ]
+    }
+  ],
+  "total_workflows": 3,
+  "successful": 3,
+  "failed": 0,
+  "not_triggered": 0,
+  "summary": "\n============================================================\n\ud83d\udcca SUMMARY\n============================================================\nTotal Workflows: 3\n\u2705 Valid Syntax: 3\n\u274c Failed Tests: 0\n\nKey Workflows Status:\n  \u2022 deploy-pages.yml: Active and running\n  \u2022 update-kb.yml: NEVER TRIGGERED \u26a0\ufe0f\n  \u2022 self-test.yml: NEVER TRIGGERED \u26a0\ufe0f\n\n\ud83c\udfaf RECOMMENDATIONS:\n\n1. Trigger Update KB workflow immediately:\n   \u2192 This syncs with official BrowserOS repo\n   \u2192 Generates new workflows\n   \u2192 Updates search index\n\n2. Trigger Self-Test workflow after KB update:\n   \u2192 Validates repository integrity\n   \u2192 Runs security scans\n   \u2192 Auto-fixes issues\n\n3. Verify Deploy Pages continues working:\n   \u2192 Already functioning correctly\n   \u2192 Deploys on content changes\n\n============================================================"
+}
