@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - 'docs/**'
+      - '!docs/repo-structure.json'
+      - '!docs/search-index.json'
       - 'BrowserOS/**'
       - 'scripts/**'
       - '.github/workflows/deploy-pages.yml'
@@ -37,7 +39,7 @@ jobs:
       - name: Generate repository structure
         run: |
           echo "🔍 Generating live repository structure..."
-          python scripts/generate_repo_structure.py --verbose
+          python scripts/generate_repo_structure.py
           
       - name: Generate search index
         run: |

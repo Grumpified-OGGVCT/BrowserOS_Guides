@@ -5,10 +5,9 @@ Scans the actual repository and creates a live structure for the repo browser.
 This replaces the hardcoded demo data with real, dynamically generated content.
 """
 
-import os
 import json
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, Any
 from datetime import datetime
 
 # Files and directories to exclude from the browser
@@ -153,6 +152,10 @@ def scan_directory(dir_path: Path, repo_root: Path, docs_dir: Path) -> Dict[str,
             if should_exclude(item, repo_root):
                 continue
             
+            # Skip symlinks to avoid infinite loops and security issues
+            if item.is_symlink():
+                continue
+            
             if item.is_dir():
                 child = scan_directory(item, repo_root, docs_dir)
                 if child and child.get('children'):  # Only include non-empty folders
@@ -229,7 +232,7 @@ def generate_repo_structure(repo_root: str = None, output_file: str = None):
     # Add metadata
     output_data = {
         'generated_at': datetime.now().isoformat(),
-        'repository': 'BrowserOS_Guides',
+        'repository': repo_root.name,
         'stats': stats,
         'structure': structure
     }
@@ -264,11 +267,6 @@ def main():
         '--output',
         help='Output JSON file path (default: docs/repo-structure.json)',
         default=None
-    )
-    parser.add_argument(
-        '--verbose',
-        help='Verbose output',
-        action='store_true'
     )
     
     args = parser.parse_args()

@@ -75,7 +75,7 @@ jobs:
       - name: Generate repository structure for browser
         run: |
           echo "🔍 Generating live repository structure..."
-          python scripts/generate_repo_structure.py --verbose
+          python scripts/generate_repo_structure.py
       
       - name: Regenerate search index
         run: |

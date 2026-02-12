@@ -927,7 +927,19 @@
                 const genDate = new Date(timestamp);
                 const infoDiv = document.createElement('div');
                 infoDiv.style.cssText = 'margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-primary); font-size: 0.875rem; color: var(--text-secondary);';
-                infoDiv.innerHTML = `<span title="${genDate.toLocaleString()}">📊 Structure generated: ${genDate.toLocaleDateString()} at ${genDate.toLocaleTimeString()}</span> <span style="margin-left: 1rem;">🔄 Auto-updated by workflows</span>`;
+                
+                const generatedSpan = document.createElement('span');
+                generatedSpan.title = genDate.toLocaleString();
+                generatedSpan.textContent = `📊 Structure generated: ${genDate.toLocaleDateString()} at ${genDate.toLocaleTimeString()}`;
+                
+                const updatedSpan = document.createElement('span');
+                updatedSpan.style.marginLeft = '1rem';
+                updatedSpan.textContent = '🔄 Auto-updated by workflows';
+                
+                infoDiv.appendChild(generatedSpan);
+                infoDiv.appendChild(document.createTextNode(' '));
+                infoDiv.appendChild(updatedSpan);
+                
                 browserHeader.appendChild(infoDiv);
             }
         }
