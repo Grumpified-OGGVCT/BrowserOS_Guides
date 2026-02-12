@@ -1,0 +1,27 @@
+{
+  "type": "conditional",
+  "name": "Sample Conditional Step",
+  "description": "Branch based on condition",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-12T21:30:51.351981",
+    "parameters": [
+      {
+        "name": "condition",
+        "description": "Configuration for conditional"
+      },
+      {
+        "name": "if_steps",
+        "description": "Configuration for conditional"
+      },
+      {
+        "name": "else_steps",
+        "description": "Configuration for conditional"
+      }
+    ]
+  },
+  "condition": "{{variable}} === true",
+  "then": [],
+  "else": []
+}

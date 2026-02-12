@@ -1,10 +1,10 @@
 {
   "test_run": {
-    "timestamp": "2026-02-12T18:47:19.824917",
-    "duration_seconds": 0.075468,
+    "timestamp": "2026-02-12T21:57:04.762698",
+    "duration_seconds": 0.084606,
     "total_tests": 13,
-    "passed": 9,
-    "failed": 4,
+    "passed": 10,
+    "failed": 3,
     "fixed": 0
   },
   "results": {
@@ -16,7 +16,7 @@
     "website_css": "PASS",
     "website_js": "PASS",
     "workflow_json": "PASS",
-    "ollama_key": "FAIL",
+    "ollama_key": "PASS",
     "openrouter_key": "FAIL",
     "github_actions": "PASS",
     "doc_links": "FAIL",
@@ -25,14 +25,8 @@
   "fixes_applied": [],
   "manual_review_needed": [
     {
-      "test": "ollama_key",
-      "issue": "OLLAMA_API_KEY environment variable not set",
-      "severity": "high",
-      "suggested_fix": "Set OLLAMA_API_KEY in repository secrets"
-    },
-    {
       "test": "doc_links",
-      "issue": "Broken internal links: README.md -> ../../actions, README.md -> .github/workflows/README.md#-how-to-trigger-workflows, README.md -> ../../issues, README.md -> ../../discussions, README.md -> ../../stargazers",
+      "issue": "Broken internal links: README.md -> .github/workflows/README.md#-how-to-trigger-workflows, MCP_AGENTIC_GUIDE.md -> BrowserOS_Workflows_KnowledgeBase.md, MCP_AGENTIC_GUIDE.md -> ADVANCED_TECHNIQUES.md, MCP_AGENTIC_GUIDE.md -> ../USE_CASE_MATRIX.md, MCP_AGENTIC_GUIDE.md -> ../Workflows/",
       "severity": "low",
       "suggested_fix": "Fix broken links in documentation"
     }

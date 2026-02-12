@@ -4,83 +4,203 @@
     "accessed": "2026-02-11T22:19:00Z",
     "author": "BrowserOS Team",
     "type": "official_documentation",
-    "abstract": "Official BrowserOS documentation covering workflows, API references, and user guides"
+    "abstract": "Official BrowserOS documentation covering workflows, API references, and user guides",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   },
   {
     "url": "https://github.com/browseros-ai/BrowserOS",
     "accessed": "2026-02-11T22:19:00Z",
     "author": "browseros-ai",
     "type": "github_repository",
-    "abstract": "Main BrowserOS repository with source code, issues, PRs, and examples"
+    "abstract": "Main BrowserOS repository with source code, issues, PRs, and examples",
+    "branches": [
+      "main",
+      "dev",
+      "beta"
+    ],
+    "track_beta": true,
+    "beta_knowledge_file": "beta_features.md",
+    "priority": "critical",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
+  },
+  {
+    "url": "https://github.com/browseros-ai/BrowserOS-agent",
+    "accessed": "2026-02-12T21:00:00Z",
+    "author": "browseros-ai",
+    "type": "github_repository",
+    "abstract": "TypeScript-based agent that orchestrates workflows and MCP tools for BrowserOS",
+    "branches": [
+      "main",
+      "dev"
+    ],
+    "track_beta": true,
+    "priority": "high",
+    "provenance": {
+      "first_indexed": "2026-02-12T21:00:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
+  },
+  {
+    "url": "https://github.com/browseros-ai/moltyflow",
+    "accessed": "2026-02-12T21:00:00Z",
+    "author": "browseros-ai",
+    "type": "github_repository",
+    "abstract": "StackOverflow for AI agents - inter-agent communication and knowledge sharing platform",
+    "branches": [
+      "main"
+    ],
+    "track_beta": false,
+    "priority": "medium",
+    "provenance": {
+      "first_indexed": "2026-02-12T21:00:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
+  },
+  {
+    "url": "https://github.com/browseros-ai/old-browseros-agent",
+    "accessed": "2026-02-12T21:00:00Z",
+    "author": "browseros-ai",
+    "type": "github_repository",
+    "abstract": "Legacy agent submodule - reference for understanding architectural evolution",
+    "branches": [
+      "main"
+    ],
+    "track_beta": false,
+    "priority": "low",
+    "provenance": {
+      "first_indexed": "2026-02-12T21:00:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   },
   {
     "url": "https://github.com/browser-use/workflow-use",
     "accessed": "2026-02-11T22:19:00Z",
     "author": "browser-use",
     "type": "github_repository",
-    "abstract": "Deterministic self-healing workflows repository (RPA 2.0) with Generation Mode and CLI tools"
+    "abstract": "Deterministic self-healing workflows repository (RPA 2.0) with Generation Mode and CLI tools",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   },
   {
     "url": "https://docs.browser-use.com",
     "accessed": "2026-02-11T22:19:00Z",
     "author": "Browser Use Team",
     "type": "official_documentation",
-    "abstract": "Browser Use documentation covering workflow creation, step types, and API integration"
+    "abstract": "Browser Use documentation covering workflow creation, step types, and API integration",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   },
   {
     "url": "https://news.ycombinator.com/item?id=42875414",
     "accessed": "2026-02-11T22:19:00Z",
     "author": "HackerNews Community",
     "type": "community_discussion",
-    "abstract": "Show HN: BrowserOS Workflows discussion with community feedback and use cases"
+    "abstract": "Show HN: BrowserOS Workflows discussion with community feedback and use cases",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   },
   {
     "url": "https://claude.ai/cowork",
     "accessed": "2026-02-11T22:19:00Z",
     "author": "Anthropic",
     "type": "official_documentation",
-    "abstract": "Claude Cowork documentation explaining local file system access and workspace integration"
+    "abstract": "Claude Cowork documentation explaining local file system access and workspace integration",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   },
   {
     "url": "https://developer.chrome.com/docs/capabilities/web-apis/file-system-access",
     "accessed": "2026-02-11T22:19:00Z",
     "author": "Chrome Developers",
     "type": "technical_specification",
-    "abstract": "File System Access API documentation detailing browser-based file operations"
+    "abstract": "File System Access API documentation detailing browser-based file operations",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   },
   {
     "url": "https://github.com/browseros-ai/BrowserOS/blob/main/docs/workflows.md",
     "accessed": "2026-02-11T22:19:00Z",
     "author": "BrowserOS Team",
     "type": "github_documentation",
-    "abstract": "Detailed workflow documentation with schema definitions and advanced examples"
+    "abstract": "Detailed workflow documentation with schema definitions and advanced examples",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   },
   {
     "url": "https://github.com/browseros-ai/BrowserOS/issues",
     "accessed": "2026-02-11T22:19:00Z",
     "author": "BrowserOS Contributors",
     "type": "github_issues",
-    "abstract": "Community-reported issues, feature requests, and troubleshooting discussions"
+    "abstract": "Community-reported issues, feature requests, and troubleshooting discussions",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   },
   {
     "url": "https://github.com/browseros-ai/BrowserOS/pulls",
     "accessed": "2026-02-11T22:19:00Z",
     "author": "BrowserOS Contributors",
     "type": "github_pulls",
-    "abstract": "Pull requests with code changes, new features, and bug fixes"
+    "abstract": "Pull requests with code changes, new features, and bug fixes",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   },
   {
     "url": "https://www.youtube.com/watch?v=example-browseros",
     "accessed": "2026-02-11T22:19:00Z",
     "author": "BrowserOS Official",
     "type": "video_tutorial",
-    "abstract": "Video tutorials demonstrating workflow creation and advanced patterns"
+    "abstract": "Video tutorials demonstrating workflow creation and advanced patterns",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   },
   {
     "url": "https://medium.com/@browseros/workflow-automation-patterns",
     "accessed": "2026-02-11T22:19:00Z",
     "author": "BrowserOS Team",
     "type": "blog_post",
-    "abstract": "Blog post covering common workflow automation patterns and best practices"
+    "abstract": "Blog post covering common workflow automation patterns and best practices",
+    "provenance": {
+      "first_indexed": "2026-02-11T22:19:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
   }
 ]

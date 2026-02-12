@@ -1,0 +1,28 @@
+{
+  "type": "api_call",
+  "name": "Sample Api_Call Step",
+  "description": "Make HTTP request",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-12T21:30:51.352979",
+    "parameters": [
+      {
+        "name": "url",
+        "description": "Configuration for api_call"
+      },
+      {
+        "name": "method",
+        "description": "Configuration for api_call"
+      },
+      {
+        "name": "headers",
+        "description": "Configuration for api_call"
+      },
+      {
+        "name": "body",
+        "description": "Configuration for api_call"
+      }
+    ]
+  }
+}

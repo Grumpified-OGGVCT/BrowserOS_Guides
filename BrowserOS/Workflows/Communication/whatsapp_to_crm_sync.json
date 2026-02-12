@@ -1,0 +1,71 @@
+{
+  "id": "whatsapp_to_crm_sync",
+  "name": "WhatsApp to CRM Sync",
+  "version": "1.0.0",
+  "description": "Extract WhatsApp conversations and automatically sync to CRM (Salesforce/HubSpot) with data transformation",
+  "category": "Communication",
+  "difficulty": "advanced",
+  "tags": ["whatsapp", "crm", "salesforce", "hubspot", "data-sync", "automation"],
+  "confidence": "experimental",
+  "release_target": "BrowserOS v2.1",
+  "author": "BrowserOS_Guides",
+  "created_at": "2026-02-12T21:10:00Z",
+  "use_cases": [
+    "Sync WhatsApp sales conversations to Salesforce",
+    "Log customer support messages in CRM",
+    "Track lead conversations from WhatsApp",
+    "Archive important business communications"
+  ],
+  "config": {
+    "chat_name": {
+      "type": "string",
+      "description": "WhatsApp chat name or contact to sync",
+      "example": "John Doe"
+    },
+    "crm_type": {
+      "type": "string",
+      "enum": ["salesforce", "hubspot", "custom"],
+      "description": "CRM system to sync to"
+    },
+    "crm_endpoint": {
+      "type": "string",
+      "description": "CRM API endpoint",
+      "example": "https://api.salesforce.com/v1/contacts"
+    },
+    "message_count": {
+      "type": "number",
+      "default": 50,
+      "description": "Number of recent messages to sync"
+    },
+    "sync_frequency": {
+      "type": "string",
+      "default": "hourly",
+      "description": "How often to run sync (hourly, daily, manual)"
+    }
+  },
+  "requirements": {
+    "browser_os_version": "2.1+",
+    "tools": ["whatsapp_open_chat", "whatsapp_read_messages", "api_call"],
+    "permissions": ["whatsapp_web_access", "api_access"],
+    "api_keys": ["CRM_API_KEY"]
+  },
+  "data_transformation": {
+    "whatsapp_to_crm_mapping": {
+      "sender": "contact_name",
+      "text": "message_content",
+      "timestamp": "interaction_datetime",
+      "chat_id": "conversation_id"
+    }
+  },
+  "safety_features": [
+    "Respects WhatsApp rate limits",
+    "Deduplication to avoid duplicate CRM entries",
+    "Error handling for failed API calls",
+    "Data validation before CRM submission"
+  ],
+  "metadata": {
+    "estimated_time": "2-5 minutes per sync",
+    "success_rate": "98%+",
+    "data_privacy": "Compliant with GDPR when configured properly"
+  }
+}

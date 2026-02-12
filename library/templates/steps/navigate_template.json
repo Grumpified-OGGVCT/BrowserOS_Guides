@@ -1,0 +1,23 @@
+{
+  "type": "navigate",
+  "name": "Sample Navigate Step",
+  "description": "Navigate to a URL",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-12T21:30:51.351202",
+    "parameters": [
+      {
+        "name": "url",
+        "description": "Configuration for navigate"
+      },
+      {
+        "name": "wait_until",
+        "description": "Configuration for navigate"
+      }
+    ]
+  },
+  "url": "https://example.com",
+  "wait_for": "networkidle",
+  "timeout": 30000
+}

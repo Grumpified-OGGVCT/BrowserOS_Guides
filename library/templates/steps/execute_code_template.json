@@ -1,0 +1,20 @@
+{
+  "type": "execute_code",
+  "name": "Sample Execute_Code Step",
+  "description": "Run Python code",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-12T21:30:51.352495",
+    "parameters": [
+      {
+        "name": "code",
+        "description": "Configuration for execute_code"
+      },
+      {
+        "name": "context",
+        "description": "Configuration for execute_code"
+      }
+    ]
+  }
+}

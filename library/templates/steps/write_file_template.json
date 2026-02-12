@@ -1,0 +1,24 @@
+{
+  "type": "write_file",
+  "name": "Sample Write_File Step",
+  "description": "Write to local workspace",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-12T21:30:51.352745",
+    "parameters": [
+      {
+        "name": "path",
+        "description": "Configuration for write_file"
+      },
+      {
+        "name": "data",
+        "description": "Configuration for write_file"
+      },
+      {
+        "name": "format",
+        "description": "Configuration for write_file"
+      }
+    ]
+  }
+}

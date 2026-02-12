@@ -1,0 +1,85 @@
+{
+  "id": "multilingual_whatsapp_support",
+  "name": "Multilingual WhatsApp Support Agent",
+  "version": "1.0.0",
+  "description": "Auto-translate incoming WhatsApp messages, query knowledge base for technical context, and respond in customer's language",
+  "category": "Communication",
+  "difficulty": "advanced",
+  "tags": ["whatsapp", "multilingual", "support", "translation", "ai-agent", "customer-service"],
+  "confidence": "experimental",
+  "release_target": "BrowserOS v2.1",
+  "author": "BrowserOS_Guides",
+  "created_at": "2026-02-12T21:10:00Z",
+  "use_cases": [
+    "Provide 24/7 multilingual customer support",
+    "Handle technical support queries in any language",
+    "Auto-respond to common questions",
+    "Escalate complex issues with context"
+  ],
+  "config": {
+    "supported_languages": {
+      "type": "array",
+      "default": ["Spanish", "French", "German", "Portuguese", "Chinese"],
+      "description": "Languages to auto-translate"
+    },
+    "knowledge_base_url": {
+      "type": "string",
+      "description": "URL to query for technical answers",
+      "example": "http://localhost:3000/mcp"
+    },
+    "translation_api": {
+      "type": "string",
+      "description": "Translation API endpoint",
+      "example": "https://api.openai.com/v1/chat/completions"
+    },
+    "auto_respond": {
+      "type": "boolean",
+      "default": false,
+      "description": "Automatically send response (false = draft only)"
+    },
+    "escalation_keywords": {
+      "type": "array",
+      "default": ["refund", "cancel", "manager", "urgent"],
+      "description": "Keywords that trigger human escalation"
+    }
+  },
+  "requirements": {
+    "browser_os_version": "2.1+",
+    "tools": ["whatsapp_read_messages", "whatsapp_send_message", "api_call", "query_knowledge"],
+    "permissions": ["whatsapp_web_access", "api_access"],
+    "api_keys": ["TRANSLATION_API_KEY", "KNOWLEDGE_BASE_API_KEY"]
+  },
+  "workflow_logic": {
+    "steps": [
+      "1. Monitor for new unread WhatsApp messages",
+      "2. Detect message language",
+      "3. Translate to English if needed",
+      "4. Extract error codes or technical terms",
+      "5. Query knowledge base for answers",
+      "6. Generate response with context",
+      "7. Translate response back to customer language",
+      "8. Send (if auto_respond=true) or draft for review"
+    ],
+    "escalation_logic": "If message contains escalation keywords or confidence < 80%, flag for human review"
+  },
+  "safety_features": [
+    "Human review option (auto_respond=false)",
+    "Confidence scoring for responses",
+    "Escalation for complex queries",
+    "Respects WhatsApp rate limits"
+  ],
+  "example_interaction": {
+    "input": "Hola, tengo el error 504 en mi aplicación",
+    "translation": "Hello, I have error 504 in my application",
+    "knowledge_query": "Resolution for Error 504",
+    "knowledge_response": "Error 504 is a database timeout. Team is fixing it.",
+    "response_draft": "Hola, el error 504 es un problema de base de datos. Nuestro equipo lo está solucionando.",
+    "confidence": "95%"
+  },
+  "metadata": {
+    "estimated_time": "10-30 seconds per message",
+    "success_rate": "92%+ with human review",
+    "languages_supported": "100+ via translation API",
+    "cost_per_message": "~$0.02 (translation + knowledge query)"
+  }
+}

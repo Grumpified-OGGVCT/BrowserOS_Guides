@@ -1,0 +1,24 @@
+{
+  "type": "screenshot",
+  "name": "Sample Screenshot Step",
+  "description": "Capture page image",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-12T21:30:51.352370",
+    "parameters": [
+      {
+        "name": "element",
+        "description": "Configuration for screenshot"
+      },
+      {
+        "name": "fullPage",
+        "description": "Configuration for screenshot"
+      },
+      {
+        "name": "path",
+        "description": "Configuration for screenshot"
+      }
+    ]
+  }
+}

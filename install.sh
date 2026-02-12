@@ -60,10 +60,11 @@ main() {
     print_header "BrowserOS Knowledge Base - Installation Script"
     
     echo "This script will:"
-    echo "  1. Check system requirements (Python 3.11+, Git)"
+    echo "  1. Check system requirements (Python 3.11+, Node.js 14+, Git)"
     echo "  2. Install Python dependencies"
-    echo "  3. Create configuration directory structure"
-    echo "  4. Launch the interactive setup wizard"
+    echo "  3. Install Node.js dependencies"
+    echo "  4. Create configuration directory structure"
+    echo "  5. Launch the interactive setup wizard"
     echo
     echo "Press Enter to continue or Ctrl+C to cancel..."
     read
@@ -114,8 +115,41 @@ main() {
     print_success "Python version is compatible"
     echo
 
+    # Check Node.js installation
+    echo "[2/8] Checking Node.js installation..."
+    
+    if command -v node &> /dev/null; then
+        NODE_VERSION=$(node --version 2>&1 | sed 's/v//')
+        print_success "Found: Node.js $NODE_VERSION"
+        
+        # Check version is 14+
+        NODE_MAJOR=$(echo $NODE_VERSION | cut -d. -f1)
+        if [ "$NODE_MAJOR" -lt 14 ]; then
+            print_warning "Node.js 14+ recommended, found v$NODE_VERSION"
+            echo "Some MCP server features may not work properly"
+        fi
+    else
+        print_warning "Node.js is not installed or not in PATH"
+        echo "Node.js is required for the MCP server"
+        echo
+        echo "Install Node.js 14+:"
+        if [ "$OS" == "macOS" ]; then
+            echo "  brew install node"
+            echo "  or download from: https://nodejs.org/"
+        elif [ "$OS" == "Linux" ]; then
+            echo "  Ubuntu/Debian: curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt install nodejs"
+            echo "  CentOS/RHEL: curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash - && sudo yum install nodejs"
+            echo "  Fedora: sudo dnf install nodejs"
+            echo "  Arch: sudo pacman -S nodejs npm"
+        fi
+        echo
+        echo "Press Enter to continue without Node.js (MCP server will not be available)..."
+        read
+    fi
+    echo
+
     # Check Git installation
-    echo "[2/6] Checking Git installation..."
+    echo "[3/8] Checking Git installation..."
     
     if command -v git &> /dev/null; then
         GIT_VERSION=$(git --version | awk '{print $3}')
@@ -141,7 +175,7 @@ main() {
     echo
 
     # Check pip
-    echo "[3/6] Checking pip installation..."
+    echo "[4/8] Checking pip installation..."
     
     if $PYTHON_CMD -m pip --version &> /dev/null; then
         print_success "pip is available"
@@ -158,7 +192,7 @@ main() {
     echo
 
     # Install Python dependencies
-    echo "[4/6] Installing Python dependencies..."
+    echo "[5/8] Installing Python dependencies..."
     echo "This may take a few minutes..."
     echo
 
@@ -186,18 +220,40 @@ main() {
     fi
     echo
 
+    # Install Node.js dependencies
+    echo "[6/8] Installing Node.js dependencies..."
+    
+    if command -v node &> /dev/null && command -v npm &> /dev/null; then
+        if [ -f package.json ]; then
+            npm install --quiet
+            if [ $? -ne 0 ]; then
+                print_warning "Failed to install Node.js dependencies"
+                echo "MCP server may not work properly"
+            else
+                print_success "Node.js dependencies installed"
+            fi
+        else
+            print_warning "package.json not found"
+        fi
+    else
+        print_warning "Skipping Node.js dependencies (Node.js not installed)"
+    fi
+    echo
+
     # Create directory structure
-    echo "[5/6] Creating directory structure..."
+    echo "[7/8] Creating directory structure..."
     
     mkdir -p logs
     mkdir -p BrowserOS/Research
     mkdir -p BrowserOS/Workflows
+    mkdir -p library/templates
+    mkdir -p library/schemas
     
     print_success "Directories created"
     echo
 
     # Check/Create .env file
-    echo "[6/6] Checking configuration..."
+    echo "[8/8] Checking configuration..."
     
     if [ ! -f .env ]; then
         if [ -f .env.template ]; then

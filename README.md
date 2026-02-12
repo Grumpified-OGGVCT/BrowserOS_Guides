@@ -1,9 +1,61 @@
 # 🚀 BrowserOS Workflows Knowledge Base
 
-> **A self-maintaining, AI-powered knowledge base for BrowserOS Workflows**  
-> Automatically compiled from the latest documentation, code, and community resources
+> **A self-aware intelligence layer for BrowserOS agents**  
+> Self-maintaining, AI-powered, with HTTP MCP server for immediate agent integration
 
 <div align="center">
+
+## 🌟 New: HTTP MCP Server Integration
+
+**Connect this knowledge base to BrowserOS in 30 seconds via "Add Custom App"**
+
+```bash
+npm run mcp-server
+# Server starts at http://localhost:3000/mcp
+```
+
+**📖 [Quick Start Guide](./QUICKSTART_MCP.md)** | **🏗️ [Architecture](./ARCHITECTURE.md)** | **📡 [MCP Integration](./MCP_SERVER_INTEGRATION.md)**
+
+[![GitHub Actions](https://img.shields.io/badge/automation-GitHub%20Actions-blue)](/.github/workflows/update-kb.yml)
+[![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://www.python.org/)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen.svg)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
+
+</div>
+
+---
+
+## ✨ What's New in v2.0
+
+This repository has evolved into an **operational intelligence layer** for BrowserOS agents:
+
+- 🧠 **HTTP MCP Server** - 10 tools for agent self-awareness
+- 📚 **917+ Executable Workflows** - Ready-to-use, validated templates
+- 🔐 **Content Integrity** - SHA-256 hashing with delta detection
+- ⚠️ **Anti-Patterns Catalog** - Know what fails before trying
+- ✅ **Ground Truth Validation** - Verified against BrowserOS source code
+- 🔄 **Event-Driven Updates** - Real-time sync with BrowserOS repo
+- 🌐 **Universal MCP** - Works with BrowserOS, Claude Desktop, Cursor, etc.
+
+### How to Use
+
+**Option 1: MCP Server (Recommended for BrowserOS)**
+```bash
+npm run mcp-server
+# Add to BrowserOS: http://localhost:3000/mcp
+```
+
+**Option 2: Interactive Website**
+```bash
+# Open docs/index.html or deploy to GitHub Pages
+```
+
+**Option 3: Direct Library Import**
+```javascript
+import templates from './library/templates'
+```
+
+---
 
 ## 🌐 Live Website (Setup Required)
 
@@ -13,12 +65,6 @@
 > 1. **Merge this PR** to main/master branch
 > 2. **Enable GitHub Pages**: Go to Settings → Pages → Source: "GitHub Actions"
 > 3. The deployment workflow will automatically publish the site
-
-[![GitHub Actions](https://img.shields.io/badge/automation-GitHub%20Actions-blue)](/.github/workflows/update-kb.yml)
-[![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
-
-</div>
 
 ---
 
@@ -545,7 +591,7 @@ We welcome contributions to improve the knowledge base!
 - **👤 Manual**: Via GitHub Actions UI (workflow_dispatch)
 - **🏷️ Versioning**: Tagged as `kb-YYYY.MM.DD`
 
-**Next scheduled update**: Check the [Actions tab](../../actions) for countdown
+**Next scheduled update**: Check the [Actions tab](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/actions) for countdown
 
 ---
 
@@ -652,8 +698,8 @@ This repository uses GitHub Actions to automate maintenance and updates:
 - **📖 Full Documentation**: [AUTOMATION_QUICKSTART.md](AUTOMATION_QUICKSTART.md)
 - **🔧 Automation Details**: [.github/ACTIONS_SETUP.md](.github/ACTIONS_SETUP.md)
 - **🔄 Workflow Guide**: [WORKFLOW_TRIGGER_GUIDE.md](WORKFLOW_TRIGGER_GUIDE.md)
-- **🐛 Issues**: [GitHub Issues](../../issues)
-- **💡 Discussions**: [GitHub Discussions](../../discussions)
+- **🐛 Issues**: [GitHub Issues](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/issues)
+- **💡 Discussions**: [GitHub Discussions](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/discussions)
 
 ---
 
@@ -667,6 +713,6 @@ This repository uses GitHub Actions to automate maintenance and updates:
 View locally: `python3 -m http.server 8000 --directory docs`  
 Deploy to Pages: Merge PR + enable in Settings → Pages
 
-[⭐ Star this repo](../../stargazers) • [🔀 Fork it](../../fork) • [📖 Read the KB](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
+[⭐ Star this repo](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/stargazers) • [🔀 Fork it](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/fork) • [📖 Read the KB](BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md)
 
 </div>

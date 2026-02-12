@@ -1,0 +1,44 @@
+{
+  "name": "browseros-guides",
+  "version": "2.0.0",
+  "description": "BrowserOS Workflows Knowledge Base - Self-aware intelligence layer for BrowserOS agents with WhatsApp monitoring",
+  "main": "server/mcp-server.js",
+  "scripts": {
+    "start": "node server/mcp-server.js",
+    "mcp-server": "MCP_SERVER_PORT=3100 node server/mcp-server.js",
+    "mcp-server:dev": "LOG_LEVEL=debug MCP_SERVER_PORT=3100 node server/mcp-server.js",
+    "mcp-server:3000": "MCP_SERVER_PORT=3000 node server/mcp-server.js",
+    "generate-library": "python3 scripts/generate_library.py",
+    "enhance-sources": "python3 scripts/enhance_sources.py",
+    "validate-kb": "python3 scripts/validate_kb.py",
+    "build-provenance": "python3 scripts/build_provenance.py",
+    "monitor-whatsapp": "python3 scripts/monitor_whatsapp.py",
+    "self-test": "python3 scripts/self_test.py",
+    "test-mcp": "node server/test-mcp-server.js",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f"
+  },
+  "keywords": [
+    "browseros",
+    "workflows",
+    "mcp",
+    "model-context-protocol",
+    "automation",
+    "knowledge-base",
+    "whatsapp-monitoring",
+    "ai-agents"
+  ],
+  "author": "BrowserOS_Guides Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0",
+    "python": ">=3.11.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Grumpified-OGGVCT/BrowserOS_Guides.git"
+  },
+  "homepage": "https://grumpified-oggvct.github.io/BrowserOS_Guides/"
+}

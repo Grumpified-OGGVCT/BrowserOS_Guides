@@ -1,0 +1,125 @@
+name: WhatsApp Integration Monitor
+
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:  # Manual trigger
+    inputs:
+      alert_on_detection:
+        description: 'Create GitHub issue on detection'
+        required: false
+        default: 'true'
+        type: boolean
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: read
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    name: Monitor for WhatsApp Integration
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Run WhatsApp Monitor
+        id: monitor
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🔍 Starting WhatsApp Integration Monitor..."
+          python scripts/monitor_whatsapp.py
+          
+          # Check if report was generated
+          if [ -f "WHATSAPP_WATCH_REPORT.md" ]; then
+            echo "report_generated=true" >> $GITHUB_OUTPUT
+            
+            # Check for detections in report
+            if grep -q "Status: DETECTION" "WHATSAPP_WATCH_REPORT.md"; then
+              echo "detection_found=true" >> $GITHUB_OUTPUT
+              echo "🚨 DETECTION FOUND!"
+            else
+              echo "detection_found=false" >> $GITHUB_OUTPUT
+              echo "✅ No detections"
+            fi
+          else
+            echo "report_generated=false" >> $GITHUB_OUTPUT
+            echo "detection_found=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit monitoring report
+        if: steps.monitor.outputs.report_generated == 'true'
+        run: |
+          git add WHATSAPP_WATCH_REPORT.md
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: Update WhatsApp monitoring report [skip ci]"
+            git push
+          fi
+      
+      - name: Create alert issue on detection
+        if: |
+          steps.monitor.outputs.detection_found == 'true' && 
+          (github.event_name == 'schedule' || inputs.alert_on_detection == true)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "🚨 WhatsApp Integration Detected in BrowserOS Repositories" \
+            --body-file .github/ISSUE_TEMPLATE/whatsapp_detection_alert.md \
+            --label "alert,whatsapp,automation,urgent"
+      
+      - name: Upload report artifact
+        if: steps.monitor.outputs.report_generated == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: whatsapp-monitoring-report
+          path: WHATSAPP_WATCH_REPORT.md
+          retention-days: 30
+      
+      - name: Summary
+        if: always()
+        run: |
+          echo "## 🔍 WhatsApp Integration Monitor" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.monitor.outputs.detection_found }}" == "true" ]; then
+            echo "### 🚨 DETECTION FOUND!" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "WhatsApp integration development detected in BrowserOS repositories." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Actions Taken**:" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ Monitoring report committed" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ Alert issue created" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ Report uploaded as artifact" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ✅ No Detection" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "WhatsApp integration not yet started. Continuing daily monitoring." >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Next Check**: Tomorrow at 00:00 UTC" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,25 @@
+{
+  "type": "wait",
+  "name": "Sample Wait Step",
+  "description": "Wait for condition",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-12T21:30:51.351855",
+    "parameters": [
+      {
+        "name": "selector",
+        "description": "Configuration for wait"
+      },
+      {
+        "name": "text",
+        "description": "Configuration for wait"
+      },
+      {
+        "name": "time",
+        "description": "Configuration for wait"
+      }
+    ]
+  },
+  "duration": 1000
+}
