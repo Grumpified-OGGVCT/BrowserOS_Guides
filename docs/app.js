@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeAnimations();
         initializeMobileMenu();
         initializeCategoryNavigation();
+        initializeCopyButtons();
     } catch (error) {
         console.error('Initialization error:', error);
         // Display user-friendly error message
@@ -56,10 +57,28 @@ async function loadSearchIndex() {
         if (searchResults) {
             const errorDiv = document.createElement('div');
             errorDiv.style.cssText = 'padding: 1rem; background: var(--bg-secondary, #1A1F26); border-radius: 8px; margin-top: 1rem;';
-            errorDiv.innerHTML = `
-                <p style="color: var(--warning, #F59E0B); font-weight: 600; margin-bottom: 0.5rem;">⚠️ Search temporarily unavailable</p>
-                <p style="color: var(--text-secondary, #9AA0A6); font-size: 0.875rem;">Unable to load search index. Please try refreshing the page or browse the <a href="#workflows" style="color: var(--browseros-orange, #FF7900);">workflows</a> directly.</p>
-            `;
+            
+            const warningP = document.createElement('p');
+            warningP.style.cssText = 'color: var(--warning, #F59E0B); font-weight: 600; margin-bottom: 0.5rem;';
+            warningP.textContent = '⚠️ Search temporarily unavailable';
+            
+            const messageP = document.createElement('p');
+            messageP.style.cssText = 'color: var(--text-secondary, #9AA0A6); font-size: 0.875rem;';
+            messageP.textContent = 'Unable to load search index. Please try refreshing the page or browse the ';
+            
+            const workflowLink = document.createElement('a');
+            workflowLink.href = '#workflows';
+            workflowLink.style.color = 'var(--browseros-orange, #FF7900)';
+            workflowLink.textContent = 'workflows';
+            
+            const directlyText = document.createTextNode(' directly.');
+            
+            messageP.appendChild(workflowLink);
+            messageP.appendChild(directlyText);
+            
+            errorDiv.appendChild(warningP);
+            errorDiv.appendChild(messageP);
+            
             // Store for later display when user tries to search
             searchResults.dataset.errorMessage = errorDiv.outerHTML;
         }
@@ -116,7 +135,13 @@ function performSearch(query, filter) {
         
         // Check if there's a stored error message
         if (searchResults.dataset.errorMessage) {
-            searchResults.innerHTML = searchResults.dataset.errorMessage;
+            // Create a temporary container and use it to safely parse the stored HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = searchResults.dataset.errorMessage;
+            // Move the child element (the error div) to searchResults
+            while (tempDiv.firstChild) {
+                searchResults.appendChild(tempDiv.firstChild);
+            }
             searchResults.classList.add('active');
             return;
         }
@@ -525,8 +550,19 @@ function copyCode(button) {
     });
 }
 
-// Make copyCode available globally
-window.copyCode = copyCode;
+// ============================================================================
+// Initialize Copy Buttons
+// ============================================================================
+
+function initializeCopyButtons() {
+    // Attach event listeners to all copy buttons
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            copyCode(this);
+        });
+    });
+}
 
 // ============================================================================
 // Category Navigation

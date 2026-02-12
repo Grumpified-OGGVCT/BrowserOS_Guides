@@ -7,6 +7,7 @@ Post-setup tool for modifying configuration settings
 import os
 import sys
 import shutil
+import subprocess
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from datetime import datetime
@@ -23,8 +24,15 @@ class Colors:
     BOLD = '\033[1m'
 
 def clear_screen():
-    """Clear the console screen"""
-    os.system('cls' if os.name == 'nt' else 'clear')
+    """Clear the console screen safely"""
+    try:
+        if os.name == 'nt':
+            subprocess.run(['cmd', '/c', 'cls'], check=False)
+        else:
+            subprocess.run(['clear'], check=False)
+    except Exception:
+        # If clearing fails, just continue
+        pass
 
 def print_header(text: str):
     """Print a formatted header"""

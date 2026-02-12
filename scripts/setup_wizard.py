@@ -23,9 +23,18 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+import subprocess
+
 def clear_screen():
-    """Clear the console screen"""
-    os.system('cls' if os.name == 'nt' else 'clear')
+    """Clear the console screen safely"""
+    try:
+        if os.name == 'nt':
+            subprocess.run(['cmd', '/c', 'cls'], check=False)
+        else:
+            subprocess.run(['clear'], check=False)
+    except Exception:
+        # If clearing fails, just continue
+        pass
 
 def print_header(text: str):
     """Print a formatted header"""
