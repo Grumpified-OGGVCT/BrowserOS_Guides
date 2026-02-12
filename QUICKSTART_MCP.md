@@ -159,8 +159,8 @@ Expected response:
 ## Troubleshooting
 
 **Server won't start?**
-- Check if port 3000 is available: `lsof -i :3100`
-- Try a different port: `BROWSEROS_GUIDES_PORT=3001 npm run mcp-server`
+- Check if port 3100 is available: `lsof -i :3100`
+- Try a different port: `BROWSEROS_GUIDES_PORT=3101 npm run mcp-server`
 
 **BrowserOS can't connect?**
 - Verify server is running: `curl http://localhost:3100/mcp/health`

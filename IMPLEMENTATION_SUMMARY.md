@@ -216,7 +216,7 @@ import { navigate } from './library/templates/steps/navigate_template.json'
 
 ### MCP Server ✅
 ```
-✓ Server starts on port 3000
+✓ Server starts on port 3100
 ✓ Health check responds
 ✓ 10 tools loaded
 ✓ 917 workflows accessible

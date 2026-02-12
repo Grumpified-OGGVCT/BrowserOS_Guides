@@ -264,7 +264,7 @@ Add to `claude_desktop_config.json`:
 
 ```bash
 # Optional: Customize server behavior
-export BROWSEROS_GUIDES_PORT=3000
+export BROWSEROS_GUIDES_PORT=3100
 export BROWSEROS_GUIDES_HOST=localhost
 export BROWSEROS_GUIDES_ENABLE_CACHE=true
 export BROWSEROS_GUIDES_LOG_LEVEL=info
@@ -373,7 +373,7 @@ Deploy to any Node.js hosting service (Heroku, Render, Railway, etc.)
 
 ### BrowserOS can't connect
 - Verify server is running: `curl http://localhost:3100/mcp/health`
-- Check firewall rules allow port 3000
+- Check firewall rules allow port 3100
 - Ensure URL in BrowserOS matches server address
 
 ### Queries return empty results

@@ -81,7 +81,7 @@ feat: add MCP transport auto-detection for custom servers
 - 9000: CDP (Chromium DevTools Protocol)
 - 9300: Controller Extension (WebSocket)
 
-**Our Server**: Port 3000 (HTTP MCP) - Separate from BrowserOS, connects as external app.
+**Our Server**: Port 3100 (HTTP MCP) - Separate from BrowserOS, connects as external app.
 
 ---
 
@@ -236,7 +236,7 @@ feat: scoped controller context (#301)
 
 | Component | Our Implementation | BrowserOS Reality | Status |
 |-----------|-------------------|-------------------|--------|
-| **HTTP MCP Server** | ✅ Port 3000, 10 tools | ✅ They use HTTP MCP | **PERFECT MATCH** |
+| **HTTP MCP Server** | ✅ Port 3100, 10 tools | ✅ They use HTTP MCP | **PERFECT MATCH** |
 | **Controller Pattern** | ✅ Documented as "Body/Hands/Brain" | ✅ Exact architecture | **VALIDATED** |
 | **Custom App Integration** | ✅ "Add Custom App" workflow | ✅ Auto-detects transport | **COMPATIBLE** |
 | **Tool Schema** | ✅ JSON Schema definitions | ✅ MCP standard format | **CORRECT** |

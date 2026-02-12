@@ -46,7 +46,7 @@ git pull origin main
 ```
 User adds: http://localhost:3100/mcp (Standard KB)
 Dev adds: http://localhost:8080/mcp (Experimental KB with beta features)
-Company adds: http://company.internal:3000/mcp (Compliance-enforced KB)
+Company adds: http://company.internal:3100/mcp (Compliance-enforced KB)
 ```
 
 Each runs **independently**. Browser remains **untainted**.
@@ -355,10 +355,10 @@ Each team adds their specific URL to BrowserOS "Custom App". **Same browser, dif
 **Current Implementation Enables**:
 ```bash
 # Production brain (stable)
-http://prod.company.com:3000/mcp
+http://prod.company.com:3100/mcp
 
 # Canary brain (10% of users, new features)
-http://canary.company.com:3000/mcp
+http://canary.company.com:3100/mcp
 
 # Dev brain (internal testing)
 http://localhost:3100/mcp

@@ -177,7 +177,7 @@ pip install browseros
 
 **2. Start MCP Server**
 ```bash
-browseros mcp-server --port 3000
+browseros mcp-server --port 3100
 ```
 
 **3. Configure Your AI Tool**
@@ -263,7 +263,7 @@ browseros mcp-server --port 3000
   "mcpServers": {
     "browseros": {
       "command": "browseros",
-      "args": ["mcp-server", "--host", "0.0.0.0", "--port", "3000"]
+      "args": ["mcp-server", "--host", "0.0.0.0", "--port", "3100"]
     }
   }
 }
