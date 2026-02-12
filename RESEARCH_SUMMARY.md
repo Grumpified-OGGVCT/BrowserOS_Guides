@@ -68,7 +68,7 @@ feat: add MCP transport auto-detection for custom servers
 - 1-hour cache per URL
 ```
 
-**Impact**: Our HTTP MCP server at `localhost:3000/mcp` is **perfectly compatible**.
+**Impact**: Our HTTP MCP server at `localhost:3100/mcp` is **perfectly compatible**.
 
 ---
 
@@ -216,7 +216,7 @@ Complete research report with:
 | Component | Our Docs | BrowserOS Reality | Status |
 |-----------|----------|-------------------|--------|
 | **Architecture** | 3-layer Brain/Hands/Body | Exact match | ✅ 100% |
-| **MCP Server** | HTTP, port 3000 | Streamable HTTP auto-detect | ✅ Compatible |
+| **MCP Server** | HTTP, port 3100 | Streamable HTTP auto-detect | ✅ Compatible |
 | **Controller Pattern** | Extension bridges APIs | Controller-ext (port 9300) | ✅ Validated |
 | **Custom Apps** | "Add Custom App" workflow | Official integration method | ✅ Correct |
 | **Tool Schemas** | JSON Schema format | MCP standard | ✅ Match |

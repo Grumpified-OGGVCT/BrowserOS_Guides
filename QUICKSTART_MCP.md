@@ -17,7 +17,7 @@ cd BrowserOS_Guides
 npm run mcp-server
 ```
 
-The server will start on `http://localhost:3000/mcp`
+The server will start on `http://localhost:3100/mcp`
 
 ### Step 2: Add to BrowserOS
 
@@ -26,7 +26,7 @@ The server will start on `http://localhost:3000/mcp`
 3. Click **"Add Custom App"**
 4. Fill in:
    - **Name**: `BrowserOS Workflows KB`
-   - **URL**: `http://localhost:3000/mcp`
+   - **URL**: `http://localhost:3100/mcp`
    - **Description**: `BrowserOS Workflows Knowledge Base - Provides workflow documentation, validation, and 917+ workflow templates`
 5. Click **"Add Server"**
 
@@ -64,7 +64,7 @@ The MCP server exposes 10 tools:
 ### Example: Query the Knowledge Base
 
 ```bash
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:3100/mcp \
   -H "Content-Type: application/json" \
   -d '{
     "tool": "query_knowledge",
@@ -78,7 +78,7 @@ curl -X POST http://localhost:3000/mcp \
 ### Example: Search Workflows
 
 ```bash
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:3100/mcp \
   -H "Content-Type: application/json" \
   -d '{
     "tool": "search_workflows",
@@ -93,7 +93,7 @@ curl -X POST http://localhost:3000/mcp \
 ### Example: Validate a Workflow
 
 ```bash
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:3100/mcp \
   -H "Content-Type: application/json" \
   -d '{
     "tool": "validate_workflow",
@@ -128,7 +128,7 @@ Add to `claude_desktop_config.json`:
   "mcpServers": {
     "browseros-guides": {
       "transport": "http",
-      "url": "http://localhost:3000/mcp"
+      "url": "http://localhost:3100/mcp"
     }
   }
 }
@@ -141,7 +141,7 @@ Add to `claude_desktop_config.json`:
 Test if the server is running:
 
 ```bash
-curl http://localhost:3000/mcp/health
+curl http://localhost:3100/mcp/health
 ```
 
 Expected response:
@@ -159,11 +159,11 @@ Expected response:
 ## Troubleshooting
 
 **Server won't start?**
-- Check if port 3000 is available: `lsof -i :3000`
-- Try a different port: `BROWSEROS_GUIDES_PORT=3001 npm run mcp-server`
+- Check if port 3100 is available: `lsof -i :3100`
+- Try a different port: `BROWSEROS_GUIDES_PORT=3101 npm run mcp-server`
 
 **BrowserOS can't connect?**
-- Verify server is running: `curl http://localhost:3000/mcp/health`
+- Verify server is running: `curl http://localhost:3100/mcp/health`
 - Check firewall settings
 - Ensure URL in BrowserOS matches exactly
 

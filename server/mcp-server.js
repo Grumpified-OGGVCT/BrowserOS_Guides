@@ -15,8 +15,9 @@ const path = require('path');
 const crypto = require('crypto');
 
 // Configuration
-const PORT = process.env.BROWSEROS_GUIDES_PORT || 3000;
-const HOST = process.env.BROWSEROS_GUIDES_HOST || 'localhost';
+// Support multiple environment variable names for flexibility
+const PORT = process.env.MCP_SERVER_PORT || process.env.MCP_PORT || process.env.BROWSEROS_GUIDES_PORT || 3100;
+const HOST = process.env.MCP_HOST || process.env.BROWSEROS_GUIDES_HOST || 'localhost';
 const ENABLE_CACHE = process.env.BROWSEROS_GUIDES_ENABLE_CACHE === 'true';
 const LOG_LEVEL = process.env.BROWSEROS_GUIDES_LOG_LEVEL || 'info';
 

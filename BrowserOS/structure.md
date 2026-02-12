@@ -62,7 +62,7 @@ python scripts/workflow_generator.py full --use-case "monitor competitor prices"
 python scripts/workflow_generator.py validate --workflow path/to/workflow.json
 
 # Start BrowserOS as MCP server for AI tools
-browseros mcp-server --port 3000
+browseros mcp-server --port 3100
 ```
 
 ### 🔄 Repository Maintenance

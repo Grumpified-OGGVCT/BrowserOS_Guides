@@ -1,0 +1,135 @@
+name: Check BrowserOS Port Configuration
+
+on:
+  # Run weekly to check for port configuration changes in BrowserOS repos
+  schedule:
+    - cron: '0 12 * * 1'  # Every Monday at 12:00 UTC
+  
+  # Allow manual trigger
+  workflow_dispatch:
+  
+  # Run on changes to port configuration files
+  push:
+    paths:
+      - 'server/mcp-server.js'
+      - 'config.yml'
+      - 'docker-compose.yml'
+      - '.env.template'
+      - 'scripts/check_browseros_ports.py'
+
+jobs:
+  check-ports:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+          
+      - name: Check BrowserOS port configuration
+        id: port_check
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          status=0
+          python scripts/check_browseros_ports.py || status=$?
+          echo "check_status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+          
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browseros-port-check-results
+          path: BrowserOS/Research/browseros_port_check.json
+          retention-days: 90
+          
+      - name: Create issue on port mismatch
+        if: steps.port_check.outputs.check_status != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Read the check results
+            let results = {};
+            try {
+              const data = fs.readFileSync('BrowserOS/Research/browseros_port_check.json', 'utf8');
+              results = JSON.parse(data);
+            } catch (e) {
+              console.log('Could not read results file');
+            }
+            
+            // Check if issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'port-configuration'
+            });
+            
+            const existingIssue = issues.data.find(issue => 
+              issue.title.includes('BrowserOS Port Configuration Mismatch')
+            );
+            
+            if (existingIssue) {
+              // Update existing issue with comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: `## Port Configuration Check Update\n\n` +
+                      `**Timestamp:** ${results.timestamp || new Date().toISOString()}\n\n` +
+                      `**Status:** ⚠️  Mismatch detected\n\n` +
+                      `**Warnings:**\n` +
+                      (results.summary?.warnings || []).map(w => `- ${w}`).join('\n') +
+                      `\n\nPlease review and update port configuration if needed.`
+              });
+              console.log(`Updated existing issue #${existingIssue.number}`);
+            } else {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '⚠️  BrowserOS Port Configuration Mismatch Detected',
+                labels: ['port-configuration', 'automated-check'],
+                body: `## BrowserOS Port Configuration Check\n\n` +
+                      `**Timestamp:** ${results.timestamp || new Date().toISOString()}\n\n` +
+                      `**Summary:**\n` +
+                      `- BrowserOS MCP Ports Found: ${(results.summary?.mcp_ports_found || []).join(', ') || 'None'}\n` +
+                      `- Our Configured Port: ${results.summary?.our_port || 3100}\n\n` +
+                      `**Warnings:**\n` +
+                      (results.summary?.warnings || []).map(w => `- ${w}`).join('\n') +
+                      `\n\n` +
+                      `### Action Required\n\n` +
+                      `Please review the BrowserOS repository port configuration and update our settings if necessary:\n\n` +
+                      `1. Check \`server/mcp-server.js\` line 18\n` +
+                      `2. Check \`config.yml\` MCP section\n` +
+                      `3. Check \`docker-compose.yml\` port mappings\n` +
+                      `4. Update documentation in README.md and related files\n\n` +
+                      `### Repositories Checked\n` +
+                      Object.keys(results.repositories || {}).map(repo => `- ${repo}`).join('\n') +
+                      `\n\n` +
+                      `---\n` +
+                      `This issue was automatically created by the port configuration check workflow.`
+              });
+              console.log('Created new issue for port mismatch');
+            }
+            
+      - name: Comment on success
+        if: steps.port_check.outputs.check_status == '0'
+        run: |
+          echo "✅ Port configuration check passed - no action needed"

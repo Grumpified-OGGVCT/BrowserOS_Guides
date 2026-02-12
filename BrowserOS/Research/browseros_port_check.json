@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-02-12T22:29:17.301892",
+  "repositories": {
+    "browseros-ai/BrowserOS": {
+      "files_checked": [],
+      "ports_found": {}
+    },
+    "browseros-ai/BrowserOS-agent": {
+      "files_checked": [],
+      "ports_found": {}
+    }
+  },
+  "summary": {
+    "mcp_ports_found": [],
+    "our_port": 3100,
+    "matches": true,
+    "warnings": [
+      "INFO: BrowserOS has no hardcoded MCP port - uses environment variables"
+    ]
+  }
+}

@@ -25,7 +25,7 @@
     "knowledge_base_url": {
       "type": "string",
       "description": "URL to query for technical answers",
-      "example": "http://localhost:3000/mcp"
+      "example": "http://localhost:3100/mcp"
     },
     "translation_api": {
       "type": "string",
