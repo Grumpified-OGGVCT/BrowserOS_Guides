@@ -88,17 +88,24 @@ function performSearch(query, filter) {
     const searchResults = document.getElementById('searchResults');
     
     if (!searchIndexLoaded || !searchIndex) {
-        searchResults.innerHTML = `
-            <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
-                <div style="display: inline-block; width: 40px; height: 40px; border: 3px solid var(--border-secondary); border-top-color: var(--browseros-orange); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem;"></div>
-                <p>⏳ Loading search index...</p>
-            </div>
-            <style>
-                @keyframes spin {
-                    to { transform: rotate(360deg); }
-                }
-            </style>
-        `;
+        // Clear existing content safely
+        searchResults.textContent = '';
+        
+        // Build loading indicator with createElement (no innerHTML)
+        const loadingDiv = document.createElement('div');
+        loadingDiv.style.textAlign = 'center';
+        loadingDiv.style.padding = '2rem';
+        loadingDiv.style.color = 'var(--text-secondary)';
+        
+        const spinner = document.createElement('div');
+        spinner.className = 'loading-spinner';
+        
+        const message = document.createElement('p');
+        message.textContent = '⏳ Loading search index...';
+        
+        loadingDiv.appendChild(spinner);
+        loadingDiv.appendChild(message);
+        searchResults.appendChild(loadingDiv);
         return;
     }
     

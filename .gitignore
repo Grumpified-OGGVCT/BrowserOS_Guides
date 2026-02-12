@@ -288,3 +288,6 @@ local/
 # Cloud storage
 .dropbox
 .dropbox.cache
+
+# Security scan reports (generated files contain triggering patterns)
+SECURITY-SCAN-REPORT.json
