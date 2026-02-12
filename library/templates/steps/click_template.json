@@ -1,0 +1,26 @@
+{
+  "type": "click",
+  "name": "Sample Click Step",
+  "description": "Click on an element",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-12T20:16:28.032224",
+    "parameters": [
+      {
+        "name": "selector",
+        "description": "Configuration for click"
+      },
+      {
+        "name": "button",
+        "description": "Configuration for click"
+      },
+      {
+        "name": "modifiers",
+        "description": "Configuration for click"
+      }
+    ]
+  },
+  "selector": "#button-id",
+  "wait_after": 500
+}

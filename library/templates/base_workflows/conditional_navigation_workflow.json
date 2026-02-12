@@ -1,0 +1,32 @@
+{
+  "name": "Conditional Navigation Workflow",
+  "description": "Navigate with conditional logic",
+  "version": "1.0.0",
+  "category": "advanced-techniques",
+  "difficulty": "intermediate",
+  "steps": [
+    {
+      "type": "navigate",
+      "name": "Navigate to Page",
+      "url": "{{config.url}}"
+    },
+    {
+      "type": "conditional",
+      "name": "Check Element Existence",
+      "condition": "{{element_exists}}",
+      "then": [
+        {
+          "type": "click",
+          "name": "Click Element",
+          "selector": "{{config.element}}"
+        }
+      ],
+      "else": [
+        {
+          "type": "comment",
+          "name": "Element not found - skip"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "type": "read_file",
+  "name": "Sample Read_File Step",
+  "description": "Read from local workspace",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-12T20:16:28.033576",
+    "parameters": [
+      {
+        "name": "path",
+        "description": "Configuration for read_file"
+      },
+      {
+        "name": "encoding",
+        "description": "Configuration for read_file"
+      }
+    ]
+  }
+}

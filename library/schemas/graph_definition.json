@@ -1,0 +1,238 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://browseros.com/schemas/graph-definition.json",
+  "title": "BrowserOS Graph Definition",
+  "description": "Schema for BrowserOS workflow graph definitions that can be executed via executeGraph()",
+  "type": "object",
+  "required": ["name", "version", "steps"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Human-readable workflow name",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed workflow description"
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version (e.g., 1.0.0)",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "e-commerce",
+        "data-extraction",
+        "testing-qa",
+        "social-media",
+        "research-monitoring",
+        "crm-business",
+        "content-creation",
+        "api-integration",
+        "advanced-techniques",
+        "community-contributed"
+      ]
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["beginner", "intermediate", "advanced", "expert"]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "author": {
+      "type": "string"
+    },
+    "config": {
+      "type": "object",
+      "description": "Configuration parameters for the workflow"
+    },
+    "variables": {
+      "type": "object",
+      "description": "Variable definitions used throughout the workflow"
+    },
+    "steps": {
+      "type": "array",
+      "description": "Array of workflow steps",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/step"
+      }
+    },
+    "error_handling": {
+      "type": "object",
+      "properties": {
+        "on_error": {
+          "type": "string",
+          "enum": ["continue", "stop", "retry"]
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retry_delay": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retry_backoff": {
+          "type": "string",
+          "enum": ["linear", "exponential"]
+        },
+        "log_errors": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schedule": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["cron", "interval", "webhook"]
+        },
+        "expression": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tested_on": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requires": {
+          "type": "object",
+          "properties": {
+            "environment_variables": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "permissions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "step": {
+      "type": "object",
+      "required": ["type", "name"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "navigate",
+            "click",
+            "input",
+            "type",
+            "extract",
+            "wait",
+            "scroll",
+            "screenshot",
+            "script",
+            "execute_code",
+            "read_file",
+            "write_file",
+            "shell",
+            "http",
+            "api_call",
+            "conditional",
+            "loop",
+            "parallel",
+            "sub_workflow",
+            "comment",
+            "report"
+          ],
+          "description": "Step type identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable step name"
+        },
+        "description": {
+          "type": "string"
+        },
+        "selector": {
+          "type": "string",
+          "description": "CSS or XPath selector"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "timeout": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "wait_for": {
+          "type": "string",
+          "enum": ["load", "domcontentloaded", "networkidle", "commit"]
+        },
+        "condition": {
+          "type": "string",
+          "description": "Boolean expression for conditional steps"
+        },
+        "then": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/step"
+          }
+        },
+        "else": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/step"
+          }
+        },
+        "iterator": {
+          "type": "string",
+          "description": "JSONPath expression for loop iteration"
+        },
+        "variable": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "description": "Nested steps for loop/parallel execution",
+          "items": {
+            "$ref": "#/definitions/step"
+          }
+        },
+        "output": {
+          "type": "string",
+          "description": "Variable name to store output"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

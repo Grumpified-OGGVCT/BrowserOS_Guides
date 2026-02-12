@@ -1,0 +1,29 @@
+{
+  "name": "Loop Processing Workflow",
+  "description": "Process multiple items in a loop",
+  "version": "1.0.0",
+  "category": "data-extraction",
+  "difficulty": "intermediate",
+  "steps": [
+    {
+      "type": "loop",
+      "name": "Process Each Item",
+      "iterator": "$.config.items",
+      "variable": "item",
+      "steps": [
+        {
+          "type": "navigate",
+          "name": "Navigate to Item",
+          "url": "{{item.url}}"
+        },
+        {
+          "type": "extract",
+          "name": "Extract Item Data",
+          "selector": ".item-data",
+          "attribute": "text",
+          "output": "item_{{item.id}}_data"
+        }
+      ]
+    }
+  ]
+}

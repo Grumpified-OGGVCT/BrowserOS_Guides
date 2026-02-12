@@ -1,0 +1,31 @@
+{
+  "name": "browseros-guides",
+  "version": "2.0.0",
+  "description": "BrowserOS Workflows Knowledge Base - Self-aware intelligence layer for BrowserOS agents",
+  "main": "server/mcp-server.js",
+  "scripts": {
+    "mcp-server": "node server/mcp-server.js",
+    "mcp-server:dev": "LOG_LEVEL=debug node server/mcp-server.js",
+    "generate-library": "python scripts/generate_library.py",
+    "enhance-sources": "python scripts/enhance_sources.py",
+    "validate-kb": "python scripts/validate_kb.py",
+    "test-mcp": "node server/test-mcp-server.js"
+  },
+  "keywords": [
+    "browseros",
+    "workflows",
+    "mcp",
+    "model-context-protocol",
+    "automation",
+    "knowledge-base"
+  ],
+  "author": "BrowserOS_Guides Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Grumpified-OGGVCT/BrowserOS_Guides.git"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Simple Navigation Workflow",
+  "description": "Navigate to a URL and wait for page load",
+  "version": "1.0.0",
+  "category": "data-extraction",
+  "difficulty": "beginner",
+  "steps": [
+    {
+      "type": "navigate",
+      "name": "Navigate to Target URL",
+      "url": "{{config.target_url}}",
+      "wait_for": "networkidle"
+    }
+  ]
+}

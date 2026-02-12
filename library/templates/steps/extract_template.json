@@ -1,0 +1,27 @@
+{
+  "type": "extract",
+  "name": "Sample Extract Step",
+  "description": "Extract data from page",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-12T20:16:28.032511",
+    "parameters": [
+      {
+        "name": "selector",
+        "description": "Configuration for extract"
+      },
+      {
+        "name": "attribute",
+        "description": "Configuration for extract"
+      },
+      {
+        "name": "store",
+        "description": "Configuration for extract"
+      }
+    ]
+  },
+  "selector": ".data-element",
+  "attribute": "text",
+  "output": "extracted_data"
+}

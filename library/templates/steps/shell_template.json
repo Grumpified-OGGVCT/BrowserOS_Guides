@@ -1,0 +1,20 @@
+{
+  "type": "shell",
+  "name": "Sample Shell Step",
+  "description": "Execute shell command",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-12T20:16:28.033911",
+    "parameters": [
+      {
+        "name": "command",
+        "description": "Configuration for shell"
+      },
+      {
+        "name": "cwd",
+        "description": "Configuration for shell"
+      }
+    ]
+  }
+}

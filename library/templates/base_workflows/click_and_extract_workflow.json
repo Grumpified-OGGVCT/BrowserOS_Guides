@@ -1,0 +1,26 @@
+{
+  "name": "Click and Extract Workflow",
+  "description": "Click an element and extract data",
+  "version": "1.0.0",
+  "category": "data-extraction",
+  "difficulty": "beginner",
+  "steps": [
+    {
+      "type": "click",
+      "name": "Click Target Element",
+      "selector": "{{config.button_selector}}"
+    },
+    {
+      "type": "wait",
+      "name": "Wait for Content",
+      "duration": 1000
+    },
+    {
+      "type": "extract",
+      "name": "Extract Data",
+      "selector": "{{config.data_selector}}",
+      "attribute": "text",
+      "output": "extracted_data"
+    }
+  ]
+}

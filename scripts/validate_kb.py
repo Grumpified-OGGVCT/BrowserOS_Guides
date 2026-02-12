@@ -2,6 +2,7 @@
 Knowledge Base Validation Script
 
 Validates the KB structure and completeness similar to the PowerShell script.
+Now includes Ground Truth Validation against source code.
 """
 
 import sys
@@ -14,6 +15,8 @@ from datetime import datetime
 REPO_ROOT = Path(__file__).parent.parent
 KB_PATH = REPO_ROOT / "BrowserOS" / "Research" / "BrowserOS_Workflows_KnowledgeBase.md"
 SOURCES_PATH = REPO_ROOT / "BrowserOS" / "Research" / "sources.json"
+LIBRARY_SCHEMA_PATH = REPO_ROOT / "library" / "schemas" / "graph_definition.json"
+BROWSEROS_REPO = REPO_ROOT / "BrowserOS" / "Research" / "raw" / "browseros-ai-BrowserOS"
 
 REQUIRED_SECTIONS = [
     "Overview & Scope",
@@ -118,6 +121,81 @@ def validate_checksum() -> list:
     return failures
 
 
+def validate_ground_truth() -> list:
+    """C06: Ground Truth Validation - Verify KB against source code"""
+    failures = []
+    
+    if not KB_PATH.exists():
+        return ["Knowledge base file not found"]
+    
+    kb_content = KB_PATH.read_text()
+    
+    # Extract step types from table format in KB
+    # Format: | **step_name** | description | config | example |
+    step_type_pattern = r'\|\s*\*\*(\w+)\*\*\s*\|'
+    kb_step_types = set(re.findall(step_type_pattern, kb_content))
+    
+    if not kb_step_types:
+        return ["No step types found in KB"]
+    
+    # Try to validate against schema if available
+    if LIBRARY_SCHEMA_PATH.exists():
+        try:
+            schema = json.loads(LIBRARY_SCHEMA_PATH.read_text())
+            
+            # Get valid step types from schema
+            if 'definitions' in schema and 'step' in schema['definitions']:
+                step_def = schema['definitions']['step']
+                if 'properties' in step_def and 'type' in step_def['properties']:
+                    type_prop = step_def['properties']['type']
+                    if 'enum' in type_prop:
+                        schema_step_types = set(type_prop['enum'])
+                        
+                        # Check for KB step types not in schema
+                        undocumented = kb_step_types - schema_step_types
+                        if undocumented:
+                            for step_type in undocumented:
+                                failures.append(f"KB mentions undocumented step type: '{step_type}'")
+                        
+                        # Check for schema types not in KB
+                        missing_from_kb = schema_step_types - kb_step_types
+                        if missing_from_kb:
+                            for step_type in missing_from_kb:
+                                failures.append(f"Schema defines '{step_type}' but KB doesn't document it")
+        
+        except Exception as e:
+            failures.append(f"Could not validate against schema: {e}")
+    
+    # Check if BrowserOS repo is available for deeper validation
+    if BROWSEROS_REPO.exists():
+        # Look for step type definitions in source code
+        # This is a simplified check - could be enhanced to parse TypeScript
+        source_files = []
+        for pattern in ['**/*.ts', '**/*.js']:
+            source_files.extend(BROWSEROS_REPO.glob(pattern))
+        
+        # Search for step type definitions in source
+        found_in_source = set()
+        for source_file in source_files[:50]:  # Limit to avoid performance issues
+            try:
+                content = source_file.read_text(errors='ignore')
+                for step_type in kb_step_types:
+                    # Look for step type definitions (simplified pattern)
+                    if f"'{step_type}'" in content or f'"{step_type}"' in content:
+                        found_in_source.add(step_type)
+            except Exception:
+                pass
+        
+        # Warn about step types in KB but not found in source
+        not_in_source = kb_step_types - found_in_source
+        if not_in_source:
+            for step_type in not_in_source:
+                # This is a warning, not a failure - source analysis is imperfect
+                print(f"  ⚠️  Step type '{step_type}' in KB but not clearly found in source")
+    
+    return failures
+
+
 def main():
     """Run all validation checks"""
     print("=" * 60)
@@ -156,6 +234,15 @@ def main():
     # C05: Checksum update
     print("\n🔐 C05: Updating checksum...")
     failures = validate_checksum()
+    if failures:
+        print(f"  ❌ Failed: {len(failures)} issue(s)")
+        all_failures.extend(failures)
+    else:
+        print("  ✅ Passed")
+    
+    # C06: Ground Truth Validation
+    print("\n🔍 C06: Ground truth validation...")
+    failures = validate_ground_truth()
     if failures:
         print(f"  ❌ Failed: {len(failures)} issue(s)")
         all_failures.extend(failures)
