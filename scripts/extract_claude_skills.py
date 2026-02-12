@@ -128,8 +128,25 @@ class SkillExtractor:
         use_cases = re.findall(r'(?:use case|example|scenario):?\s*(.+?)(?:\n|$)', 
                                skill_content, re.IGNORECASE)
         
+        # Clean and filter use cases - remove artifacts like "|", ".com", empty strings
+        cleaned_use_cases = []
+        for uc in use_cases[:5]:
+            uc = uc.strip()
+            # Skip if it's just a placeholder, domain fragment, or too short
+            if uc and len(uc) > 3 and uc not in ["|", ".com", "...", "-"]:
+                # Skip if it's just a domain or URL fragment
+                if not re.match(r'^[\w.-]+\.(com|org|net|io)$', uc, re.IGNORECASE):
+                    cleaned_use_cases.append(uc)
+        
+        # Generate stable ID from name (snake_case)
+        stable_id = skill["name"].replace("-", "_").lower()
+        
+        # Create ISO 8601 timestamp with UTC timezone
+        created_timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        
         workflow = {
             "name": skill["name"].replace("-", "_"),
+            "id": stable_id,
             "description": skill["description"],
             "version": "1.0.0",
             "source": "adapted-from-claude-skill",
@@ -137,10 +154,10 @@ class SkillExtractor:
             "category": skill.get("category", "Other"),
             "tags": skill.get("tags", []) + ["claude-skill", "community"],
             "metadata": {
-                "created": datetime.now().isoformat(),
+                "created": created_timestamp,
                 "adapted_from": "awesome-claude-skills",
                 "requires_mcp": skill.get("requires", {}).get("mcp", []),
-                "use_cases": use_cases[:5]  # First 5 use cases
+                "use_cases": cleaned_use_cases if cleaned_use_cases else []
             },
             "steps": [
                 {

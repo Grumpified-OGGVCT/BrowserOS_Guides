@@ -1,0 +1,61 @@
+{
+  "name": "findymail_automation",
+  "id": "findymail_automation",
+  "description": "Automate Findymail tasks via Rube MCP (Composio). Always search tools first for current schemas.",
+  "version": "1.0.0",
+  "source": "adapted-from-claude-skill",
+  "original_skill": "findymail-automation",
+  "category": "App Automation",
+  "tags": [
+    "claude-skill",
+    "community"
+  ],
+  "metadata": {
+    "created": "2026-02-12T05:42:41.428718Z",
+    "adapted_from": "awesome-claude-skills",
+    "requires_mcp": [
+      "rube"
+    ],
+    "use_cases": []
+  },
+  "steps": [
+    {
+      "name": "navigate",
+      "type": "navigate",
+      "url": "{{target_url}}",
+      "description": "Navigate to target website"
+    },
+    {
+      "name": "extract_data",
+      "type": "extract",
+      "selector": "{{data_selector}}",
+      "description": "Extract relevant data for findymail-automation"
+    },
+    {
+      "name": "process_results",
+      "type": "custom",
+      "description": "Process extracted data",
+      "notes": "Adapted from Claude skill - implement custom logic here"
+    }
+  ],
+  "configuration": {
+    "target_url": {
+      "type": "string",
+      "required": true,
+      "description": "Target website URL"
+    },
+    "data_selector": {
+      "type": "string",
+      "required": true,
+      "description": "CSS selector for data extraction"
+    }
+  },
+  "notes": [
+    "This workflow was automatically adapted from the Claude skill: findymail-automation",
+    "Original skill description: Automate Findymail tasks via Rube MCP (Composio). Always search tools first for current schemas.",
+    "Additional customization required for production use",
+    "See original skill at: https://github.com/Grumpified-OGGVCT/awesome-claude-skills",
+    "\u26a0\ufe0f SECURITY: This workflow has been scanned and sanitized, but review before production use",
+    "Content hash: 1033cc78e7d1a297"
+  ]
+}

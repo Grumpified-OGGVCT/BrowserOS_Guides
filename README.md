@@ -7,7 +7,7 @@
 
 ## 🌐 Live Website (Setup Required)
 
-**Interactive knowledge hub with 500+ use cases, 130+ workflows, and AI-powered tools**
+**Interactive knowledge hub with 917+ workflows, 500+ use cases, and AI-powered tools**
 
 > ⚠️ **GitHub Pages Setup Required**: To make the live site available at [https://grumpified-oggvct.github.io/BrowserOS_Guides/](https://grumpified-oggvct.github.io/BrowserOS_Guides/), you need to:
 > 1. **Merge this PR** to main/master branch
@@ -29,10 +29,10 @@
 ### **Interactive Knowledge Hub**
 <picture>
   <source srcset="docs/screenshots/01-hero-section.webp" type="image/webp">
-  <img src="docs/screenshots/01-hero-section.png" alt="BrowserOS Knowledge Hub homepage showing hero section with 500+ use cases, 130+ workflows, and AI-powered tools" loading="lazy">
+  <img src="docs/screenshots/01-hero-section.png" alt="BrowserOS Knowledge Hub homepage showing hero section with 917+ workflows, 500+ use cases, and AI-powered tools" loading="lazy">
 </picture>
 
-*The static website in `docs/` includes the full interactive knowledge hub with 500+ use cases and 130+ workflows*
+*The static website in `docs/` includes the full interactive knowledge hub with 917+ workflows and 500+ use cases*
 
 </div>
 
