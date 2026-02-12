@@ -1,0 +1,483 @@
+# ============================================================================
+# BrowserOS KB Research - Universal Configuration
+# ============================================================================
+# This configuration file supports multiple deployment modes and agent types
+# Adjust parameters based on your environment and requirements
+# ============================================================================
+
+# ============================================================================
+# AGENT CONNECTION MODE
+# ============================================================================
+# Supported modes: sdk, mcp, http, local, docker, hybrid
+# - sdk: Use official SDK client libraries
+# - mcp: Model Context Protocol server connection
+# - http: Direct HTTP/REST API calls
+# - local: Local execution without external services
+# - docker: Containerized execution
+# - hybrid: Multiple connection types simultaneously
+
+AGENT_MODE: "hybrid"  # Default: supports multiple modes
+
+# ============================================================================
+# OLLAMA CONFIGURATION
+# ============================================================================
+OLLAMA:
+  enabled: true
+  mode: "http"  # sdk, mcp, http, docker, local
+  
+  # HTTP/REST API Configuration
+  http:
+    base_url: "https://api.ollama.ai/v1"
+    api_key_env: "OLLAMA_API_KEY"
+    timeout: 60
+    retry_count: 3
+    retry_backoff: "exponential"  # linear, exponential
+  
+  # SDK Configuration (Python client)
+  sdk:
+    library: "ollama-python"
+    host: "localhost:11434"
+    model: "kimi-k2.5:cloud"  # Kimi K2.5 via Ollama Cloud for workflow validation
+    options:
+      temperature: 0.7
+      top_p: 0.9
+      max_tokens: 4000  # Increased for detailed workflow analysis
+  
+  # MCP Server Configuration
+  mcp:
+    server_url: "mcp://localhost:3000/ollama"
+    protocol_version: "2024-11-05"
+    transport: "stdio"  # stdio, http, websocket
+    capabilities:
+      - "chat/completions"
+      - "embeddings"
+  
+  # Docker Configuration
+  docker:
+    image: "ollama/ollama:latest"
+    container_name: "browseros-kb-ollama"
+    ports:
+      - "11434:11434"
+    volumes:
+      - "./ollama-data:/root/.ollama"
+    environment:
+      OLLAMA_MODELS: "llama2,codellama"
+  
+  # Local Binary Configuration
+  local:
+    binary_path: "/usr/local/bin/ollama"
+    models_dir: "~/.ollama/models"
+    serve_address: "127.0.0.1:11434"
+
+# ============================================================================
+# OPENROUTER CONFIGURATION
+# ============================================================================
+OPENROUTER:
+  enabled: true
+  mode: "http"  # http, sdk, mcp
+  
+  # HTTP/REST API Configuration
+  http:
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: "OPENROUTER_API_KEY"
+    timeout: 120
+    retry_count: 3
+    retry_backoff: "exponential"
+    headers:
+      HTTP-Referer: "https://github.com/Grumpified-OGGVCT/BrowserOS_Guides"
+      X-Title: "BrowserOS KB Research"
+  
+  # SDK Configuration
+  sdk:
+    library: "openai"  # OpenAI-compatible SDK
+    api_base: "https://openrouter.ai/api/v1"
+    model: "anthropic/claude-3-sonnet"
+    options:
+      temperature: 0.7
+      max_tokens: 4000
+  
+  # MCP Server Configuration
+  mcp:
+    server_url: "mcp://openrouter.local/api"
+    protocol_version: "2024-11-05"
+    transport: "http"
+    capabilities:
+      - "chat/completions"
+      - "models/list"
+
+  # Model Selection
+  models:
+    primary: "anthropic/claude-3-sonnet"
+    fallback: "openai/gpt-4-turbo"
+    budget: "meta-llama/llama-3-8b-instruct"
+
+# ============================================================================
+# RESEARCH PIPELINE CONFIGURATION
+# ============================================================================
+RESEARCH:
+  # Execution Mode
+  mode: "local"  # local, docker, distributed
+  
+  # Source Fetching
+  sources:
+    fetch_enabled: true
+    cache_duration_days: 7
+    max_concurrent: 5
+    timeout: 30
+    user_agent: "BrowserOS-KB-Bot/1.0"
+    rate_limit:
+      requests_per_minute: 30
+      burst: 10
+  
+  # GitHub Integration
+  github:
+    enabled: true
+    token_env: "GITHUB_TOKEN"
+    clone_repos: true
+    fetch_issues: true
+    fetch_prs: true
+    fetch_discussions: true
+    rate_limit_aware: true
+  
+  # AI Analysis
+  ai_analysis:
+    enabled: true
+    primary_provider: "openrouter"  # ollama, openrouter
+    fallback_provider: "ollama"
+    synthesis_strategy: "multi_model"  # single, multi_model, ensemble
+    max_context_length: 8000
+    chunk_size: 2000
+    overlap: 200
+  
+  # Output Configuration
+  output:
+    format: "markdown"
+    include_citations: true
+    include_timestamps: true
+    generate_summary: true
+    append_to_kb: true
+    update_strategy: "append"  # append, replace, merge
+
+# ============================================================================
+# VALIDATION CONFIGURATION
+# ============================================================================
+VALIDATION:
+  enabled: true
+  strict_mode: false
+  
+  # Validation Checks
+  checks:
+    c01_sections: true
+    c02_placeholders: true
+    c03_sources: true
+    c04_schema: true
+    c05_checksum: true
+    c06_git: true
+  
+  # Auto-fix Options
+  auto_fix:
+    enabled: false
+    max_iterations: 3
+    backup_before_fix: true
+
+# ============================================================================
+# DOCKER DEPLOYMENT
+# ============================================================================
+DOCKER:
+  # Main Application Container
+  app:
+    image: "python:3.11-slim"
+    container_name: "browseros-kb-research"
+    build_context: "."
+    dockerfile: "Dockerfile"
+    networks:
+      - "browseros-network"
+    volumes:
+      - "./BrowserOS:/app/BrowserOS"
+      - "./scripts:/app/scripts"
+    environment:
+      AGENT_MODE: "${AGENT_MODE}"
+      PYTHONUNBUFFERED: "1"
+  
+  # Ollama Service Container
+  ollama:
+    image: "ollama/ollama:latest"
+    container_name: "ollama-service"
+    ports:
+      - "11434:11434"
+    networks:
+      - "browseros-network"
+    volumes:
+      - "ollama-data:/root/.ollama"
+  
+  # MCP Server Container (optional)
+  mcp_server:
+    enabled: false
+    image: "modelcontextprotocol/server:latest"
+    container_name: "mcp-server"
+    ports:
+      - "3000:3000"
+    networks:
+      - "browseros-network"
+    environment:
+      MCP_PORT: "3000"
+      MCP_HOST: "0.0.0.0"
+
+# ============================================================================
+# MCP (Model Context Protocol) CONFIGURATION
+# ============================================================================
+MCP:
+  enabled: false
+  
+  # Server Configuration
+  server:
+    host: "localhost"
+    port: 3000
+    protocol: "2024-11-05"
+    transport: "stdio"  # stdio, http, websocket
+  
+  # Client Configuration
+  client:
+    name: "browseros-kb-research"
+    version: "1.0.0"
+    capabilities:
+      experimental: {}
+      sampling: {}
+  
+  # Tools Configuration
+  tools:
+    - name: "web_search"
+      description: "Search web for BrowserOS information"
+      enabled: true
+    - name: "github_query"
+      description: "Query GitHub repositories"
+      enabled: true
+    - name: "code_analysis"
+      description: "Analyze code snippets"
+      enabled: true
+  
+  # Resources
+  resources:
+    - uri: "file://BrowserOS/Research/"
+      name: "Knowledge Base"
+      description: "BrowserOS Workflows KB"
+      mime_type: "text/markdown"
+
+# ============================================================================
+# SDK CONFIGURATION
+# ============================================================================
+SDK:
+  # Python SDK
+  python:
+    ollama:
+      package: "ollama"
+      install_command: "pip install ollama"
+      import_path: "ollama"
+    openai:
+      package: "openai"
+      install_command: "pip install openai"
+      import_path: "openai"
+    github:
+      package: "PyGithub"
+      install_command: "pip install PyGithub"
+      import_path: "github"
+  
+  # Node.js SDK (if needed)
+  nodejs:
+    enabled: false
+    ollama:
+      package: "ollama"
+      install_command: "npm install ollama"
+    openai:
+      package: "openai"
+      install_command: "npm install openai"
+
+# ============================================================================
+# HTTP/REST API CONFIGURATION
+# ============================================================================
+HTTP:
+  # Global HTTP Settings
+  timeout: 60
+  max_retries: 3
+  retry_backoff: 2.0
+  verify_ssl: true
+  
+  # Connection Pooling
+  connection_pool:
+    max_connections: 100
+    max_keepalive: 10
+    keepalive_expiry: 30
+  
+  # Rate Limiting
+  rate_limit:
+    enabled: true
+    requests_per_second: 10
+    burst: 20
+  
+  # Proxies (optional)
+  proxies:
+    enabled: false
+    http: "http://proxy.example.com:8080"
+    https: "https://proxy.example.com:8443"
+
+# ============================================================================
+# LOGGING & MONITORING
+# ============================================================================
+LOGGING:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # File Logging
+  file:
+    enabled: true
+    path: "logs/research_pipeline.log"
+    max_bytes: 10485760  # 10MB
+    backup_count: 5
+  
+  # Console Logging
+  console:
+    enabled: true
+    colored: true
+  
+  # Structured Logging (JSON)
+  structured:
+    enabled: false
+    format: "json"
+
+MONITORING:
+  enabled: false
+  
+  # Metrics
+  metrics:
+    provider: "prometheus"  # prometheus, statsd, datadog
+    port: 9090
+    endpoint: "/metrics"
+  
+  # Tracing
+  tracing:
+    enabled: false
+    provider: "opentelemetry"
+    endpoint: "http://localhost:4318"
+
+# ============================================================================
+# PERFORMANCE & OPTIMIZATION
+# ============================================================================
+PERFORMANCE:
+  # Concurrency
+  max_workers: 5
+  thread_pool_size: 10
+  process_pool_size: 4
+  
+  # Caching
+  cache:
+    enabled: true
+    backend: "memory"  # memory, redis, file
+    ttl: 3600
+    max_size: 1000
+  
+  # Batch Processing
+  batch:
+    enabled: true
+    size: 10
+    timeout: 300
+
+# ============================================================================
+# SECURITY
+# ============================================================================
+SECURITY:
+  # API Key Management
+  secrets:
+    provider: "env"  # env, vault, aws_secrets, azure_keyvault
+    rotation_enabled: false
+    
+  # Encryption
+  encryption:
+    enabled: false
+    algorithm: "AES-256-GCM"
+    key_env: "ENCRYPTION_KEY"
+  
+  # Access Control
+  access_control:
+    enabled: false
+    allow_list: []
+    deny_list: []
+
+# ============================================================================
+# GITHUB ACTIONS INTEGRATION
+# ============================================================================
+GITHUB_ACTIONS:
+  enabled: true
+  
+  # Workflow Configuration
+  workflow:
+    schedule_cron: "0 0 * * 0"  # Weekly on Sunday
+    manual_trigger: true
+    force_update_option: true
+  
+  # Permissions
+  permissions:
+    contents: "write"
+    pull_requests: "write"
+  
+  # Outputs
+  outputs:
+    create_summary: true
+    upload_artifacts: false
+    comment_on_pr: false
+
+# ============================================================================
+# FEATURE FLAGS
+# ============================================================================
+FEATURES:
+  web_scraping: true
+  github_integration: true
+  ai_synthesis: true
+  auto_commit: true
+  validation: true
+  docker_support: true
+  mcp_support: true
+  sdk_fallback: true
+  rate_limiting: true
+  caching: true
+  parallel_processing: true
+
+# ============================================================================
+# EXPERIMENTAL FEATURES
+# ============================================================================
+EXPERIMENTAL:
+  # Multi-model ensemble
+  ensemble_analysis:
+    enabled: false
+    models:
+      - "anthropic/claude-3-sonnet"
+      - "openai/gpt-4-turbo"
+      - "meta-llama/llama-3-70b"
+    voting_strategy: "majority"  # majority, weighted, unanimous
+  
+  # Semantic chunking
+  semantic_chunking:
+    enabled: false
+    embedding_model: "text-embedding-ada-002"
+    similarity_threshold: 0.8
+  
+  # Knowledge graph generation
+  knowledge_graph:
+    enabled: false
+    format: "neo4j"
+    relationships: ["related_to", "depends_on", "implements"]
+
+# ============================================================================
+# COST OPTIMIZATION
+# ============================================================================
+COST:
+  # Budget Limits
+  budget:
+    enabled: false
+    monthly_limit_usd: 50.0
+    alert_threshold: 0.8
+  
+  # Model Selection Strategy
+  model_selection:
+    strategy: "cost_aware"  # performance, cost_aware, balanced
+    prefer_local: true
+    cache_aggressive: true

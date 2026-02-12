@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The Ultimate BrowserOS Knowledge Hub - Comprehensive workflows, guides, and AI-powered tools for browser automation">
+    <meta name="keywords" content="BrowserOS, automation, workflows, AI, Kimi, browser, web scraping, testing">
+    <meta property="og:title" content="BrowserOS Knowledge Hub - Ultimate Resource">
+    <meta property="og:description" content="500+ use cases, 130+ workflows, AI-powered generation, self-expanding knowledge base">
+    <meta property="og:type" content="website">
+    
+    <title>BrowserOS Knowledge Hub - The Ultimate Resource</title>
+    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="logo">🚀</span>
+                <span class="brand-name">BrowserOS Knowledge Hub</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#workflows">Workflows</a></li>
+                <li><a href="#use-cases">Use Cases</a></li>
+                <li><a href="#knowledge-base">Knowledge Base</a></li>
+                <li><a href="#tools">AI Tools</a></li>
+                <li><a href="#mcp-agentic">🤖 MCP/Agentic</a></li>
+                <li><a href="https://github.com/Grumpified-OGGVCT/BrowserOS_Guides" target="_blank" class="github-link">
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    GitHub
+                </a></li>
+            </ul>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-gradient"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    AI-Powered Knowledge Hub
+                </div>
+                <h1 class="hero-title">
+                    The Ultimate<br/>
+                    <span class="gradient-text">BrowserOS</span><br/>
+                    Knowledge Source
+                </h1>
+                <p class="hero-subtitle">
+                    500+ use cases • 130+ workflows • Self-expanding with AI • Production-ready examples
+                </p>
+                <div class="hero-buttons">
+                    <a href="#workflows" class="btn btn-primary">
+                        Explore Workflows
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.707 3.293a1 1 0 00-1.414 0l-6 6a1 1 0 001.414 1.414L9 6.414V17a1 1 0 102 0V6.414l4.293 4.293a1 1 0 001.414-1.414l-6-6z"/>
+                        </svg>
+                    </a>
+                    <a href="#search" class="btn btn-secondary">
+                        Search Knowledge Base
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-number">130+</div>
+                    <div class="stat-label">Workflows</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Use Cases</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏭</div>
+                    <div class="stat-number">25+</div>
+                    <div class="stat-label">Industries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🤖</div>
+                    <div class="stat-number">AI</div>
+                    <div class="stat-label">Powered</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">About This Project</span>
+                <h2>Celebrating & Expanding <span class="highlight">BrowserOS</span></h2>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-card primary-card">
+                    <h3>🙏 Huge Credit to the BrowserOS Team</h3>
+                    <p>This repository exists to <strong>celebrate and honor</strong> the incredible work of the BrowserOS team. They've created an amazing browser automation platform that empowers developers worldwide.</p>
+                    <div class="links">
+                        <a href="https://github.com/browseros-ai/BrowserOS" target="_blank" class="link-btn">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                            </svg>
+                            Official BrowserOS Repository
+                        </a>
+                    </div>
+                </div>
+
+                <div class="about-grid">
+                    <div class="about-card">
+                        <div class="card-icon">🎯</div>
+                        <h3>Our Purpose</h3>
+                        <p>To create the most comprehensive, practical, and accessible BrowserOS knowledge source that goes beyond official documentation with advanced techniques, production patterns, and real-world examples.</p>
+                    </div>
+                    
+                    <div class="about-card">
+                        <div class="card-icon">🚀</div>
+                        <h3>What We Add</h3>
+                        <p>Advanced guides, expert techniques, 500+ use cases across 25+ industries, production-ready workflows, AI-powered tools, and a self-expanding workflow library validated by Kimi-K2.5:cloud.</p>
+                    </div>
+                    
+                    <div class="about-card">
+                        <div class="card-icon">🤝</div>
+                        <h3>Community-Driven</h3>
+                        <p>This is a community resource, for the community. We welcome contributions, workflows, and ideas from everyone. All content is AI-validated to ensure quality and feasibility.</p>
+                    </div>
+                    
+                    <div class="about-card">
+                        <div class="card-icon">⚡</div>
+                        <h3>Always Growing</h3>
+                        <p>With weekly AI-powered updates, GitHub Actions automation, and community contributions, this knowledge base continuously expands and stays current with the latest BrowserOS developments.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section id="search" class="search-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Instant Search</span>
+                <h2>Find What You Need</h2>
+                <p>Search through 500+ use cases, 130+ workflows, and comprehensive documentation</p>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <svg class="search-icon" width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search workflows, use cases, documentation..." class="search-input">
+                    <div class="search-filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="workflows">Workflows</button>
+                        <button class="filter-btn" data-filter="usecases">Use Cases</button>
+                        <button class="filter-btn" data-filter="docs">Docs</button>
+                    </div>
+                </div>
+                <div id="searchResults" class="search-results"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflows Section -->
+    <section id="workflows" class="workflows">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Workflow Library</span>
+                <h2>Production-Ready Workflows</h2>
+                <p>130+ AI-validated workflows across 10 categories</p>
+            </div>
+            
+            <div class="categories-grid">
+                <div class="category-card" data-category="e-commerce">
+                    <div class="category-icon">🛒</div>
+                    <h3>E-Commerce</h3>
+                    <p>Price tracking, inventory management, review analysis</p>
+                    <div class="category-stats">
+                        <span class="stat">7+ workflows</span>
+                        <span class="stat">50+ use cases</span>
+                    </div>
+                    <a href="../BrowserOS/Workflows/E-Commerce/README.md" class="category-link">
+                        Explore →
+                    </a>
+                </div>
+                
+                <div class="category-card" data-category="data-extraction">
+                    <div class="category-icon">📊</div>
+                    <h3>Data Extraction</h3>
+                    <p>Web scraping, research, data aggregation</p>
+                    <div class="category-stats">
+                        <span class="stat">20+ workflows</span>
+                        <span class="stat">60+ use cases</span>
+                    </div>
+                    <a href="../BrowserOS/Workflows/Data-Extraction/" class="category-link">
+                        Explore →
+                    </a>
+                </div>
+                
+                <div class="category-card" data-category="testing-qa">
+                    <div class="category-icon">🧪</div>
+                    <h3>Testing & QA</h3>
+                    <p>E2E testing, visual regression, performance monitoring</p>
+                    <div class="category-stats">
+                        <span class="stat">12+ workflows</span>
+                        <span class="stat">40+ use cases</span>
+                    </div>
+                    <a href="../BrowserOS/Workflows/Testing-QA/" class="category-link">
+                        Explore →
+                    </a>
+                </div>
+                
+                <div class="category-card" data-category="social-media">
+                    <div class="category-icon">📱</div>
+                    <h3>Social Media</h3>
+                    <p>Multi-platform posting, engagement tracking, analytics</p>
+                    <div class="category-stats">
+                        <span class="stat">10+ workflows</span>
+                        <span class="stat">45+ use cases</span>
+                    </div>
+                    <a href="../BrowserOS/Workflows/Social-Media/" class="category-link">
+                        Explore →
+                    </a>
+                </div>
+                
+                <div class="category-card" data-category="research">
+                    <div class="category-icon">🔍</div>
+                    <h3>Research & Monitoring</h3>
+                    <p>Brand tracking, competitor analysis, alerts</p>
+                    <div class="category-stats">
+                        <span class="stat">18+ workflows</span>
+                        <span class="stat">35+ use cases</span>
+                    </div>
+                    <a href="../BrowserOS/Workflows/Research-Monitoring/" class="category-link">
+                        Explore →
+                    </a>
+                </div>
+                
+                <div class="category-card" data-category="crm-business">
+                    <div class="category-icon">💼</div>
+                    <h3>CRM & Business</h3>
+                    <p>Lead enrichment, automation, integration</p>
+                    <div class="category-stats">
+                        <span class="stat">8+ workflows</span>
+                        <span class="stat">55+ use cases</span>
+                    </div>
+                    <a href="../BrowserOS/Workflows/CRM-Business/" class="category-link">
+                        Explore →
+                    </a>
+                </div>
+                
+                <div class="category-card" data-category="content">
+                    <div class="category-icon">✍️</div>
+                    <h3>Content Creation</h3>
+                    <p>Publishing, distribution, optimization</p>
+                    <div class="category-stats">
+                        <span class="stat">10+ workflows</span>
+                        <span class="stat">30+ use cases</span>
+                    </div>
+                    <a href="../BrowserOS/Workflows/Content-Creation/" class="category-link">
+                        Explore →
+                    </a>
+                </div>
+                
+                <div class="category-card" data-category="api">
+                    <div class="category-icon">🔌</div>
+                    <h3>API Integration</h3>
+                    <p>Webhooks, services, microservices orchestration</p>
+                    <div class="category-stats">
+                        <span class="stat">15+ workflows</span>
+                        <span class="stat">40+ use cases</span>
+                    </div>
+                    <a href="../BrowserOS/Workflows/API-Integration/" class="category-link">
+                        Explore →
+                    </a>
+                </div>
+                
+                <div class="category-card" data-category="advanced">
+                    <div class="category-icon">🚀</div>
+                    <h3>Advanced Techniques</h3>
+                    <p>Expert patterns, optimization, complex workflows</p>
+                    <div class="category-stats">
+                        <span class="stat">25+ workflows</span>
+                        <span class="stat">Expert level</span>
+                    </div>
+                    <a href="../BrowserOS/Workflows/Advanced-Techniques/" class="category-link">
+                        Explore →
+                    </a>
+                </div>
+                
+                <div class="category-card" data-category="community">
+                    <div class="category-icon">👥</div>
+                    <h3>Community Contributed</h3>
+                    <p>User submissions, AI-validated workflows</p>
+                    <div class="category-stats">
+                        <span class="stat">Growing!</span>
+                        <span class="stat">Submit yours</span>
+                    </div>
+                    <a href="../BrowserOS/Workflows/Community-Contributed/" class="category-link">
+                        Explore →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section id="use-cases" class="use-cases">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Real-World Applications</span>
+                <h2>500+ Use Cases Across 25+ Industries</h2>
+                <p>Discover what you can build with BrowserOS</p>
+            </div>
+            
+            <div class="use-case-showcase">
+                <div class="showcase-card featured">
+                    <div class="showcase-header">
+                        <span class="showcase-badge">Most Popular</span>
+                        <h3>Price Intelligence & Monitoring</h3>
+                    </div>
+                    <p>Track competitor prices, monitor stock levels, get alerts on price drops. Perfect for e-commerce businesses and dropshippers.</p>
+                    <div class="showcase-metrics">
+                        <div class="metric">
+                            <span class="metric-value">40h/week</span>
+                            <span class="metric-label">Time Saved</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">$52K/year</span>
+                            <span class="metric-label">Avg. Savings</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">98%</span>
+                            <span class="metric-label">Success Rate</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="industries-grid">
+                    <a href="../BrowserOS/USE_CASE_MATRIX.md#1-e-commerce--retail-50-use-cases" class="industry-card">
+                        <span class="industry-icon">🛒</span>
+                        <span class="industry-name">E-Commerce</span>
+                        <span class="industry-count">50+ cases</span>
+                    </a>
+                    <a href="../BrowserOS/USE_CASE_MATRIX.md#2-data-intelligence--analytics-60-use-cases" class="industry-card">
+                        <span class="industry-icon">📊</span>
+                        <span class="industry-name">Data & Analytics</span>
+                        <span class="industry-count">60+ cases</span>
+                    </a>
+                    <a href="../BrowserOS/USE_CASE_MATRIX.md#3-quality-assurance--testing-40-use-cases" class="industry-card">
+                        <span class="industry-icon">🧪</span>
+                        <span class="industry-name">QA & Testing</span>
+                        <span class="industry-count">40+ cases</span>
+                    </a>
+                    <a href="../BrowserOS/USE_CASE_MATRIX.md#4-social-media--marketing-45-use-cases" class="industry-card">
+                        <span class="industry-icon">📱</span>
+                        <span class="industry-name">Social Media</span>
+                        <span class="industry-count">45+ cases</span>
+                    </a>
+                    <a href="../BrowserOS/USE_CASE_MATRIX.md#5-business-process-automation-55-use-cases" class="industry-card">
+                        <span class="industry-icon">💼</span>
+                        <span class="industry-name">Business Automation</span>
+                        <span class="industry-count">55+ cases</span>
+                    </a>
+                    <a href="../BrowserOS/USE_CASE_MATRIX.md" class="industry-card view-all">
+                        <span class="industry-icon">➕</span>
+                        <span class="industry-name">20+ More</span>
+                        <span class="industry-count">View All →</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="roi-calculator">
+                <h3>💰 Calculate Your ROI</h3>
+                <p>See how much time and money you could save with automation</p>
+                <a href="../BrowserOS/USE_CASE_MATRIX.md#-roi-calculator" class="btn btn-primary">Open Calculator</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Knowledge Base Section -->
+    <section id="knowledge-base" class="knowledge-base">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Documentation</span>
+                <h2>Comprehensive Knowledge Base</h2>
+                <p>From basics to expert-level techniques</p>
+            </div>
+            
+            <div class="kb-grid">
+                <a href="../BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md" class="kb-card primary">
+                    <div class="kb-icon">📚</div>
+                    <h3>Core Knowledge Base</h3>
+                    <p>Complete technical reference covering architecture, step types, integrations, and more. The definitive guide to BrowserOS workflows.</p>
+                    <div class="kb-meta">
+                        <span>12 chapters</span>
+                        <span>•</span>
+                        <span>All levels</span>
+                    </div>
+                </a>
+                
+                <a href="../BrowserOS/Research/ADVANCED_TECHNIQUES.md" class="kb-card">
+                    <div class="kb-icon">🚀</div>
+                    <h3>Advanced Techniques</h3>
+                    <p>Expert-level content beyond official docs. Internal architecture, undocumented features, and production patterns.</p>
+                    <div class="kb-meta">
+                        <span>Expert level</span>
+                        <span>•</span>
+                        <span>21KB</span>
+                    </div>
+                </a>
+                
+                <a href="../BrowserOS/structure.md" class="kb-card">
+                    <div class="kb-icon">🗂️</div>
+                    <h3>Repository Structure</h3>
+                    <p>Navigate the entire knowledge base. Central index linking all resources and documentation.</p>
+                    <div class="kb-meta">
+                        <span>Main index</span>
+                    </div>
+                </a>
+                
+                <a href="../AUTOMATION_QUICKSTART.md" class="kb-card">
+                    <div class="kb-icon">⚡</div>
+                    <h3>Quick Start Guide</h3>
+                    <p>Get up and running fast. Setup instructions for automated KB updates and workflow generation.</p>
+                    <div class="kb-meta">
+                        <span>5 min read</span>
+                    </div>
+                </a>
+                
+                <a href="../DEPLOYMENT.md" class="kb-card">
+                    <div class="kb-icon">🐳</div>
+                    <h3>Deployment Guide</h3>
+                    <p>Deploy BrowserOS workflows anywhere. Supports HTTP, SDK, MCP, Docker, Local, and Hybrid modes.</p>
+                    <div class="kb-meta">
+                        <span>6 modes</span>
+                        <span>•</span>
+                        <span>Production-ready</span>
+                    </div>
+                </a>
+                
+                <a href="../SECURITY_AUDIT.md" class="kb-card">
+                    <div class="kb-icon">🔒</div>
+                    <h3>Security Best Practices</h3>
+                    <p>Keep your automations secure. Audit results and security guidelines for production deployments.</p>
+                    <div class="kb-meta">
+                        <span>Security</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Tools Section -->
+    <section id="tools" class="ai-tools">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">AI-Powered Tools</span>
+                <h2>Intelligent Workflow Generation</h2>
+                <p>Powered by Kimi-K2.5:cloud via Ollama Cloud API</p>
+            </div>
+            
+            <div class="tools-showcase">
+                <div class="tool-card main-tool">
+                    <div class="tool-header">
+                        <div class="tool-icon">🤖</div>
+                        <div>
+                            <h3>AI Workflow Generator</h3>
+                            <span class="tool-badge">Powered by Kimi-K2.5:cloud</span>
+                        </div>
+                    </div>
+                    <p>Transform natural language descriptions into complete, production-ready workflows. AI validates feasibility and ensures real-world applicability.</p>
+                    
+                    <div class="code-example">
+                        <div class="code-header">
+                            <span>Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code id="generator-code"># Generate complete workflow from use case
+python scripts/workflow_generator.py full \
+  --use-case "monitor competitor prices" \
+  --validate</code></pre>
+                    </div>
+                    
+                    <div class="tool-features">
+                        <div class="feature">✅ Idea Generation</div>
+                        <div class="feature">✅ Complete Implementation</div>
+                        <div class="feature">✅ Feasibility Validation</div>
+                        <div class="feature">✅ Error Handling</div>
+                    </div>
+                </div>
+                
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">💡</div>
+                        <h3>Idea Generator</h3>
+                        <p>Get AI-powered workflow ideas based on your industry and use case. Explores possibilities you haven't thought of.</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">🔍</div>
+                        <h3>Feasibility Validator</h3>
+                        <p>Validate your workflow designs before implementing. AI checks for technical issues, security concerns, and real-world viability.</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">🔄</div>
+                        <h3>Auto-Expansion</h3>
+                        <p>Weekly automated workflow generation. New workflows added to the library every Sunday via GitHub Actions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCP & Agentic AI Section -->
+    <section id="mcp-agentic" class="mcp-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">🤖 Agentic AI Integration</span>
+                <h2>BrowserOS in AI Stacks</h2>
+                <p>Power your AI agents with browser automation via Model Context Protocol (MCP)</p>
+            </div>
+            
+            <div class="mcp-hero">
+                <div class="mcp-content">
+                    <h3>🚀 The Breakthrough</h3>
+                    <p>BrowserOS implements the <strong>Model Context Protocol</strong>, enabling LLMs to autonomously browse, scrape, test, and automate the web. Give your AI agents superpowers!</p>
+                    
+                    <div class="mcp-features-grid">
+                        <div class="mcp-feature">
+                            <span class="mcp-feature-icon">🧠</span>
+                            <h4>Autonomous Research</h4>
+                            <p>AI browses sources, extracts data, verifies facts, creates reports</p>
+                        </div>
+                        <div class="mcp-feature">
+                            <span class="mcp-feature-icon">🧪</span>
+                            <h4>Self-Testing Code</h4>
+                            <p>AI writes code, deploys, runs E2E tests, fixes bugs autonomously</p>
+                        </div>
+                        <div class="mcp-feature">
+                            <span class="mcp-feature-icon">📊</span>
+                            <h4>Intelligent Data Collection</h4>
+                            <p>AI determines what to collect, adapts to site structure, validates completeness</p>
+                        </div>
+                        <div class="mcp-feature">
+                            <span class="mcp-feature-icon">⚡</span>
+                            <h4>Agentic Workflows</h4>
+                            <p>Multi-step autonomous tasks with decision-making and error recovery</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mcp-tools-section">
+                <h3 style="text-align: center; margin-bottom: 2rem;">Compatible AI Tools & IDEs</h3>
+                <div class="mcp-tools-grid">
+                    <div class="mcp-tool-card">
+                        <div class="tool-logo">💻</div>
+                        <h4>VSCode + Copilot</h4>
+                        <p>Code testing, documentation lookup</p>
+                    </div>
+                    <div class="mcp-tool-card">
+                        <div class="tool-logo">⚡</div>
+                        <h4>Cursor IDE</h4>
+                        <p>AI-first development with browser context</p>
+                    </div>
+                    <div class="mcp-tool-card">
+                        <div class="tool-logo">🌊</div>
+                        <h4>Windsurf</h4>
+                        <p>Web integration testing, API exploration</p>
+                    </div>
+                    <div class="mcp-tool-card">
+                        <div class="tool-logo">🤖</div>
+                        <h4>Claude Desktop</h4>
+                        <p>Research, data gathering, automation</p>
+                    </div>
+                    <div class="mcp-tool-card">
+                        <div class="tool-logo">🎨</div>
+                        <h4>MSTY Studio</h4>
+                        <p>Local AI + browser automation</p>
+                    </div>
+                    <div class="mcp-tool-card">
+                        <div class="tool-logo">📚</div>
+                        <h4>AnythingLLM</h4>
+                        <p>Knowledge base with web context</p>
+                    </div>
+                    <div class="mcp-tool-card">
+                        <div class="tool-logo">🦙</div>
+                        <h4>LM Studio + Ollama</h4>
+                        <p>Local models + web scraping</p>
+                    </div>
+                    <div class="mcp-tool-card">
+                        <div class="tool-logo">🔄</div>
+                        <h4>Continue.dev + Cody</h4>
+                        <p>Code assistance with web context</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mcp-cta">
+                <h3>Ready to Build Agentic AI Applications?</h3>
+                <p>Complete integration guides, real-world examples, and autonomous agent patterns</p>
+                <a href="../BrowserOS/MCP_AGENTIC_GUIDE.md" class="btn btn-primary" style="margin-top: 1rem;">
+                    📖 Read the Complete MCP Guide
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🚀 BrowserOS Knowledge Hub</h3>
+                    <p>The ultimate community-driven resource for BrowserOS automation, celebrating and expanding upon the incredible work of the BrowserOS team.</p>
+                    <div class="social-links">
+                        <a href="https://github.com/Grumpified-OGGVCT/BrowserOS_Guides" target="_blank" aria-label="GitHub Repository">
+                            <svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="../BrowserOS/Workflows/">Workflow Library</a></li>
+                        <li><a href="../BrowserOS/USE_CASE_MATRIX.md">Use Case Matrix</a></li>
+                        <li><a href="../BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md">Knowledge Base</a></li>
+                        <li><a href="../TRANSFORMATION_SUMMARY.md">Project Summary</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="../AUTOMATION_QUICKSTART.md">Quick Start</a></li>
+                        <li><a href="../DEPLOYMENT.md">Deployment Guide</a></li>
+                        <li><a href="../REPO_TRACKING.md">Repo Tracking</a></li>
+                        <li><a href="../SECURITY_AUDIT.md">Security</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Official BrowserOS</h4>
+                    <ul class="footer-links">
+                        <li><a href="https://github.com/browseros-ai/BrowserOS" target="_blank">GitHub Repository</a></li>
+                        <li><a href="https://docs.browseros.com" target="_blank">Official Documentation</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>Built with ❤️ celebrating the BrowserOS team • Powered by Kimi-K2.5:cloud</p>
+                <p>This is an independent community project, not officially affiliated with BrowserOS</p>
+                <p class="copyright">© 2026 BrowserOS Knowledge Hub • MIT License</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
