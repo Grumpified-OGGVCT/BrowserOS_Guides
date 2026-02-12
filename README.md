@@ -577,10 +577,34 @@ It helps others discover this resource and shows appreciation for the automation
 
 ---
 
+## 🔄 Workflow Automation Status
+
+This repository uses GitHub Actions to automate maintenance and updates:
+
+| Workflow | Status | Purpose | Trigger |
+|----------|--------|---------|---------|
+| 📚 Update KB | ⚡ Ready | Syncs with official BrowserOS repo, generates workflows | Weekly Sun 00:00 UTC + Manual |
+| 🧪 Self-Test | ⚡ Ready | Runs 42 tests, security scans, auto-fixes issues | Weekly Sun 02:00 UTC + Manual |
+| 🚀 Deploy Pages | ✅ Active | Deploys website to GitHub Pages | On push + Manual |
+| 🎯 Trigger All | ⚡ Ready | Convenience workflow to trigger others | Manual only |
+
+**Quick Actions**:
+- 📋 [View All Workflows](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/actions)
+- 🚀 [Trigger Workflows](.github/workflows/README.md#-how-to-trigger-workflows)
+- 📊 [Workflow Documentation](.github/workflows/README.md)
+- 🔍 [Verification Report](WORKFLOW_VERIFICATION_REPORT.md)
+
+**For Detailed Workflow Information**:
+- [Workflow Trigger Guide](WORKFLOW_TRIGGER_GUIDE.md) - Comprehensive guide to triggering and monitoring workflows
+- [Workflow Verification Report](WORKFLOW_VERIFICATION_REPORT.md) - Testing and verification status
+
+---
+
 ## 📞 Support & Contact
 
 - **📖 Full Documentation**: [AUTOMATION_QUICKSTART.md](AUTOMATION_QUICKSTART.md)
 - **🔧 Automation Details**: [.github/ACTIONS_SETUP.md](.github/ACTIONS_SETUP.md)
+- **🔄 Workflow Guide**: [WORKFLOW_TRIGGER_GUIDE.md](WORKFLOW_TRIGGER_GUIDE.md)
 - **🐛 Issues**: [GitHub Issues](../../issues)
 - **💡 Discussions**: [GitHub Discussions](../../discussions)
 

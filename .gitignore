@@ -291,3 +291,7 @@ local/
 
 # Security scan reports (generated files contain triggering patterns)
 SECURITY-SCAN-REPORT.json
+
+# Workflow test results (generated output files)
+WORKFLOW_TEST_RESULTS.json
+WORKFLOW_TRIGGER_REPORT.json

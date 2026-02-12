@@ -1,0 +1,131 @@
+name: Trigger All Workflows
+
+on:
+  workflow_dispatch:
+    inputs:
+      trigger_update_kb:
+        description: 'Trigger Update KB workflow'
+        required: false
+        default: true
+        type: boolean
+      trigger_self_test:
+        description: 'Trigger Self-Test workflow'
+        required: false
+        default: true
+        type: boolean
+      trigger_deploy_pages:
+        description: 'Trigger Deploy Pages workflow'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  trigger-workflows:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Trigger Update KB Workflow
+        if: ${{ github.event.inputs.trigger_update_kb == 'true' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('🚀 Triggering Update KB workflow...');
+            const result = await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'update-kb.yml',
+              ref: 'main',
+              inputs: {
+                force_update: false
+              }
+            });
+            console.log('✅ Update KB workflow triggered successfully');
+      
+      - name: Wait before triggering Self-Test
+        if: ${{ github.event.inputs.trigger_self_test == 'true' && github.event.inputs.trigger_update_kb == 'true' }}
+        run: |
+          echo "⏳ Waiting 10 seconds to allow Update KB to start..."
+          sleep 10
+      
+      - name: Trigger Self-Test Workflow
+        if: ${{ github.event.inputs.trigger_self_test == 'true' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('🚀 Triggering Self-Test workflow...');
+            const result = await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'self-test.yml',
+              ref: 'main',
+              inputs: {
+                force_fix: true
+              }
+            });
+            console.log('✅ Self-Test workflow triggered successfully');
+      
+      - name: Trigger Deploy Pages Workflow
+        if: ${{ github.event.inputs.trigger_deploy_pages == 'true' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('🚀 Triggering Deploy Pages workflow...');
+            const result = await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy-pages.yml',
+              ref: 'main'
+            });
+            console.log('✅ Deploy Pages workflow triggered successfully');
+      
+      - name: Summary
+        run: |
+          echo "## 🎯 Workflow Trigger Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The following workflows have been triggered:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ github.event.inputs.trigger_update_kb }}" == "true" ]; then
+            echo "- ✅ Update BrowserOS Knowledge Base" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ github.event.inputs.trigger_self_test }}" == "true" ]; then
+            echo "- ✅ Self-Test & Quality Assurance" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ github.event.inputs.trigger_deploy_pages }}" == "true" ]; then
+            echo "- ✅ Deploy to GitHub Pages" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📋 Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "1. Go to [Actions tab](https://github.com/${{ github.repository }}/actions)" >> $GITHUB_STEP_SUMMARY
+          echo "2. Monitor the triggered workflows" >> $GITHUB_STEP_SUMMARY
+          echo "3. Check logs for any errors" >> $GITHUB_STEP_SUMMARY
+          echo "4. Verify expected outputs" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Expected Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Update KB Workflow:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Syncs with official BrowserOS repo" >> $GITHUB_STEP_SUMMARY
+          echo "- Updates docs/repo-structure.json" >> $GITHUB_STEP_SUMMARY
+          echo "- Updates docs/search-index.json" >> $GITHUB_STEP_SUMMARY
+          echo "- May generate new workflows" >> $GITHUB_STEP_SUMMARY
+          echo "- Creates version tag (kb-YYYY.MM.DD)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Self-Test Workflow:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Runs 42 comprehensive tests" >> $GITHUB_STEP_SUMMARY
+          echo "- Performs security scanning" >> $GITHUB_STEP_SUMMARY
+          echo "- Auto-fixes issues found" >> $GITHUB_STEP_SUMMARY
+          echo "- May create GitHub issues" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Deploy Pages Workflow:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Builds and deploys website" >> $GITHUB_STEP_SUMMARY
+          echo "- Updates GitHub Pages site" >> $GITHUB_STEP_SUMMARY
