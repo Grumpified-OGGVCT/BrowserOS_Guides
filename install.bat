@@ -1,0 +1,214 @@
+@echo off
+REM ============================================================================
+REM BrowserOS Knowledge Base - Windows Installation Script
+REM ============================================================================
+REM This script installs all dependencies and launches the setup wizard
+REM ============================================================================
+
+setlocal enabledelayedexpansion
+color 0A
+
+echo ================================================================================
+echo    BrowserOS Knowledge Base - Installation Script
+echo ================================================================================
+echo.
+echo This script will:
+echo   1. Check system requirements (Python 3.11+, Git)
+echo   2. Install Python dependencies
+echo   3. Create configuration directory structure
+echo   4. Launch the interactive setup wizard
+echo.
+echo Press any key to continue or Ctrl+C to cancel...
+pause >nul
+
+REM ============================================================================
+REM Check Python Installation
+REM ============================================================================
+echo.
+echo [1/6] Checking Python installation...
+python --version >nul 2>&1
+if errorlevel 1 (
+    echo ERROR: Python is not installed or not in PATH
+    echo.
+    echo Please install Python 3.11 or higher from:
+    echo https://www.python.org/downloads/
+    echo.
+    echo Make sure to check "Add Python to PATH" during installation
+    echo.
+    pause
+    exit /b 1
+)
+
+REM Get Python version
+for /f "tokens=2" %%i in ('python --version 2^>^&1') do set PYTHON_VERSION=%%i
+echo Found: Python %PYTHON_VERSION%
+
+REM Check Python version is 3.11+
+for /f "tokens=1,2 delims=." %%a in ("%PYTHON_VERSION%") do (
+    set MAJOR=%%a
+    set MINOR=%%b
+)
+if %MAJOR% LSS 3 (
+    echo ERROR: Python 3.11+ required, found %PYTHON_VERSION%
+    pause
+    exit /b 1
+)
+if %MAJOR% EQU 3 if %MINOR% LSS 11 (
+    echo ERROR: Python 3.11+ required, found %PYTHON_VERSION%
+    pause
+    exit /b 1
+)
+echo OK: Python version is compatible
+
+REM ============================================================================
+REM Check Git Installation
+REM ============================================================================
+echo.
+echo [2/6] Checking Git installation...
+git --version >nul 2>&1
+if errorlevel 1 (
+    echo WARNING: Git is not installed or not in PATH
+    echo Git is optional but recommended for version control
+    echo.
+    echo Download from: https://git-scm.com/download/win
+    echo.
+    echo Press any key to continue without Git...
+    pause >nul
+) else (
+    for /f "tokens=3" %%i in ('git --version 2^>^&1') do set GIT_VERSION=%%i
+    echo Found: Git %GIT_VERSION%
+)
+
+REM ============================================================================
+REM Check pip
+REM ============================================================================
+echo.
+echo [3/6] Checking pip installation...
+python -m pip --version >nul 2>&1
+if errorlevel 1 (
+    echo ERROR: pip is not available
+    echo.
+    echo Installing pip...
+    python -m ensurepip --default-pip
+    if errorlevel 1 (
+        echo ERROR: Failed to install pip
+        pause
+        exit /b 1
+    )
+)
+echo OK: pip is available
+
+REM ============================================================================
+REM Install Python Dependencies
+REM ============================================================================
+echo.
+echo [4/6] Installing Python dependencies...
+echo This may take a few minutes...
+echo.
+
+python -m pip install --upgrade pip setuptools wheel
+if errorlevel 1 (
+    echo ERROR: Failed to upgrade pip
+    pause
+    exit /b 1
+)
+
+if exist requirements.txt (
+    python -m pip install -r requirements.txt
+    if errorlevel 1 (
+        echo ERROR: Failed to install dependencies
+        echo.
+        echo Please check your internet connection and try again
+        pause
+        exit /b 1
+    )
+    echo OK: All dependencies installed successfully
+) else (
+    echo ERROR: requirements.txt not found
+    echo Please run this script from the repository root directory
+    pause
+    exit /b 1
+)
+
+REM ============================================================================
+REM Create Directory Structure
+REM ============================================================================
+echo.
+echo [5/6] Creating directory structure...
+
+if not exist logs mkdir logs
+if not exist BrowserOS\Research mkdir BrowserOS\Research
+if not exist BrowserOS\Workflows mkdir BrowserOS\Workflows
+
+echo OK: Directories created
+
+REM ============================================================================
+REM Check/Create .env file
+REM ============================================================================
+echo.
+echo [6/6] Checking configuration...
+
+if not exist .env (
+    if exist .env.template (
+        copy .env.template .env >nul
+        echo Created .env from template
+        echo You will configure this in the setup wizard
+    ) else (
+        echo WARNING: .env.template not found
+    )
+) else (
+    echo Found existing .env file
+    echo.
+    echo Do you want to keep your existing configuration?
+    echo   Y = Keep existing (you can modify it later)
+    echo   N = Start fresh with setup wizard
+    choice /C YN /N /M "Your choice (Y/N): "
+    if errorlevel 2 (
+        if exist .env.template (
+            copy .env.template .env >nul
+            echo Reset .env from template
+        )
+    ) else (
+        echo Keeping existing configuration
+    )
+)
+
+REM ============================================================================
+REM Installation Complete
+REM ============================================================================
+echo.
+echo ================================================================================
+echo    Installation Complete!
+echo ================================================================================
+echo.
+echo Next step: Configure your BrowserOS Knowledge Base
+echo.
+echo The setup wizard will guide you through:
+echo   - Agent mode selection
+echo   - API key configuration
+echo   - Connection settings
+echo   - Performance tuning
+echo   - And more...
+echo.
+echo Press any key to launch the setup wizard...
+pause >nul
+
+REM Launch setup wizard
+python scripts\setup_wizard.py
+if errorlevel 1 (
+    echo.
+    echo Setup wizard encountered an error
+    echo You can run it again later with: python scripts\setup_wizard.py
+    pause
+    exit /b 1
+)
+
+echo.
+echo ================================================================================
+echo    Setup Complete!
+echo ================================================================================
+echo.
+echo You can now use run.bat to start the BrowserOS Knowledge Base
+echo.
+pause
+exit /b 0
