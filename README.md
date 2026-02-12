@@ -27,7 +27,7 @@
 <div align="center">
 
 ### **Interactive Knowledge Hub**
-![BrowserOS Knowledge Hub](docs/screenshots/01-hero-section.png)
+![BrowserOS Knowledge Hub homepage showing hero section with 500+ use cases, 130+ workflows, and AI-powered tools](docs/screenshots/01-hero-section.png)
 
 *The static website in `docs/` includes the full interactive knowledge hub with 500+ use cases and 130+ workflows*
 
@@ -80,7 +80,7 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-![Workflows Section](docs/screenshots/02-workflows-section.png)
+![Workflows section displaying 130+ organized workflows across E-Commerce, Data Extraction, Testing, QA, Social Media, Research, CRM, Content Creation, and API Integration categories](docs/screenshots/02-workflows-section.png)
 
 *E-Commerce, Data Extraction, Testing & QA, Social Media, Research, CRM, Content Creation, API Integration, and more!*
 
@@ -90,7 +90,7 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-![Use Cases Section](docs/screenshots/03-use-cases-section.png)
+![Use cases section showing 500+ real-world examples across retail, healthcare, finance, logistics, marketing, and customer service industries](docs/screenshots/03-use-cases-section.png)
 
 *Real-world examples from retail, healthcare, finance, logistics, marketing, customer service, and beyond*
 
@@ -100,7 +100,7 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-![MCP Agentic Section](docs/screenshots/04-mcp-agentic-section.png)
+![MCP and Agentic AI integration guide showing compatibility with VSCode, Cursor, Windsurf, Claude Desktop, MSTY, AnythingLLM, and 10+ other AI development tools](docs/screenshots/04-mcp-agentic-section.png)
 
 *Use BrowserOS with VSCode, Cursor, Windsurf, Claude Desktop, MSTY, AnythingLLM, and 10+ AI tools*
 
@@ -110,7 +110,7 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-![Repo Browser](docs/screenshots/05-repo-browser.png)
+![Interactive repository browser interface showing file tree navigation, search functionality, and content preview capabilities](docs/screenshots/05-repo-browser.png)
 
 *Browse the entire repository structure, search files, preview content, and navigate with ease*
 
@@ -120,7 +120,7 @@ This is a **living, self-maintaining knowledge base** that:
 
 <div align="center">
 
-![Search Section](docs/screenshots/06-search-section.png)
+![Search interface with AI-powered search capabilities across 500+ use cases, 130+ workflows, and comprehensive documentation](docs/screenshots/06-search-section.png)
 
 *AI-powered search across 500+ use cases, 130+ workflows, and comprehensive documentation*
 

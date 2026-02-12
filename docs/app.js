@@ -63,7 +63,7 @@ function initializeSearch() {
                 performSearch(query, currentFilter);
             } else {
                 searchResults.classList.remove('active');
-                searchResults.innerHTML = '';
+                searchResults.replaceChildren(); // Safer than innerHTML = ''
             }
         }, 300));
     }
@@ -251,11 +251,11 @@ function displaySearchResults(results, query) {
         `;
     } else {
         const resultsHTML = results.map(result => `
-            <a href="${result.url}" class="search-result-item" style="display: block; padding: 1rem; border-bottom: 1px solid var(--gray-200); text-decoration: none; color: inherit; transition: background 0.2s;">
+            <a href="${escapeHtml(result.url)}" class="search-result-item" style="display: block; padding: 1rem; border-bottom: 1px solid var(--gray-200); text-decoration: none; color: inherit; transition: background 0.2s;">
                 <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
                     <div style="flex: 1; min-width: 0;">
                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-                            <span style="background: var(--primary); color: white; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; white-space: nowrap;">${result.category}</span>
+                            <span style="background: var(--primary); color: white; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; white-space: nowrap;">${escapeHtml(result.category)}</span>
                             ${result.score > 500 ? '<span style="background: var(--success); color: white; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">⭐ Top Match</span>' : ''}
                         </div>
                         <h4 style="margin-bottom: 0.25rem; color: var(--gray-900); font-size: 1.125rem; font-weight: 600;">${highlightMatch(result.title, query)}</h4>
@@ -263,7 +263,7 @@ function displaySearchResults(results, query) {
                         ${result.keywords && result.keywords.length > 0 ? `
                             <div style="display: flex; gap: 0.25rem; margin-top: 0.5rem; flex-wrap: wrap;">
                                 ${result.keywords.slice(0, 5).map(kw => `
-                                    <span style="background: var(--gray-100); color: var(--gray-600); padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">${kw}</span>
+                                    <span style="background: var(--gray-100); color: var(--gray-600); padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">${escapeHtml(kw)}</span>
                                 `).join('')}
                             </div>
                         ` : ''}
@@ -377,6 +377,61 @@ function initializeMobileMenu() {
 }
 
 // ============================================================================
+// Mobile Menu
+// ============================================================================
+
+function initializeMobileMenu() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (mobileMenuToggle && navLinks) {
+        mobileMenuToggle.addEventListener('click', function() {
+            // Toggle menu visibility
+            navLinks.classList.toggle('active');
+            mobileMenuToggle.classList.toggle('active');
+            
+            // Update ARIA attributes
+            const isExpanded = navLinks.classList.contains('active');
+            mobileMenuToggle.setAttribute('aria-expanded', isExpanded);
+            
+            // Prevent body scroll when menu is open
+            document.body.style.overflow = isExpanded ? 'hidden' : '';
+        });
+        
+        // Close menu when clicking nav links
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.navbar') && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Handle escape key to close menu
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+                mobileMenuToggle.focus(); // Return focus to toggle button
+            }
+        });
+    }
+}
+
+// ============================================================================
 // Animations
 // ============================================================================
 
@@ -467,7 +522,7 @@ function initializeCategoryNavigation() {
             if (searchInput && searchInput.value) {
                 searchInput.value = '';
                 searchResults.classList.remove('active');
-                searchResults.innerHTML = '';
+                searchResults.replaceChildren(); // Safer than innerHTML = ''
             }
         }
     });

@@ -24,7 +24,7 @@
                 <span class="logo">🚀</span>
                 <span class="brand-name">BrowserOS Knowledge Hub</span>
             </div>
-            <ul class="nav-links">
+            <ul class="nav-links" id="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#workflows">Workflows</a></li>
                 <li><a href="#use-cases">Use Cases</a></li>
@@ -39,7 +39,7 @@
                     GitHub
                 </a></li>
             </ul>
-            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+            <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -246,7 +246,7 @@
                     <svg class="search-icon" width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
                     </svg>
-                    <input type="text" id="searchInput" placeholder="Search workflows, use cases, documentation..." class="search-input">
+                    <input type="text" id="searchInput" placeholder="Search workflows, use cases, documentation..." class="search-input" maxlength="200" aria-label="Search knowledge base">
                     <div class="search-filters">
                         <button class="filter-btn active" data-filter="all">All</button>
                         <button class="filter-btn" data-filter="workflows">Workflows</button>
@@ -254,7 +254,7 @@
                         <button class="filter-btn" data-filter="docs">Docs</button>
                     </div>
                 </div>
-                <div id="searchResults" class="search-results"></div>
+                <div id="searchResults" class="search-results" role="region" aria-live="polite" aria-atomic="true"></div>
             </div>
         </div>
     </section>
