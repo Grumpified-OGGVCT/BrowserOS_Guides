@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-02-12T05:21:26.539365",
+  "generated_at": "2026-02-12T05:23:23.154095",
   "repository": "BrowserOS_Guides",
   "stats": {
-    "files": 987,
-    "folders": 12,
-    "docs": 24
+    "files": 995,
+    "folders": 20,
+    "docs": 32
   },
   "structure": {
     "name": "BrowserOS_Guides",
@@ -132,6 +132,34 @@
             "name": "Workflows",
             "type": "folder",
             "children": [
+              {
+                "name": "Advanced-Techniques",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "README.md",
+                    "type": "file",
+                    "description": "Markdown documentation",
+                    "path": "../BrowserOS/Workflows/Advanced-Techniques/README.md",
+                    "size": 116,
+                    "modified": "2026-02-12T05:23:18.104719"
+                  }
+                ]
+              },
+              {
+                "name": "API-Integration",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "README.md",
+                    "type": "file",
+                    "description": "Markdown documentation",
+                    "path": "../BrowserOS/Workflows/API-Integration/README.md",
+                    "size": 112,
+                    "modified": "2026-02-12T05:23:18.103719"
+                  }
+                ]
+              },
               {
                 "name": "Community-Contributed",
                 "type": "folder",
@@ -7489,6 +7517,48 @@
                 ]
               },
               {
+                "name": "Content-Creation",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "README.md",
+                    "type": "file",
+                    "description": "Markdown documentation",
+                    "path": "../BrowserOS/Workflows/Content-Creation/README.md",
+                    "size": 113,
+                    "modified": "2026-02-12T05:23:18.103719"
+                  }
+                ]
+              },
+              {
+                "name": "CRM-Business",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "README.md",
+                    "type": "file",
+                    "description": "Markdown documentation",
+                    "path": "../BrowserOS/Workflows/CRM-Business/README.md",
+                    "size": 109,
+                    "modified": "2026-02-12T05:23:18.103719"
+                  }
+                ]
+              },
+              {
+                "name": "Data-Extraction",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "README.md",
+                    "type": "file",
+                    "description": "Markdown documentation",
+                    "path": "../BrowserOS/Workflows/Data-Extraction/README.md",
+                    "size": 1336,
+                    "modified": "2026-02-12T05:23:12.720674"
+                  }
+                ]
+              },
+              {
                 "name": "E-Commerce",
                 "type": "folder",
                 "children": [
@@ -7507,6 +7577,48 @@
                     "path": "../BrowserOS/Workflows/E-Commerce/README.md",
                     "size": 7487,
                     "modified": "2026-02-12T05:19:44.903717"
+                  }
+                ]
+              },
+              {
+                "name": "Research-Monitoring",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "README.md",
+                    "type": "file",
+                    "description": "Markdown documentation",
+                    "path": "../BrowserOS/Workflows/Research-Monitoring/README.md",
+                    "size": 116,
+                    "modified": "2026-02-12T05:23:18.103719"
+                  }
+                ]
+              },
+              {
+                "name": "Social-Media",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "README.md",
+                    "type": "file",
+                    "description": "Markdown documentation",
+                    "path": "../BrowserOS/Workflows/Social-Media/README.md",
+                    "size": 109,
+                    "modified": "2026-02-12T05:23:18.103719"
+                  }
+                ]
+              },
+              {
+                "name": "Testing-QA",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "README.md",
+                    "type": "file",
+                    "description": "Markdown documentation",
+                    "path": "../BrowserOS/Workflows/Testing-QA/README.md",
+                    "size": 107,
+                    "modified": "2026-02-12T05:23:18.103719"
                   }
                 ]
               },
@@ -7705,16 +7817,16 @@
             "type": "file",
             "description": "JSON data",
             "path": "repo-structure.json",
-            "size": 20735,
-            "modified": "2026-02-12T05:19:44.904717"
+            "size": 418531,
+            "modified": "2026-02-12T05:21:26.547782"
           },
           {
             "name": "search-index.json",
             "type": "file",
             "description": "JSON data",
             "path": "search-index.json",
-            "size": 33968,
-            "modified": "2026-02-12T05:19:44.910717"
+            "size": 44115,
+            "modified": "2026-02-12T05:21:30.385814"
           },
           {
             "name": "styles.css",
