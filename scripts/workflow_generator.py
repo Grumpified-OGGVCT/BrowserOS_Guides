@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 BrowserOS Workflow Generator - AI-Powered Workflow Creation
-Uses Kimi-K2.5:cloud via Ollama Cloud API to generate realistic, working workflows
+Uses GLM-5 via Ollama Cloud API to generate realistic, working workflows
 
 This script is the core of the self-growing workflow library system.
 """
@@ -19,6 +19,11 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
+# Force UTF-8 output for Windows console
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 try:
     from config_loader import get_config as load_config
 except ImportError:
@@ -26,11 +31,11 @@ except ImportError:
     load_config = None
 
 
-class KimiWorkflowGenerator:
+class GLMWorkflowGenerator:
     """
-    AI-Powered Workflow Generator using Kimi-K2.5:cloud
+    AI-Powered Workflow Generator using GLM-5
     
-    This class uses Kimi (Moonshot AI's latest model) to generate
+    This class uses GLM-5 to generate
     realistic, production-ready BrowserOS workflows based on use cases.
     
     SAFETY DISCLAIMER:
@@ -133,14 +138,14 @@ class KimiWorkflowGenerator:
         if not self.api_key:
             raise ValueError("OLLAMA_API_KEY environment variable required")
         
-        # Kimi model name MUST include :cloud tag for Ollama Cloud
-        self.model = "kimi-k2.5:cloud"
+        # GLM-5 model name
+        self.model = "glm-5"
         self.base_url = "https://api.ollama.ai/v1"
         
         # Load configuration if available
         self.config = self._load_config()
         
-        print(f"✅ Initialized Kimi Workflow Generator")
+        print(f"✅ Initialized GLM-5 Workflow Generator")
         print(f"   Model: {self.model}")
         print(f"   API: Ollama Cloud")
         print(f"   Safety: Enabled (NSFW/Illegal content filtering)")
@@ -242,7 +247,7 @@ class KimiWorkflowGenerator:
                 'retry_count': 3
             },
             'sdk': {
-                'model': 'kimi-k2.5:cloud',
+                'model': 'glm-5',
                 'options': {
                     'temperature': 0.7,
                     'top_p': 0.9,
@@ -258,7 +263,7 @@ class KimiWorkflowGenerator:
         complexity: str = "medium"
     ) -> Dict[str, Any]:
         """
-        Generate a workflow idea using Kimi
+        Generate a workflow idea using GLM-5
         
         Args:
             use_case: What the workflow should accomplish
@@ -292,11 +297,11 @@ class KimiWorkflowGenerator:
         print(f"   Complexity: {complexity}")
         print(f"   Safety: ✅ Passed")
         
-        # Construct prompt for Kimi
+        # Construct prompt for GLM-5
         prompt = self._build_workflow_idea_prompt(use_case, industry, complexity)
         
-        # Call Kimi via Ollama Cloud API
-        response = self._call_kimi(prompt, max_tokens=2000)
+        # Call GLM-5 via Ollama Cloud API
+        response = self._call_model(prompt, max_tokens=2000)
         
         # Parse response
         try:
@@ -318,7 +323,7 @@ class KimiWorkflowGenerator:
             return idea
             
         except json.JSONDecodeError:
-            print("⚠️  Kimi response was not valid JSON, wrapping in structure")
+            print("⚠️  GLM-5 response was not valid JSON, wrapping in structure")
             return {
                 'title': f"Workflow for {use_case}",
                 'description': response,
@@ -350,8 +355,8 @@ class KimiWorkflowGenerator:
         # Construct prompt for implementation
         prompt = self._build_workflow_implementation_prompt(idea)
         
-        # Call Kimi with larger token limit
-        response = self._call_kimi(prompt, max_tokens=4000)
+        # Call GLM-5 with larger token limit
+        response = self._call_model(prompt, max_tokens=4000)
         
         # Parse workflow JSON
         try:
@@ -390,8 +395,8 @@ class KimiWorkflowGenerator:
         # Construct validation prompt
         prompt = self._build_validation_prompt(workflow)
         
-        # Call Kimi for analysis
-        response = self._call_kimi(prompt, max_tokens=2000)
+        # Call GLM-5 for analysis
+        response = self._call_model(prompt, max_tokens=2000)
         
         # Parse validation results
         try:
@@ -425,9 +430,9 @@ class KimiWorkflowGenerator:
                 'raw_response': response
             }
     
-    def _call_kimi(self, prompt: str, max_tokens: int = 2000) -> str:
+    def _call_model(self, prompt: str, max_tokens: int = 2000) -> str:
         """
-        Call Kimi-K2.5:cloud via Ollama Cloud API
+        Call GLM-5 via Ollama Cloud API
         
         Args:
             prompt: The prompt to send
@@ -444,7 +449,7 @@ class KimiWorkflowGenerator:
         }
         
         payload = {
-            'model': self.model,  # Must be "kimi-k2.5:cloud"
+            'model': self.model,  # Must be "glm-5"
             'messages': [
                 {
                     'role': 'system',
@@ -477,7 +482,7 @@ class KimiWorkflowGenerator:
             return content.strip()
             
         except requests.exceptions.RequestException as e:
-            print(f"❌ Error calling Kimi API: {e}")
+            print(f"❌ Error calling Model API: {e}")
             if hasattr(e.response, 'text'):
                 print(f"   Response: {e.response.text[:200]}")
             raise
@@ -913,7 +918,7 @@ Your goal is to ensure this workflow will actually work in production, is safe, 
 def main():
     """CLI interface for workflow generator"""
     parser = argparse.ArgumentParser(
-        description='Generate BrowserOS workflows using Kimi-K2.5:cloud AI'
+        description='Generate BrowserOS workflows using GLM-5 AI'
     )
     
     subparsers = parser.add_subparsers(dest='command', help='Command to run')
@@ -957,7 +962,7 @@ def main():
     
     # Initialize generator
     try:
-        generator = KimiWorkflowGenerator()
+        generator = GLMWorkflowGenerator()
     except ValueError as e:
         print(f"❌ {e}")
         print("Set OLLAMA_API_KEY environment variable")

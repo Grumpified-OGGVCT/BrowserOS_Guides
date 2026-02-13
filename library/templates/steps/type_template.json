@@ -1,0 +1,24 @@
+{
+  "type": "type",
+  "name": "Sample Type Step",
+  "description": "Type text (alias for input)",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-13T09:11:37.679268",
+    "parameters": [
+      {
+        "name": "selector",
+        "description": "Configuration for type"
+      },
+      {
+        "name": "text",
+        "description": "Configuration for type"
+      },
+      {
+        "name": "delay",
+        "description": "Configuration for type"
+      }
+    ]
+  }
+}

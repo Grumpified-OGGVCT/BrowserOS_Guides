@@ -93,7 +93,81 @@
                 </div>
             </div>
             
-            <div class="stats-grid">
+            <!-- System Health Dashboard (Dynamic) -->
+            <div id="system-status-board" class="health-dashboard" style="display: none; margin-top: 3rem; max-width: 800px; margin-left: auto; margin-right: auto; background: rgba(15, 20, 25, 0.8); backdrop-filter: blur(10px); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-xl);">
+                <!-- Header -->
+                <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-primary); display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.03);">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="position: relative; display: flex; height: 12px; width: 12px;">
+                            <span id="global-status-ping" class="status-ping" style="background: var(--success);"></span>
+                            <span id="global-status-dot" class="status-dot" style="background: var(--success);"></span>
+                        </span>
+                        <h3 style="font-size: 1.1rem; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                            System Health
+                            <span style="font-size: 0.75rem; background: var(--bg-tertiary); padding: 0.1rem 0.5rem; border-radius: 99px; border: 1px solid var(--border-secondary); color: var(--text-secondary);">Beta</span>
+                        </h3>
+                    </div>
+                    <div style="text-align: right;">
+                        <span id="last-updated" style="font-size: 0.75rem; color: var(--text-tertiary); display: block;">Updated: Just now</span>
+                        <span id="connection-status" style="font-size: 0.75rem; color: var(--success); font-weight: 600;">Connected to MCP</span>
+                    </div>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: var(--border-primary);">
+                    
+                    <!-- CPU Metric -->
+                    <div class="metric-cell" style="background: var(--bg-secondary); padding: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                            <span style="color: var(--text-secondary); font-size: 0.875rem; font-weight: 500;">CPU Load</span>
+                            <span id="cpu-value" style="font-weight: 700; color: var(--text-primary);">--%</span>
+                        </div>
+                        <div class="progress-track" style="height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden;">
+                            <div id="cpu-bar" class="progress-fill" style="width: 0%; height: 100%; background: var(--info); transition: width 0.5s ease;"></div>
+                        </div>
+                        <div id="cpu-detail" style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 0.5rem;">Processing...</div>
+                    </div>
+
+                    <!-- RAM Metric -->
+                    <div class="metric-cell" style="background: var(--bg-secondary); padding: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                            <span style="color: var(--text-secondary); font-size: 0.875rem; font-weight: 500;">Memory</span>
+                            <span id="ram-value" style="font-weight: 700; color: var(--text-primary);">--%</span>
+                        </div>
+                        <div class="progress-track" style="height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden;">
+                            <div id="ram-bar" class="progress-fill" style="width: 0%; height: 100%; background: var(--browseros-orange); transition: width 0.5s ease;"></div>
+                        </div>
+                        <div id="ram-detail" style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 0.5rem;">-- status</div>
+                    </div>
+
+                    <!-- Disk Metric -->
+                    <div class="metric-cell" style="background: var(--bg-secondary); padding: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                            <span style="color: var(--text-secondary); font-size: 0.875rem; font-weight: 500;">Disk (C:)</span>
+                            <span id="disk-value" style="font-weight: 700; color: var(--text-primary);">--%</span>
+                        </div>
+                        <div class="progress-track" style="height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden;">
+                            <div id="disk-bar" class="progress-fill" style="width: 0%; height: 100%; background: var(--success); transition: width 0.5s ease;"></div>
+                        </div>
+                        <div id="disk-detail" style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 0.5rem;">-- free</div>
+                    </div>
+                </div>
+
+                <!-- Services Status -->
+                <div style="padding: 1rem 1.5rem; background: var(--bg-secondary); border-top: 1px solid var(--border-primary); display: flex; gap: 2rem; flex-wrap: wrap;">
+                    <div class="service-status" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span id="port-3100-dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--gray-500, #6B7280);"></span>
+                        <span style="font-size: 0.875rem; color: var(--text-secondary);">MCP Server (3100)</span>
+                    </div>
+                    <div class="service-status" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span id="port-9000-dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--gray-500, #6B7280);"></span>
+                        <span style="font-size: 0.875rem; color: var(--text-secondary);">Chrome Debugger (9000)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fallback Static Stats (Hidden if JS loads) -->
+            <div id="static-stats-grid" class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">📚</div>
                     <div class="stat-number">917+</div>

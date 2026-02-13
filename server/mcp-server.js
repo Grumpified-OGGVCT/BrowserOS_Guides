@@ -449,34 +449,55 @@ const tools = {
   /**
    * Check system health
    */
-  system_health_check: async ({ check_type = 'basic' }) => {
-    const health = {
-      status: 'online',
-      timestamp: new Date().toISOString(),
-      mcp_server: {
-        uptime: process.uptime(),
-        memory_usage: process.memoryUsage(),
-        active_sse_sessions: sseSessions.size,
-        port: PORT
-      },
-      system: {
-        platform: os.platform(),
-        arch: os.arch(),
-        cpus: os.cpus().length,
-        total_mem_gb: (os.totalmem() / 1024 / 1024 / 1024).toFixed(2),
-        free_mem_gb: (os.freemem() / 1024 / 1024 / 1024).toFixed(2)
-      }
-    };
-    
-    if (check_type === 'full' || check_type === 'network') {
-       // Simple port check (mocked for safety/speed in JS-only version)
-       health.network = {
-         mcp_port_3100: 'listening',
-         interfaces: os.networkInterfaces()
-       };
-    }
-    
-    return health;
+
+
+  system_health_check: async () => {
+    return new Promise((resolve, reject) => {
+      // Use powershell to run the script
+      const ps = spawn('powershell.exe', [
+        '-ExecutionPolicy', 'Bypass',
+        '-File', path.join(REPO_ROOT, 'scripts', 'system_health_check.ps1')
+      ]);
+
+      let stdout = '';
+      let stderr = '';
+
+      ps.stdout.on('data', (data) => stdout += data.toString());
+      ps.stderr.on('data', (data) => stderr += data.toString());
+
+      ps.on('close', (code) => {
+        if (code !== 0) {
+          resolve({
+            content: [{ type: 'text', text: `Health check failed (Exit Code ${code}): ${stderr}` }],
+            isError: true
+          });
+          return;
+        }
+
+        try {
+          // Robust JSON parsing: find the first '{' and last '}'
+          const stdoutStr = stdout.trim();
+          const firstBrace = stdoutStr.indexOf('{');
+          const lastBrace = stdoutStr.lastIndexOf('}');
+
+          if (firstBrace === -1 || lastBrace === -1) {
+             throw new Error('No JSON object found in output');
+          }
+
+          const jsonStr = stdoutStr.substring(firstBrace, lastBrace + 1);
+          const data = JSON.parse(jsonStr);
+          
+          resolve({
+            content: [{ type: 'text', text: JSON.stringify(data, null, 2) }]
+          });
+        } catch (e) {
+             resolve({
+            content: [{ type: 'text', text: `Failed to parse health check output: ${e.message}\nRaw Output: ${stdout}` }],
+             isError: true
+          });
+        }
+      });
+    });
   },
 
   semantic_bridge_monitor: async ({ action, objective, poll_interval = 5, min_relevance_score = 40, auto_kb_update = true, port = 9000 }) => {
@@ -563,6 +584,98 @@ const tools = {
     }
 
     throw new Error(`Unknown action: ${action}`);
+  },
+
+  /**
+   * File System Tools (for Local Repo Browser)
+   */
+  list_directory: async ({ path: dirPath = '' }) => {
+    // Sanitize and resolve path
+    const safePath = path.normalize(dirPath).replace(/^(\.\.[\/\\])+/, '');
+    const absolutePath = path.join(REPO_ROOT, safePath);
+
+    // Security check: ensure effective path is inside REPO_ROOT
+    if (!absolutePath.startsWith(REPO_ROOT)) {
+      throw new Error('Access denied: Cannot list directories outside repository root');
+    }
+
+    if (!fs.existsSync(absolutePath)) {
+      throw new Error(`Directory not found: ${dirPath}`);
+    }
+
+    if (!fs.statSync(absolutePath).isDirectory()) {
+      throw new Error(`Not a directory: ${dirPath}`);
+    }
+
+    try {
+      const entries = fs.readdirSync(absolutePath, { withFileTypes: true });
+      
+      const children = entries.map(entry => {
+        const entryPath = path.posix.join(dirPath.replace(/\\/g, '/'), entry.name);
+        const stats = fs.statSync(path.join(absolutePath, entry.name));
+        
+        return {
+          name: entry.name,
+          type: entry.isDirectory() ? 'folder' : 'file',
+          path: entryPath,
+          size: entry.isDirectory() ? 0 : stats.size,
+          modified: stats.mtime.toISOString(),
+          description: '' // Placeholder for future metadata
+        };
+      });
+
+      // Sort: folders first, then files
+      children.sort((a, b) => {
+        if (a.type === b.type) return a.name.localeCompare(b.name);
+        return a.type === 'folder' ? -1 : 1;
+      });
+
+      return {
+        name: path.basename(absolutePath) || 'Root',
+        type: 'folder',
+        path: dirPath.replace(/\\/g, '/'),
+        children: children
+      };
+    } catch (e) {
+      throw new Error(`Failed to list directory: ${e.message}`);
+    }
+  },
+
+  read_file: async ({ path: filePath }) => {
+    if (!filePath) throw new Error('File path is required');
+
+    // Sanitize and resolve path
+    const safePath = path.normalize(filePath).replace(/^(\.\.[\/\\])+/, '');
+    const absolutePath = path.join(REPO_ROOT, safePath);
+
+    // Security check: ensure effective path is inside REPO_ROOT
+    if (!absolutePath.startsWith(REPO_ROOT)) {
+      throw new Error('Access denied: Cannot read files outside repository root');
+    }
+
+    if (!fs.existsSync(absolutePath)) {
+      throw new Error(`File not found: ${filePath}`);
+    }
+
+    if (fs.statSync(absolutePath).isDirectory()) {
+      throw new Error(`Cannot read directory as file: ${filePath}`);
+    }
+
+    try {
+      const content = fs.readFileSync(absolutePath, 'utf8');
+      const stats = fs.statSync(absolutePath);
+      
+      return {
+        name: path.basename(filePath),
+        path: filePath.replace(/\\/g, '/'),
+        size: stats.size,
+        modified: stats.mtime.toISOString(),
+        content: content,
+        type: path.extname(filePath).toLowerCase() || 'text'
+      };
+    } catch (e) {
+      throw new Error(`Failed to read file: ${e.message}`);
+    }
   }
 };
 
@@ -687,6 +800,20 @@ const toolDefinitions = [
     }
   },
   {
+    name: 'system_health_check',
+    description: 'Returns real-time system metrics (CPU, RAM, Disk) and checks status of critical ports (3100, 9000).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+         check_type: { 
+          type: 'string', 
+          enum: ['basic'], 
+          default: 'basic'
+        }
+      }
+    }
+  },
+  {
     "name": "semantic_bridge_monitor",
     "description": "Activates a real-time semantic watchtower that monitors the active browser tab via CDP. It compares the visual/text content against the provided 'objective' using a local LLM. If relevance drops, it logs a Drift Warning.",
     "inputSchema": {
@@ -723,6 +850,27 @@ const toolDefinitions = [
         }
       },
       "required": ["action"]
+    }
+  },
+  {
+    "name": "list_directory",
+    "description": "List files and directories in a given path (relative to repository root)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string", "description": "Relative path to list (e.g., 'docs' or 'scripts')" }
+      }
+    }
+  },
+  {
+    "name": "read_file",
+    "description": "Read the content of a file (relative to repository root)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string", "description": "Relative path of the file to read" }
+      },
+      "required": ["path"]
     }
   }
 ];

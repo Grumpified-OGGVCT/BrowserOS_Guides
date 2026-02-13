@@ -7,6 +7,12 @@ Scans all markdown and JSON files and creates a searchable index with semantic c
 import os
 import json
 import re
+import sys
+
+# Force UTF-8 output for Windows console
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 from pathlib import Path
 from datetime import datetime
 import hashlib

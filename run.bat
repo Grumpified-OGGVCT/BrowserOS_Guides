@@ -54,25 +54,26 @@ REM Display current configuration summary
 echo Current Configuration:
 echo.
 for /f "tokens=1,2 delims==" %%a in ('findstr /v "^#" .env ^| findstr /v "^$"') do (
+    set "%%a=%%b"
     set KEY=%%a
     set VALUE=%%b
     
     REM Only show key settings
-    if "!KEY!"=="AGENT_MODE" (
-        echo   Agent Mode:        !VALUE!
+    if "%%a"=="AGENT_MODE" (
+        echo   Agent Mode:        %%b
     )
-    if "!KEY!"=="LOG_LEVEL" (
-        echo   Log Level:         !VALUE!
+    if "%%a"=="LOG_LEVEL" (
+        echo   Log Level:         %%b
     )
-    if "!KEY!"=="OLLAMA_API_KEY" (
-        if not "!VALUE!"=="" (
+    if "%%a"=="OLLAMA_API_KEY" (
+        if not "%%b"=="" (
             echo   Ollama API:        Configured
         ) else (
             echo   Ollama API:        Not set
         )
     )
-    if "!KEY!"=="OPENROUTER_API_KEY" (
-        if not "!VALUE!"=="" (
+    if "%%a"=="OPENROUTER_API_KEY" (
+        if not "%%b"=="" (
             echo   OpenRouter API:    Configured
         ) else (
             echo   OpenRouter API:    Not set
@@ -309,7 +310,7 @@ echo.
 set /p DESC="Enter workflow description (or press Enter to skip): "
 if "%DESC%"=="" goto MAIN_MENU
 
-python scripts\workflow_generator.py --description "%DESC%"
+python scripts\workflow_generator.py full --use-case "%DESC%"
 if errorlevel 1 (
     echo.
     echo ERROR: Workflow generation failed

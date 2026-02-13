@@ -33,7 +33,7 @@ class LibraryGenerator:
         """Load the GraphDefinition schema"""
         if not SCHEMA_PATH.exists():
             return {}
-        return json.loads(SCHEMA_PATH.read_text())
+        return json.loads(SCHEMA_PATH.read_text(encoding='utf-8'))
     
     def extract_step_types_from_kb(self) -> List[Dict[str, Any]]:
         """Extract step types documentation from KB"""
@@ -41,7 +41,7 @@ class LibraryGenerator:
             print("⚠️ Knowledge base not found")
             return []
         
-        content = KB_PATH.read_text()
+        content = KB_PATH.read_text(encoding='utf-8')
         step_types = []
         
         # Find Step Types Catalog section (table format)
@@ -156,7 +156,7 @@ class LibraryGenerator:
         # Scan workflow directories
         for workflow_file in WORKFLOWS_DIR.rglob("*.json"):
             try:
-                workflow = json.loads(workflow_file.read_text())
+                workflow = json.loads(workflow_file.read_text(encoding='utf-8'))
                 
                 # Extract pattern metadata
                 pattern = {

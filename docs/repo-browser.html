@@ -3,96 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://api.github.com; img-src 'self' data: https:; connect-src 'self' https://api.github.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http://localhost:3100 ws://localhost:3100; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
     <title>BrowserOS_Guides Repository Browser</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        .repo-browser {
-            min-height: 100vh;
-            background: var(--bg-primary);
-            padding-top: 80px;
-            position: relative;
+        :root {
+            --primary-color: #0066cc;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+            --border-color: #dee2e6;
+            
+            /* BrowserOS Colors */
+            --browseros-blue: #0066CC;
+            --browseros-orange: #FF7900;
+            --browseros-orange-light: #FF9D4D;
+            --browseros-orange-dark: #CC6100;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --bg-elevated: #ffffff;
+            
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --text-tertiary: #868e96;
+            --text-inverse: #ffffff;
+            
+            --border-primary: #dee2e6;
+            --border-secondary: #ced4da;
+            
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --shadow-orange: 0 4px 12px rgba(255, 121, 0, 0.25);
+            
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --radius-xl: 12px;
+            
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-12: 3rem;
+            
+            --transition-fast: 150ms ease;
+            --transition-base: 250ms ease;
+            --transition-smooth: 350ms cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        .repo-browser::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 300px;
-            background: radial-gradient(circle at 50% 0%, rgba(255, 121, 0, 0.08) 0%, transparent 70%);
-            z-index: 0;
+
+        .repo-browser {
+            padding: var(--space-8) 0;
+            background: var(--bg-secondary);
+            min-height: calc(100vh - 70px);
         }
         
         .browser-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: var(--space-10) var(--space-6);
-            position: relative;
-            z-index: 1;
+            padding: 0 var(--space-4);
         }
         
         .browser-header {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-primary);
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-            padding: var(--space-8);
-            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-6);
         }
         
         .browser-header h1 {
-            margin: 0 0 var(--space-3) 0;
-            font-size: 2rem;
-            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: var(--space-4);
+            gap: var(--space-3);
+            font-size: 2rem;
+            margin-bottom: var(--space-2);
+            color: var(--text-primary);
         }
         
         .browser-header p {
-            margin: 0;
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-size: 1.1rem;
+            max-width: 600px;
         }
         
         .browser-stats {
             display: flex;
-            gap: var(--space-8);
-            margin-top: var(--space-6);
-            padding-top: var(--space-6);
-            border-top: 1px solid var(--border-primary);
+            gap: var(--space-6);
+            margin-top: var(--space-4);
         }
         
         .browser-stat {
             display: flex;
             flex-direction: column;
+            background: var(--bg-primary);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-primary);
+            box-shadow: var(--shadow-sm);
         }
         
         .browser-stat-value {
-            font-size: 1.75rem;
-            font-weight: 800;
+            font-size: 1.5rem;
+            font-weight: 700;
             color: var(--browseros-orange);
-            margin-bottom: var(--space-1);
+            font-family: 'JetBrains Mono', monospace;
         }
         
         .browser-stat-label {
             font-size: 0.875rem;
             color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
         }
         
         .browser-content {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-primary);
-            border-top: none;
-            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
-            box-shadow: var(--shadow-lg);
             display: grid;
-            grid-template-columns: 360px 1fr;
-            min-height: 600px;
+            grid-template-columns: 350px 1fr;
+            gap: var(--space-6);
+            height: 800px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-primary);
             overflow: hidden;
         }
         
@@ -136,7 +176,7 @@
         }
         
         .file-tree-item.file {
-            padding-left: var(--space-8);
+            /* padding-left handled dynamically */
         }
         
         .file-tree-item .icon {
@@ -167,90 +207,20 @@
             margin-bottom: var(--space-3);
         }
         
-        .preview-meta {
-            display: flex;
-            gap: var(--space-6);
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            flex-wrap: wrap;
-        }
-        
         .preview-content {
             font-size: 0.9375rem;
             line-height: 1.7;
-        }
-        
-        .preview-content h2 {
-            color: var(--text-primary);
-            margin-top: var(--space-8);
-            margin-bottom: var(--space-4);
-            font-size: 1.25rem;
-        }
-        
-        .preview-content ul {
-            margin-left: var(--space-6);
-            color: var(--text-secondary);
-        }
-        
-        .preview-content ul li {
-            margin-bottom: var(--space-2);
-        }
-        
-        .preview-content a {
-            color: var(--browseros-orange);
-            text-decoration: none;
-            transition: all var(--transition-fast);
-        }
-        
-        .preview-content a:hover {
-            text-decoration: underline;
-            color: var(--browseros-orange-light);
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: var(--space-3);
-            margin-top: var(--space-6);
-            flex-wrap: wrap;
-        }
-        
-        .btn-action {
-            padding: var(--space-3) var(--space-5);
+            font-family: 'JetBrains Mono', monospace;
+            white-space: pre-wrap;
+            background: var(--bg-secondary);
+            padding: var(--space-4);
             border-radius: var(--radius-lg);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.875rem;
-            transition: all var(--transition-base);
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-2);
-            border: 1px solid transparent;
+            border: 1px solid var(--border-secondary);
+            overflow-x: auto;
         }
-        
-        .btn-github {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border-color: var(--border-secondary);
-        }
-        
-        .btn-github:hover {
-            background: var(--bg-elevated);
-            border-color: var(--browseros-orange);
-            color: var(--browseros-orange);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .btn-raw {
-            background: var(--browseros-orange);
-            color: var(--text-inverse);
-            box-shadow: var(--shadow-orange);
-        }
-        
-        .btn-raw:hover {
-            background: var(--browseros-orange-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255, 121, 0, 0.35);
+
+        .preview-content code {
+            font-family: inherit;
         }
         
         .search-box {
@@ -283,7 +253,7 @@
         }
         
         .folder-contents {
-            margin-left: var(--space-4);
+            /* Handled by JS toggling */
         }
         
         .folder-contents.collapsed {
@@ -294,17 +264,6 @@
             text-align: center;
             padding: var(--space-12) var(--space-6);
             color: var(--text-tertiary);
-        }
-        
-        .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: var(--space-6);
-            opacity: 0.5;
-        }
-        
-        .empty-state h3 {
-            color: var(--text-secondary);
-            margin-bottom: var(--space-3);
         }
         
         .back-link {
@@ -328,6 +287,23 @@
             border-color: var(--browseros-orange);
             color: var(--browseros-orange);
             transform: translateX(-4px);
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border-left-color: var(--browseros-orange);
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         @media (max-width: 968px) {
@@ -356,12 +332,7 @@
                 <li><a href="index.html#workflows">Workflows</a></li>
                 <li><a href="index.html#knowledge-base">Knowledge Base</a></li>
                 <li><a href="repo-browser.html" class="active">Repository Browser</a></li>
-                <li><a href="https://github.com/Grumpified-OGGVCT/BrowserOS_Guides" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="View BrowserOS Guides on GitHub">
-                    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-                    </svg>
-                    GitHub
-                </a></li>
+                <!-- GitHub link removed -->
             </ul>
         </div>
     </nav>
@@ -378,7 +349,7 @@
                     <span>📂</span>
                     BrowserOS_Guides Repository Browser
                 </h1>
-                <p>Browse and explore the complete repository structure</p>
+                <p>Browse and explore the local repository structure</p>
                 
                 <div class="browser-stats">
                     <div class="browser-stat">
@@ -389,24 +360,22 @@
                         <span class="browser-stat-value" id="folder-count">0</span>
                         <span class="browser-stat-label">Folders</span>
                     </div>
-                    <div class="browser-stat">
-                        <span class="browser-stat-value" id="doc-count">0</span>
-                        <span class="browser-stat-label">Documentation Files</span>
-                    </div>
                 </div>
             </div>
             
             <div class="browser-content">
                 <div class="file-tree">
-                    <input type="text" class="search-box" id="search-box" placeholder="Search files..." aria-label="Search repository files">
-                    <div id="file-tree-container"></div>
+                    <input type="text" class="search-box" id="search-box" placeholder="Search files...">
+                    <div id="file-tree-container">
+                        <!-- Tree rendered here -->
+                    </div>
                 </div>
                 
                 <div class="file-preview">
                     <div class="empty-state">
                         <div class="empty-state-icon">📄</div>
-                        <h3>Select a file to preview</h3>
-                        <p>Click on any file in the tree to view its details</p>
+                        <h3>Select a file to view content</h3>
+                        <p>Click on any file in the tree to view its contents here.</p>
                     </div>
                 </div>
             </div>
@@ -414,399 +383,252 @@
     </section>
 
     <script>
-        // Repository structure data - loaded dynamically from generated JSON
-        let repoStructure = null;
-        let repoMetadata = null;
-        
-        // Fallback structure in case JSON fails to load
-        const fallbackStructure = {
-            name: 'BrowserOS_Guides',
-            type: 'folder',
-            children: [
-                {
-                    name: '.github',
-                    type: 'folder',
-                    children: [
-                        { name: 'ACTIONS_SETUP.md', type: 'file', description: 'GitHub Actions setup guide', path: '../.github/ACTIONS_SETUP.md' },
-                        {
-                            name: 'workflows',
-                            type: 'folder',
-                            children: [
-                                { name: 'self-test.yml', type: 'file', description: 'Automated self-test workflow', path: '../.github/workflows/self-test.yml' },
-                                { name: 'update-kb.yml', type: 'file', description: 'Knowledge base update automation', path: '../.github/workflows/update-kb.yml' }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: 'BrowserOS',
-                    type: 'folder',
-                    children: [
-                        { name: 'README.md', type: 'file', description: 'BrowserOS documentation overview', path: '../BrowserOS/README.md' },
-                        { name: 'structure.md', type: 'file', description: 'Primary repository index and structure', path: '../BrowserOS/structure.md' },
-                        { name: 'MCP_AGENTIC_GUIDE.md', type: 'file', description: 'MCP and agentic AI integration guide', path: '../BrowserOS/MCP_AGENTIC_GUIDE.md' },
-                        { name: 'USE_CASE_MATRIX.md', type: 'file', description: '500+ use cases across 25+ industries', path: '../BrowserOS/USE_CASE_MATRIX.md' },
-                        {
-                            name: 'Research',
-                            type: 'folder',
-                            children: [
-                                { name: 'BrowserOS_Workflows_KnowledgeBase.md', type: 'file', description: 'Comprehensive workflows knowledge base', path: '../BrowserOS/Research/BrowserOS_Workflows_KnowledgeBase.md' },
-                                { name: 'ADVANCED_TECHNIQUES.md', type: 'file', description: 'Advanced and expert-level techniques', path: '../BrowserOS/Research/ADVANCED_TECHNIQUES.md' },
-                                { name: 'verify_kb_completeness.ps1', type: 'file', description: 'KB validation script', path: '../BrowserOS/Research/verify_kb_completeness.ps1' },
-                                { name: 'sources.json', type: 'file', description: 'Research sources tracking', path: '../BrowserOS/Research/sources.json' }
-                            ]
-                        },
-                        {
-                            name: 'Workflows',
-                            type: 'folder',
-                            children: [
-                                { name: 'README.md', type: 'file', description: 'Workflows library overview', path: '../BrowserOS/Workflows/README.md' },
-                                {
-                                    name: 'E-Commerce',
-                                    type: 'folder',
-                                    children: [
-                                        { name: 'README.md', type: 'file', description: 'E-commerce workflows', path: '../BrowserOS/Workflows/E-Commerce/README.md' },
-                                        { name: 'amazon_price_tracker.json', type: 'file', description: 'Amazon price tracking workflow', path: '../BrowserOS/Workflows/E-Commerce/amazon_price_tracker.json' }
-                                    ]
-                                },
-                                { name: 'Data-Extraction', type: 'folder', path: '../BrowserOS/Workflows/Data-Extraction/' },
-                                { name: 'Testing-QA', type: 'folder', path: '../BrowserOS/Workflows/Testing-QA/' },
-                                { name: 'Social-Media', type: 'folder', path: '../BrowserOS/Workflows/Social-Media/' },
-                                { name: 'Research-Monitoring', type: 'folder', path: '../BrowserOS/Workflows/Research-Monitoring/' },
-                                { name: 'CRM-Business', type: 'folder', path: '../BrowserOS/Workflows/CRM-Business/' },
-                                { name: 'Content-Creation', type: 'folder', path: '../BrowserOS/Workflows/Content-Creation/' },
-                                { name: 'API-Integration', type: 'folder', path: '../BrowserOS/Workflows/API-Integration/' },
-                                { name: 'Advanced-Techniques', type: 'folder', path: '../BrowserOS/Workflows/Advanced-Techniques/' },
-                                { name: 'Community-Contributed', type: 'folder', path: '../BrowserOS/Workflows/Community-Contributed/' }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: 'docs',
-                    type: 'folder',
-                    children: [
-                        { name: 'index.html', type: 'file', description: 'Main website homepage', path: 'index.html' },
-                        { name: 'repo-browser.html', type: 'file', description: 'Repository browser (this page)', path: 'repo-browser.html' },
-                        { name: 'styles.css', type: 'file', description: 'Website styles', path: 'styles.css' },
-                        { name: 'app.js', type: 'file', description: 'Website JavaScript', path: 'app.js' },
-                        { name: 'search-index.json', type: 'file', description: 'Search index data', path: 'search-index.json' }
-                    ]
-                },
-                {
-                    name: 'scripts',
-                    type: 'folder',
-                    children: [
-                        { name: 'workflow_generator.py', type: 'file', description: 'AI-powered workflow generation', path: '../scripts/workflow_generator.py' },
-                        { name: 'research_pipeline.py', type: 'file', description: 'Automated research pipeline', path: '../scripts/research_pipeline.py' },
-                        { name: 'validate_kb.py', type: 'file', description: 'Knowledge base validation', path: '../scripts/validate_kb.py' },
-                        { name: 'self_test.py', type: 'file', description: 'Self-test automation (42 tests)', path: '../scripts/self_test.py' },
-                        { name: 'security_scanner.py', type: 'file', description: 'Security vulnerability scanner', path: '../scripts/security_scanner.py' },
-                        { name: 'extract_claude_skills.py', type: 'file', description: 'Claude skills extraction', path: '../scripts/extract_claude_skills.py' },
-                        { name: 'repo_tracker.py', type: 'file', description: 'Repository tracking system', path: '../scripts/repo_tracker.py' },
-                        { name: 'generate_search_index.py', type: 'file', description: 'Search index generation', path: '../scripts/generate_search_index.py' },
-                        { name: 'agent_connectors.py', type: 'file', description: 'Universal agent connectors', path: '../scripts/agent_connectors.py' },
-                        { name: 'config_loader.py', type: 'file', description: 'Configuration management', path: '../scripts/config_loader.py' }
-                    ]
-                },
-                { name: 'README.md', type: 'file', description: 'Main repository README', path: '../README.md' },
-                { name: 'AUTOMATION_QUICKSTART.md', type: 'file', description: 'Quick start guide for automation', path: '../AUTOMATION_QUICKSTART.md' },
-                { name: 'DEPLOYMENT.md', type: 'file', description: 'Deployment guide (6 connection types)', path: '../DEPLOYMENT.md' },
-                { name: 'SECURITY-POLICY.md', type: 'file', description: 'Security policy and guidelines', path: '../SECURITY-POLICY.md' },
-                { name: 'SECURITY_AUDIT.md', type: 'file', description: 'Security audit report', path: '../SECURITY_AUDIT.md' },
-                { name: 'REPO_TRACKING.md', type: 'file', description: 'Repository tracking documentation', path: '../REPO_TRACKING.md' },
-                { name: 'COMPLETE_IMPLEMENTATION.md', type: 'file', description: 'Complete implementation details', path: '../COMPLETE_IMPLEMENTATION.md' },
-                { name: 'TRANSFORMATION_SUMMARY.md', type: 'file', description: 'Repository transformation summary', path: '../TRANSFORMATION_SUMMARY.md' },
-                { name: 'FINAL_SUMMARY.md', type: 'file', description: 'Final project summary', path: '../FINAL_SUMMARY.md' },
-                { name: 'config.yml', type: 'file', description: 'Main configuration (500+ parameters)', path: '../config.yml' },
-                { name: 'requirements.txt', type: 'file', description: 'Python dependencies', path: '../requirements.txt' },
-                { name: 'Dockerfile', type: 'file', description: 'Docker container definition', path: '../Dockerfile' },
-                { name: 'docker-compose.yml', type: 'file', description: 'Docker compose orchestration', path: '../docker-compose.yml' },
-                { name: '.env.template', type: 'file', description: 'Environment variables template', path: '../.env.template' },
-                { name: 'update_kb.ps1', type: 'file', description: 'PowerShell KB update script', path: '../update_kb.ps1' },
-                { name: 'LICENSE', type: 'file', description: 'MIT License', path: '../LICENSE' }
-            ]
-        };
+        // Configuration
+        const API_BASE_URL = window.location.protocol === 'file:' 
+            ? 'http://localhost:3100' 
+            : `${window.location.protocol}//${window.location.hostname}:3100`;
 
-        // Track statistics
-        let fileCount = 0;
-        let folderCount = 0;
-        let docCount = 0;
+        // State
+        let rootNode = null;
 
-        function countItems(node) {
-            if (node.type === 'folder') {
-                folderCount++;
-                if (node.children) {
-                    node.children.forEach(countItems);
+        // MCP Client Helper
+        async function callMcpTool(toolName, args = {}) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/mcp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tool: toolName, parameters: args })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`MCP Server Error: ${response.status} ${response.statusText}`);
                 }
-            } else {
-                fileCount++;
-                if (node.name.endsWith('.md') || node.name.endsWith('.html')) {
-                    docCount++;
+
+                const result = await response.json();
+                
+                if (!result.success && result.isError) {
+                    throw new Error(result.content?.[0]?.text || 'Unknown MCP error');
                 }
+                
+                // Parse the inner JSON content if it's a string (common pattern in our tools)
+                let data = result.data || result.content?.[0]?.text;
+                if (typeof data === 'string') {
+                    try {
+                        data = JSON.parse(data);
+                    } catch (e) {
+                        // Keep as string if not JSON
+                    }
+                }
+                
+                return data;
+            } catch (error) {
+                console.error(`MCP Tool Call Failed (${toolName}):`, error);
+                throw error;
             }
         }
 
-        function renderFileTree(node, container, level = 0, parentPath = '') {
-            if (!node.children) return;
+        // Initialize - Load Root
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadRepoStructure();
+            
+            // Search listener (simple filter for visible items)
+            document.getElementById('search-box').addEventListener('input', (e) => {
+               const searchTerm = e.target.value.toLowerCase();
+               const items = document.querySelectorAll('.file-tree-item');
+               items.forEach(item => {
+                   if (item.classList.contains('folder')) return; 
+                   const name = item.querySelector('span:last-child').textContent.toLowerCase();
+                   item.style.display = name.includes(searchTerm) ? 'flex' : 'none';
+               });
+            });
+        });
+
+        async function loadRepoStructure() {
+            const container = document.getElementById('file-tree-container');
+            container.innerHTML = '<div class="loading-spinner"></div> Loading local repository...';
+
+            try {
+                // Fetch root directory
+                const rootData = await callMcpTool('list_directory', { path: '' });
+                rootNode = rootData;
+                
+                updateStats(rootNode.children);
+
+                container.innerHTML = '';
+                renderFileTree(rootNode, container);
+                
+                updateGenerationInfo(new Date().toISOString());
+
+            } catch (error) {
+                container.innerHTML = `
+                    <div style="color: var(--danger-color); padding: 1rem;">
+                        <strong>⚠️ Local Server Error</strong><br>
+                        Could not pull file list from MCP server.<br>
+                        Ensure server is running: <code>npm run mcp-server</code><br>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+            }
+        }
+
+        function updateStats(children) {
+            // Count immediate children
+            const files = children.filter(c => c.type === 'file').length;
+            const folders = children.filter(c => c.type === 'folder').length;
+            
+            document.getElementById('file-count').textContent = files + '+';
+            document.getElementById('folder-count').textContent = folders + '+';
+        }
+
+        function renderFileTree(node, container, level = 0) {
+            if (!node || !node.children) return;
 
             node.children.forEach(child => {
                 const item = document.createElement('div');
-                const fullPath = parentPath ? `${parentPath}/${child.name}` : child.name;
+                item.className = `file-tree-item ${child.type === 'folder' ? 'folder' : 'file'}`;
+                item.style.paddingLeft = `${level * 20 + 12}px`;
+                item.setAttribute('role', 'button');
+                item.setAttribute('tabindex', '0');
                 
+                // Icon
+                const icon = document.createElement('span');
+                icon.className = 'icon';
+                icon.textContent = child.type === 'folder' ? '📁' : getFileIcon(child.name);
+                item.appendChild(icon);
+
+                // Name
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = child.name;
+                item.appendChild(nameSpan);
+
+                // Container for children (if folder)
+                let childrenContainer = null;
+
                 if (child.type === 'folder') {
-                    item.className = 'file-tree-item folder folder-toggle';
+                    item.classList.add('folder-toggle');
+                    childrenContainer = document.createElement('div');
+                    childrenContainer.className = 'folder-contents collapsed';
                     
-                    // Use safer DOM methods instead of innerHTML
-                    const iconSpan = document.createElement('span');
-                    iconSpan.className = 'icon';
-                    iconSpan.textContent = '📁';
-                    iconSpan.setAttribute('aria-hidden', 'true');
-                    
-                    const nameSpan = document.createElement('span');
-                    nameSpan.textContent = child.name;
-                    
-                    item.appendChild(iconSpan);
-                    item.appendChild(nameSpan);
-                    item.style.paddingLeft = `${level * 20 + 12}px`;
-                    item.setAttribute('role', 'button');
-                    item.setAttribute('aria-expanded', 'false');
-                    item.setAttribute('aria-label', `Folder: ${child.name}`);
-                    item.setAttribute('tabindex', '0');
-                    
-                    const folderContents = document.createElement('div');
-                    folderContents.className = 'folder-contents collapsed'; // Start collapsed to match aria-expanded="false"
-                    folderContents.setAttribute('role', 'group');
-                    
-                    const toggleFolder = (e) => {
+                    const toggle = async (e) => {
                         e.stopPropagation();
-                        folderContents.classList.toggle('collapsed');
-                        const isExpanded = !folderContents.classList.contains('collapsed');
-                        iconSpan.textContent = isExpanded ? '📂' : '📁';
-                        item.setAttribute('aria-expanded', isExpanded.toString());
+                        childrenContainer.classList.toggle('collapsed');
+                        const isExpanded = !childrenContainer.classList.contains('collapsed');
+                        icon.textContent = isExpanded ? '📂' : '📁';
+
+                        // Lazy Load if empty and expanding
+                        if (isExpanded && childrenContainer.children.length === 0) {
+                            await loadFolderContents(child, childrenContainer, level + 1);
+                        }
                     };
-                    
-                    item.addEventListener('click', toggleFolder);
-                    item.addEventListener('keydown', (e) => {
+
+                    item.onclick = toggle;
+                    item.onkeydown = (e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
-                            toggleFolder(e);
+                            toggle(e);
                         }
-                    });
-                    
-                    container.appendChild(item);
-                    container.appendChild(folderContents);
-                    renderFileTree(child, folderContents, level + 1, fullPath);
+                    };
+
                 } else {
-                    item.className = 'file-tree-item file';
-                    const icon = child.name.endsWith('.md') ? '📄' : 
-                                child.name.endsWith('.json') ? '📋' : 
-                                child.name.endsWith('.py') ? '🐍' : 
-                                child.name.endsWith('.yml') || child.name.endsWith('.yaml') ? '⚙️' : 
-                                child.name.endsWith('.html') ? '🌐' : 
-                                child.name.endsWith('.css') ? '🎨' : 
-                                child.name.endsWith('.js') ? '📜' : '📄';
-                    
-                    // Use safer DOM methods instead of innerHTML
-                    const iconSpan = document.createElement('span');
-                    iconSpan.className = 'icon';
-                    iconSpan.textContent = icon;
-                    iconSpan.setAttribute('aria-hidden', 'true');
-                    
-                    const nameSpan = document.createElement('span');
-                    nameSpan.textContent = child.name;
-                    
-                    item.appendChild(iconSpan);
-                    item.appendChild(nameSpan);
-                    item.style.paddingLeft = `${level * 20 + 12}px`;
-                    item.dataset.path = child.path || '';
-                    item.dataset.description = child.description || '';
-                    item.dataset.name = child.name;
-                    item.dataset.fullPath = fullPath;
-                    item.setAttribute('role', 'button');
-                    item.setAttribute('aria-label', `File: ${child.name}`);
-                    item.setAttribute('tabindex', '0');
-                    
-                    const selectFile = () => {
-                        document.querySelectorAll('.file-tree-item').forEach(el => 
-                            el.classList.remove('active'));
+                    // File click -> Preview
+                    const select = (e) => {
+                        e.stopPropagation();
+                        document.querySelectorAll('.file-tree-item').forEach(el => el.classList.remove('active'));
                         item.classList.add('active');
                         showFilePreview(child);
                     };
-                    
-                    item.addEventListener('click', selectFile);
-                    item.addEventListener('keydown', (e) => {
+
+                    item.onclick = select;
+                    item.onkeydown = (e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
-                            selectFile();
+                            select(e);
                         }
-                    });
-                    
-                    container.appendChild(item);
+                    };
+                }
+
+                container.appendChild(item);
+                if (childrenContainer) {
+                    container.appendChild(childrenContainer);
                 }
             });
         }
 
-        function showFilePreview(file) {
-            const preview = document.querySelector('.file-preview');
-            const githubUrl = `https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/blob/main/${file.path?.replace('../', '') || file.name}`;
-            const rawUrl = `https://raw.githubusercontent.com/Grumpified-OGGVCT/BrowserOS_Guides/main/${file.path?.replace('../', '') || file.name}`;
-            
-            // Clear existing content
-            preview.textContent = '';
-            
-            // Create preview header
-            const headerDiv = document.createElement('div');
-            headerDiv.className = 'preview-header';
-            
-            const titleDiv = document.createElement('div');
-            titleDiv.className = 'preview-title';
-            
-            const iconSpan = document.createElement('span');
-            iconSpan.textContent = getFileIcon(file.name);
-            iconSpan.setAttribute('aria-hidden', 'true');
-            
-            const fileName = document.createTextNode(file.name);
-            
-            titleDiv.appendChild(iconSpan);
-            titleDiv.appendChild(fileName);
-            
-            const metaDiv = document.createElement('div');
-            metaDiv.className = 'preview-meta';
-            
-            const locationSpan = document.createElement('span');
-            locationSpan.textContent = `📂 ${file.path?.split('/').slice(0, -1).join('/') || 'Root'}`;
-            
-            const typeSpan = document.createElement('span');
-            typeSpan.textContent = `📝 ${getFileType(file.name)}`;
-            
-            metaDiv.appendChild(locationSpan);
-            metaDiv.appendChild(typeSpan);
-            
-            headerDiv.appendChild(titleDiv);
-            headerDiv.appendChild(metaDiv);
-            
-            // Create preview content
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'preview-content';
-            
-            const descH2 = document.createElement('h2');
-            descH2.textContent = 'Description';
-            
-            const descP = document.createElement('p');
-            descP.textContent = file.description || 'No description available';
-            
-            const actionsH2 = document.createElement('h2');
-            actionsH2.textContent = 'Actions';
-            
-            const actionButtonsDiv = document.createElement('div');
-            actionButtonsDiv.className = 'action-buttons';
-            
-            // GitHub button
-            const githubLink = document.createElement('a');
-            githubLink.href = githubUrl;
-            githubLink.target = '_blank';
-            githubLink.rel = 'noopener noreferrer';
-            githubLink.className = 'btn-action btn-github';
-            githubLink.setAttribute('aria-label', 'View file on GitHub');
-            
-            const githubSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            githubSvg.setAttribute('width', '16');
-            githubSvg.setAttribute('height', '16');
-            githubSvg.setAttribute('viewBox', '0 0 16 16');
-            githubSvg.setAttribute('fill', 'currentColor');
-            githubSvg.setAttribute('role', 'img');
-            githubSvg.setAttribute('aria-label', 'GitHub logo');
-            
-            const githubPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            githubPath.setAttribute('d', 'M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z');
-            
-            githubSvg.appendChild(githubPath);
-            githubLink.appendChild(githubSvg);
-            githubLink.appendChild(document.createTextNode(' View on GitHub'));
-            
-            actionButtonsDiv.appendChild(githubLink);
-            
-            // View File button (only for docs folder)
-            if (file.path && !file.path.startsWith('../')) {
-                const viewFileLink = document.createElement('a');
-                viewFileLink.href = file.path;
-                viewFileLink.className = 'btn-action btn-raw';
-                viewFileLink.setAttribute('aria-label', 'View file content');
-                viewFileLink.textContent = '📄 View File';
-                actionButtonsDiv.appendChild(viewFileLink);
+        async function loadFolderContents(folderNode, container, level) {
+            const loadingItem = document.createElement('div');
+            loadingItem.className = 'file-tree-item';
+            loadingItem.style.paddingLeft = `${level * 20 + 12}px`;
+            loadingItem.style.color = 'var(--text-tertiary)';
+            loadingItem.innerHTML = 'All ⏳ Loading...';
+            container.appendChild(loadingItem);
+
+            try {
+                const data = await callMcpTool('list_directory', { path: folderNode.path });
+                loadingItem.remove();
+
+                // Update folder node with new children data
+                folderNode.children = data.children;
+                renderFileTree(folderNode, container, level);
+
+            } catch (error) {
+                loadingItem.innerHTML = `<span style="color: var(--danger-color)">⚠️ Error loading</span>`;
             }
+        }
+
+        async function showFilePreview(file) {
+            const previewContainer = document.querySelector('.file-preview');
             
-            // Download button
-            const downloadLink = document.createElement('a');
-            downloadLink.href = rawUrl;
-            downloadLink.target = '_blank';
-            downloadLink.rel = 'noopener noreferrer';
-            downloadLink.className = 'btn-action btn-raw';
-            downloadLink.setAttribute('aria-label', 'Download file');
-            downloadLink.textContent = '⬇️ Download';
-            
-            actionButtonsDiv.appendChild(downloadLink);
-            
-            // File Information
-            const infoH2 = document.createElement('h2');
-            infoH2.textContent = 'File Information';
-            
-            const infoUl = document.createElement('ul');
-            
-            const nameLi = document.createElement('li');
-            const nameStrong = document.createElement('strong');
-            nameStrong.textContent = 'Name:';
-            nameLi.appendChild(nameStrong);
-            nameLi.appendChild(document.createTextNode(' ' + file.name));
-            
-            const typeLi = document.createElement('li');
-            const typeStrong = document.createElement('strong');
-            typeStrong.textContent = 'Type:';
-            typeLi.appendChild(typeStrong);
-            typeLi.appendChild(document.createTextNode(' ' + getFileType(file.name)));
-            
-            const locationLi = document.createElement('li');
-            const locationStrong = document.createElement('strong');
-            locationStrong.textContent = 'Location:';
-            locationLi.appendChild(locationStrong);
-            locationLi.appendChild(document.createTextNode(' ' + (file.path || 'Root directory')));
-            
-            infoUl.appendChild(nameLi);
-            infoUl.appendChild(typeLi);
-            infoUl.appendChild(locationLi);
-            
-            // Add size if available
-            if (file.size !== undefined) {
-                const sizeLi = document.createElement('li');
-                const sizeStrong = document.createElement('strong');
-                sizeStrong.textContent = 'Size:';
-                sizeLi.appendChild(sizeStrong);
-                sizeLi.appendChild(document.createTextNode(' ' + formatFileSize(file.size)));
-                infoUl.appendChild(sizeLi);
+            // Clear previous content
+            previewContainer.innerHTML = `
+                <div class="preview-header">
+                    <div class="preview-title">
+                        <span>${getFileIcon(file.name)}</span>
+                        ${file.name}
+                    </div>
+                     <div class="preview-meta">
+                        <span>📂 ${file.path}</span>
+                        <span>📝 ${getFileType(file.name)}</span>
+                        <span>📊 ${formatSize(file.size || 0)}</span>
+                    </div>
+                </div>
+                <div class="preview-content">
+                    <div class="loading-spinner" style="margin: 2rem auto;"></div>
+                </div>
+            `;
+
+            try {
+                const data = await callMcpTool('read_file', { path: file.path });
+                const contentDiv = previewContainer.querySelector('.preview-content');
+                
+                const extension = file.name.split('.').pop().toLowerCase();
+                const imageExts = ['png', 'jpg', 'jpeg', 'gif', 'svg', 'ico'];
+                
+                if (imageExts.includes(extension)) {
+                    contentDiv.innerHTML = `
+                        <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                            <p>🖼️ Image Preview</p>
+                            <p>Binary file display not supported in text mode.</p>
+                        </div>
+                    `;
+                } else {
+                    // Escape HTML
+                    const safeContent = (data.content || '')
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;");
+
+                    contentDiv.innerHTML = `<pre><code>${safeContent}</code></pre>`;
+                }
+
+            } catch (error) {
+                const contentDiv = previewContainer.querySelector('.preview-content');
+                contentDiv.innerHTML = `
+                    <div style="padding: 2rem; color: var(--danger-color); text-align: center;">
+                        <h3>Unable to read file</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
             }
-            
-            // Add modified date if available
-            if (file.modified) {
-                const modifiedLi = document.createElement('li');
-                const modifiedStrong = document.createElement('strong');
-                modifiedStrong.textContent = 'Last Modified:';
-                modifiedLi.appendChild(modifiedStrong);
-                const modDate = new Date(file.modified);
-                modifiedLi.appendChild(document.createTextNode(' ' + modDate.toLocaleString()));
-                infoUl.appendChild(modifiedLi);
-            }
-            
-            // Assemble everything
-            contentDiv.appendChild(descH2);
-            contentDiv.appendChild(descP);
-            contentDiv.appendChild(actionsH2);
-            contentDiv.appendChild(actionButtonsDiv);
-            contentDiv.appendChild(infoH2);
-            contentDiv.appendChild(infoUl);
-            
-            preview.appendChild(headerDiv);
-            preview.appendChild(contentDiv);
         }
 
         function getFileIcon(filename) {
@@ -822,27 +644,11 @@
         }
 
         function getFileType(filename) {
-            // Handle files without extensions (e.g., Dockerfile, LICENSE)
-            if (!filename.includes('.')) {
-                return filename.charAt(0).toUpperCase() + filename.slice(1);
-            }
-            const ext = filename.split('.').pop().toUpperCase();
-            const types = {
-                'MD': 'Markdown Documentation',
-                'JSON': 'JSON Data',
-                'PY': 'Python Script',
-                'YML': 'YAML Configuration',
-                'YAML': 'YAML Configuration',
-                'HTML': 'HTML Document',
-                'CSS': 'Stylesheet',
-                'JS': 'JavaScript',
-                'PS1': 'PowerShell Script',
-                'TXT': 'Text File'
-            };
-            return types[ext] || ext + ' File';
+            if (!filename.includes('.')) return 'File';
+            return filename.split('.').pop().toUpperCase() + ' File';
         }
-        
-        function formatFileSize(bytes) {
+
+        function formatSize(bytes) {
             if (bytes === 0) return '0 Bytes';
             const k = 1024;
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -850,102 +656,22 @@
             return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
         }
 
-        // Search functionality
-        document.getElementById('search-box').addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const items = document.querySelectorAll('.file-tree-item.file');
-            
-            items.forEach(item => {
-                const name = item.dataset.name?.toLowerCase() || '';
-                const description = item.dataset.description?.toLowerCase() || '';
-                const fullPath = item.dataset.fullPath?.toLowerCase() || '';
-                
-                if (name.includes(searchTerm) || description.includes(searchTerm) || fullPath.includes(searchTerm)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-
-        // Load repository structure from JSON
-        async function loadRepoStructure() {
-            try {
-                const response = await fetch('repo-structure.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                
-                repoStructure = data.structure;
-                repoMetadata = {
-                    generated_at: data.generated_at,
-                    repository: data.repository,
-                    stats: data.stats
-                };
-                
-                console.log('✅ Loaded live repository structure:', repoMetadata);
-                
-                // Use actual stats from generated data
-                if (repoMetadata.stats) {
-                    document.getElementById('file-count').textContent = repoMetadata.stats.files;
-                    document.getElementById('folder-count').textContent = repoMetadata.stats.folders;
-                    document.getElementById('doc-count').textContent = repoMetadata.stats.docs;
-                }
-                
-                // Render the tree
-                const treeContainer = document.getElementById('file-tree-container');
-                treeContainer.innerHTML = '';
-                renderFileTree(repoStructure, treeContainer);
-                
-                // Add generation timestamp to page
-                updateGenerationInfo(data.generated_at);
-                
-            } catch (error) {
-                console.error('Failed to load repository structure:', error);
-                console.warn('⚠️ Falling back to static structure');
-                
-                // Fall back to static structure
-                repoStructure = fallbackStructure;
-                
-                // Calculate stats from fallback
-                countItems(repoStructure);
-                document.getElementById('file-count').textContent = fileCount;
-                document.getElementById('folder-count').textContent = folderCount;
-                document.getElementById('doc-count').textContent = docCount;
-                
-                // Render the tree
-                const treeContainer = document.getElementById('file-tree-container');
-                renderFileTree(repoStructure, treeContainer);
-            }
-        }
-        
         function updateGenerationInfo(timestamp) {
-            // Add a timestamp indicator to show when data was generated
             const browserHeader = document.querySelector('.browser-header');
-            if (browserHeader && timestamp) {
-                const genDate = new Date(timestamp);
-                const infoDiv = document.createElement('div');
-                infoDiv.style.cssText = 'margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-primary); font-size: 0.875rem; color: var(--text-secondary);';
-                
-                const generatedSpan = document.createElement('span');
-                generatedSpan.title = genDate.toLocaleString();
-                generatedSpan.textContent = `📊 Structure generated: ${genDate.toLocaleDateString()} at ${genDate.toLocaleTimeString()}`;
-                
-                const updatedSpan = document.createElement('span');
-                updatedSpan.style.marginLeft = '1rem';
-                updatedSpan.textContent = '🔄 Auto-updated by workflows';
-                
-                infoDiv.appendChild(generatedSpan);
-                infoDiv.appendChild(document.createTextNode(' '));
-                infoDiv.appendChild(updatedSpan);
-                
-                browserHeader.appendChild(infoDiv);
-            }
-        }
+            if (browserHeader.querySelector('.local-indicator')) return;
 
-        // Initialize - load structure on page load
-        document.addEventListener('DOMContentLoaded', loadRepoStructure);
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'local-indicator';
+            infoDiv.style.cssText = 'margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-primary); font-size: 0.875rem; color: var(--success-color); display: flex; align-items: center; gap: 0.5rem;';
+            
+            infoDiv.innerHTML = `
+                <span>🟢</span>
+                <strong>Live Local Connection</strong>
+                <span style="color: var(--text-secondary);">| Reading directly from disk via MCP</span>
+            `;
+            
+            browserHeader.appendChild(infoDiv);
+        }
     </script>
 </body>
 </html>

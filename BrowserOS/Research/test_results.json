@@ -1,32 +1,32 @@
 {
   "test_run": {
-    "timestamp": "2026-02-13T00:45:49.324172",
-    "duration_seconds": 0.092156,
+    "timestamp": "2026-02-13T09:17:52.277020",
+    "duration_seconds": 0.257214,
     "total_tests": 13,
-    "passed": 9,
-    "failed": 4,
+    "passed": 13,
+    "failed": 0,
     "fixed": 0
   },
   "results": {
     "C01_sections": "PASS",
     "C02_placeholders": "PASS",
     "C05_checksum": "PASS",
-    "search_index": "FAIL",
+    "search_index": "PASS",
     "website_html": "PASS",
     "website_css": "PASS",
-    "website_js": "FAIL",
+    "website_js": "PASS",
     "workflow_json": "PASS",
     "ollama_key": "PASS",
-    "openrouter_key": "FAIL",
+    "openrouter_key": "PASS",
     "github_actions": "PASS",
-    "doc_links": "FAIL",
+    "doc_links": "PASS",
     "python_syntax": "PASS"
   },
   "fixes_applied": [],
   "manual_review_needed": [
     {
       "test": "doc_links",
-      "issue": "Broken internal links: README.md -> ./MCP_SERVER_INTEGRATION.md, README.md -> CROSS_PLATFORM_SETUP.md, README.md -> WINDOWS_SETUP.md, README.md -> .github/workflows/README.md#-how-to-trigger-workflows, README.md -> WORKFLOW_VERIFICATION_REPORT.md",
+      "issue": "Broken internal links: QUICKSTART_MCP.md -> ./MCP_SERVER_INTEGRATION.md, MCP_AGENTIC_GUIDE.md -> BrowserOS_Workflows_KnowledgeBase.md, MCP_AGENTIC_GUIDE.md -> ADVANCED_TECHNIQUES.md, MCP_AGENTIC_GUIDE.md -> ../USE_CASE_MATRIX.md, MCP_AGENTIC_GUIDE.md -> ../Workflows/",
       "severity": "low",
       "suggested_fix": "Fix broken links in documentation"
     }

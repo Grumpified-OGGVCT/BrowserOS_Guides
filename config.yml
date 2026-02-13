@@ -37,7 +37,7 @@ OLLAMA:
   sdk:
     library: "ollama-python"
     host: "localhost:11434"
-    model: "kimi-k2.5:cloud"  # Kimi K2.5 via Ollama Cloud for workflow validation
+    model: "glm-5"  # GLM-5 for high-quality workflow generation
     options:
       temperature: 0.7
       top_p: 0.9

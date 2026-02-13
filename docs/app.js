@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeMobileMenu();
         initializeCategoryNavigation();
         initializeCopyButtons();
+        initializeSystemMonitor();
     } catch (error) {
         console.error('Initialization error:', error);
         // Display user-friendly error message
@@ -949,3 +950,143 @@ document.addEventListener('DOMContentLoaded', function() {
         this.style.boxShadow = 'var(--shadow-orange)';
     });
 });
+
+// ============================================================================
+// System Health Monitor
+// ============================================================================
+
+function initializeSystemMonitor() {
+    const dashboard = document.getElementById('system-status-board');
+    const staticStats = document.getElementById('static-stats-grid');
+    
+    if (!dashboard) return;
+
+    // Elements
+    const pingStatus = document.getElementById('global-status-ping');
+    const dotStatus = document.getElementById('global-status-dot');
+    const connectionStatus = document.getElementById('connection-status');
+    const lastUpdated = document.getElementById('last-updated');
+    
+    const cpuValue = document.getElementById('cpu-value');
+    const cpuBar = document.getElementById('cpu-bar');
+    const cpuDetail = document.getElementById('cpu-detail');
+    
+    const ramValue = document.getElementById('ram-value');
+    const ramBar = document.getElementById('ram-bar');
+    const ramDetail = document.getElementById('ram-detail');
+    
+    const diskValue = document.getElementById('disk-value');
+    const diskBar = document.getElementById('disk-bar');
+    const diskDetail = document.getElementById('disk-detail');
+    
+    const port3100Dot = document.getElementById('port-3100-dot');
+    const port9000Dot = document.getElementById('port-9000-dot');
+
+    // Dynamic API URL
+    const API_BASE_URL = window.location.protocol === 'file:' 
+        ? 'http://localhost:3100' 
+        : `${window.location.protocol}//${window.location.hostname}:3100`;
+
+    let isOffline = false;
+
+    async function fetchHealth() {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+            const response = await fetch(`${API_BASE_URL}/mcp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tool: 'system_health_check' }),
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            const result = await response.json();
+            
+            // Show dashboard, hide static stats on first successful load
+            if (dashboard.style.display === 'none') {
+                dashboard.style.display = 'block';
+                if (staticStats) staticStats.style.display = 'none';
+            }
+
+            // Parse valid data
+            if (result.success && result.data) {
+                const data = result.data;
+                updateUI(data);
+                setOnline(true);
+            } else {
+                setOnline(false);
+            }
+
+        } catch (error) {
+            setOnline(false);
+            // Don't log to console constantly to avoid noise
+            if (!isOffline) console.warn('System Health Check failed:', error);
+            isOffline = true;
+        }
+    }
+
+    function updateUI(data) {
+        // CPU
+        const cpu = parseFloat(data.cpu_load);
+        cpuValue.textContent = `${cpu.toFixed(1)}%`;
+        cpuBar.style.width = `${Math.min(cpu, 100)}%`;
+        cpuBar.style.background = cpu > 80 ? 'var(--error)' : (cpu > 60 ? 'var(--warning)' : 'var(--info)');
+        cpuDetail.textContent = `${data.process_count || '?'} processes`;
+
+        // RAM
+        const ramUsed = parseFloat(data.memory_used_gb);
+        const ramTotal = parseFloat(data.memory_total_gb);
+        const ramPercent = (ramUsed / ramTotal) * 100;
+        ramValue.textContent = `${ramPercent.toFixed(1)}%`;
+        ramBar.style.width = `${Math.min(ramPercent, 100)}%`;
+        ramDetail.textContent = `${ramUsed.toFixed(1)}GB / ${ramTotal.toFixed(1)}GB`;
+
+        // Disk
+        const diskFree = parseFloat(data.disk_c_free_gb);
+        const diskTotal = parseFloat(data.disk_c_total_gb);
+        const diskUsedPercent = 100 - ((diskFree / diskTotal) * 100);
+        diskValue.textContent = `${diskUsedPercent.toFixed(1)}%`;
+        diskBar.style.width = `${Math.min(diskUsedPercent, 100)}%`;
+        diskDetail.textContent = `${diskFree.toFixed(0)}GB free of ${diskTotal.toFixed(0)}GB`;
+
+        // Ports
+        updatePortStatus(port3100Dot, data.mcp_port_3100 === 'Listening');
+        updatePortStatus(port9000Dot, data.cdp_port_9000 === 'Listening');
+
+        lastUpdated.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+    }
+
+    function updatePortStatus(element, isListening) {
+        element.style.background = isListening ? 'var(--success)' : 'var(--error)';
+        element.style.boxShadow = isListening ? '0 0 8px var(--success)' : 'none';
+        element.title = isListening ? 'Listening' : 'Offline';
+    }
+
+    function setOnline(online) {
+        if (online) {
+            pingStatus.style.background = 'var(--success)';
+            dotStatus.style.background = 'var(--success)';
+            pingStatus.style.animation = 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite';
+            connectionStatus.textContent = 'Connected to MCP';
+            connectionStatus.style.color = 'var(--success)';
+        } else {
+            pingStatus.style.background = 'var(--error)';
+            dotStatus.style.background = 'var(--error)';
+            pingStatus.style.animation = 'none';
+            connectionStatus.textContent = 'Connection Lost';
+            connectionStatus.style.color = 'var(--error)';
+        }
+    }
+
+    // Initial fetch
+    fetchHealth();
+
+    // Poll every 5 seconds
+    setInterval(fetchHealth, 5000);
+}
+

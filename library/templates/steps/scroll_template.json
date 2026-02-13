@@ -1,0 +1,24 @@
+{
+  "type": "scroll",
+  "name": "Sample Scroll Step",
+  "description": "Scroll page or element",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-13T09:11:37.689303",
+    "parameters": [
+      {
+        "name": "selector",
+        "description": "Configuration for scroll"
+      },
+      {
+        "name": "direction",
+        "description": "Configuration for scroll"
+      },
+      {
+        "name": "amount",
+        "description": "Configuration for scroll"
+      }
+    ]
+  }
+}

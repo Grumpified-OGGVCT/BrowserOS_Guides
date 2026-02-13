@@ -1,0 +1,28 @@
+{
+  "type": "http",
+  "name": "Sample Http Step",
+  "description": "Make HTTP request (low-level)",
+  "_template_info": {
+    "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
+    "section": "Step Types Catalog",
+    "generated_at": "2026-02-13T09:11:37.709742",
+    "parameters": [
+      {
+        "name": "url",
+        "description": "Configuration for http"
+      },
+      {
+        "name": "method",
+        "description": "Configuration for http"
+      },
+      {
+        "name": "headers",
+        "description": "Configuration for http"
+      },
+      {
+        "name": "body",
+        "description": "Configuration for http"
+      }
+    ]
+  }
+}

@@ -43,7 +43,7 @@ def validate_sections() -> list:
     if not KB_PATH.exists():
         return ["Knowledge base file not found"]
     
-    content = KB_PATH.read_text()
+    content = KB_PATH.read_text(encoding='utf-8')
     
     # Extract H2 sections
     found_sections = re.findall(r'^##\s+(.+)$', content, re.MULTILINE)
@@ -63,7 +63,7 @@ def validate_placeholders() -> list:
     if not KB_PATH.exists():
         return ["Knowledge base file not found"]
     
-    content = KB_PATH.read_text()
+    content = KB_PATH.read_text(encoding='utf-8')
     
     for marker in PLACEHOLDER_MARKERS:
         if marker in content:
@@ -81,7 +81,7 @@ def validate_sources() -> list:
         return ["Sources manifest not found"]
     
     try:
-        sources = json.loads(SOURCES_PATH.read_text())
+        sources = json.loads(SOURCES_PATH.read_text(encoding='utf-8'))
         
         if not isinstance(sources, list):
             failures.append("Sources must be a list")
@@ -128,7 +128,7 @@ def validate_ground_truth() -> list:
     if not KB_PATH.exists():
         return ["Knowledge base file not found"]
     
-    kb_content = KB_PATH.read_text()
+    kb_content = KB_PATH.read_text(encoding='utf-8')
     
     # Extract step types from table format in KB
     # Format: | **step_name** | description | config | example |
@@ -146,7 +146,7 @@ def validate_ground_truth() -> list:
     # Try to validate against schema if available
     if LIBRARY_SCHEMA_PATH.exists():
         try:
-            schema = json.loads(LIBRARY_SCHEMA_PATH.read_text())
+            schema = json.loads(LIBRARY_SCHEMA_PATH.read_text(encoding='utf-8'))
             
             # Get valid step types from schema
             if 'definitions' in schema and 'step' in schema['definitions']:
@@ -183,7 +183,7 @@ def validate_ground_truth() -> list:
         found_in_source = set()
         for source_file in source_files[:50]:  # Limit to avoid performance issues
             try:
-                content = source_file.read_text(errors='ignore')
+                content = source_file.read_text(encoding='utf-8', errors='ignore')
                 for step_type in kb_step_types:
                     # Look for step type definitions (simplified pattern)
                     if f"'{step_type}'" in content or f'"{step_type}"' in content:

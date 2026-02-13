@@ -1,0 +1,30 @@
+Traceback (most recent call last):
+[09:09:57] [INFO] ============================================================
+[09:09:57] [INFO] Starting Comprehensive Self-Test
+[09:09:57] [INFO] ============================================================
+[09:09:57] [INFO] 
+--- Testing KB Completeness ---
+[09:09:57] [INFO] 
+--- Testing Search Index ---
+[09:09:57] [INFO] 
+--- Testing Website Assets ---
+[09:09:57] [INFO] 
+--- Testing Workflow Examples ---
+[09:09:57] [INFO] 
+--- Testing AI Integration ---
+  File "C:\Users\gerry\BrowserOS_Guides\BrowserOS_Guides\scripts\self_test.py", line 552, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\gerry\BrowserOS_Guides\BrowserOS_Guides\scripts\self_test.py", line 547, in main
+    success = tester.run_all_tests()
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\gerry\BrowserOS_Guides\BrowserOS_Guides\scripts\self_test.py", line 67, in run_all_tests
+    self.test_ai_integration()
+  File "C:\Users\gerry\BrowserOS_Guides\BrowserOS_Guides\scripts\self_test.py", line 332, in test_ai_integration
+    self.log("  \u2139\ufe0f  OLLAMA_API_KEY not set (this is optional)")
+  File "C:\Users\gerry\BrowserOS_Guides\BrowserOS_Guides\scripts\self_test.py", line 52, in log
+    print(f"[{timestamp}] [{level}] {message}")
+  File "C:\Users\gerry\AppData\Local\Programs\Python\Python312\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 20-21: character maps to <undefined>

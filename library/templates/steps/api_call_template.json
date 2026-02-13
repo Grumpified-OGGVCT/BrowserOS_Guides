@@ -1,11 +1,11 @@
 {
   "type": "api_call",
   "name": "Sample Api_Call Step",
-  "description": "Make HTTP request",
+  "description": "Make HTTP request (high-level)",
   "_template_info": {
     "generated_from": "BrowserOS_Workflows_KnowledgeBase.md",
     "section": "Step Types Catalog",
-    "generated_at": "2026-02-12T21:30:51.352979",
+    "generated_at": "2026-02-13T09:11:37.713552",
     "parameters": [
       {
         "name": "url",
