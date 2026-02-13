@@ -2,12 +2,12 @@
 
 ## Self-Test Found Issues Requiring Manual Review
 
-**Test Run:** 2026-02-12 21:57:04 UTC
+**Test Run:** 2026-02-13 00:45:49 UTC
 **Total Issues:** 1
 
 ### doc_links [LOW]
 
-**Issue:** Broken internal links: README.md -> .github/workflows/README.md#-how-to-trigger-workflows, MCP_AGENTIC_GUIDE.md -> BrowserOS_Workflows_KnowledgeBase.md, MCP_AGENTIC_GUIDE.md -> ADVANCED_TECHNIQUES.md, MCP_AGENTIC_GUIDE.md -> ../USE_CASE_MATRIX.md, MCP_AGENTIC_GUIDE.md -> ../Workflows/
+**Issue:** Broken internal links: README.md -> ./MCP_SERVER_INTEGRATION.md, README.md -> CROSS_PLATFORM_SETUP.md, README.md -> WINDOWS_SETUP.md, README.md -> .github/workflows/README.md#-how-to-trigger-workflows, README.md -> WORKFLOW_VERIFICATION_REPORT.md
 
 **Suggested Fix:** Fix broken links in documentation
 

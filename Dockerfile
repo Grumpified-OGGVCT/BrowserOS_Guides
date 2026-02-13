@@ -94,15 +94,23 @@ USER kbuser
 CMD ["python", "scripts/research_pipeline.py"]
 
 # ============================================================================
-# MCP Server stage (optional)
+# MCP Server stage
 # ============================================================================
 FROM node:18-slim as mcp-server
 
-WORKDIR /mcp
+WORKDIR /app
 
-# Install MCP server (placeholder - adjust based on actual MCP implementation)
-RUN npm install -g @modelcontextprotocol/server
+# Copy package.json and install dependencies (currently only built-in modules)
+COPY package.json ./
+COPY server/ ./server/
 
-EXPOSE 3000
+# Install any future npm dependencies
+# RUN npm install --production
 
-CMD ["mcp-server", "start"]
+# Create necessary directories
+RUN mkdir -p /app/BrowserOS /app/logs
+
+EXPOSE 3100
+
+# Run MCP server
+CMD ["node", "server/mcp-server.js"]
