@@ -17,9 +17,16 @@ import os
 from datetime import datetime
 import sys
 from dotenv import load_dotenv
+from utils.resilience import (
+    ResilientLogger, retry_with_backoff, validate_api_key,
+    safe_json_load, safe_file_write, resilient_request
+)
 
 # Load environment variables
 load_dotenv()
+
+# Initialize logger
+logger = ResilientLogger(__name__)
 
 # API Keys
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
@@ -58,7 +65,7 @@ MODEL_POOL = list(dict.fromkeys(MODEL_POOL))
 def get_active_tab_content(cdp_port):
     """Fetch title and url of active tab from Chrome/BrowserOS"""
     try:
-        response = requests.get(f"http://localhost:{cdp_port}/json")
+        response = requests.get(f"http://localhost:{cdp_port}/json", timeout=10)
         response.raise_for_status()
         tabs = response.json()
         
@@ -71,7 +78,7 @@ def get_active_tab_content(cdp_port):
                     "id": tab.get('id', '')
                 }
     except Exception as e:
-        print(f"[Error] CDP Connection failed: {e}", file=sys.stderr)
+        logger.error(f"CDP Connection failed: {e}")
     return None
 
 def score_relevance_with_pool(objective, content, initial_model=None):
@@ -104,14 +111,27 @@ def score_relevance_with_pool(objective, content, initial_model=None):
     Return ONLY a JSON object: {{"score": <int>, "reasoning": "<string>"}}
     """
 
-    for model in pool:
+    for attempt_idx, model in enumerate(pool):
         try:
+            # Add exponential backoff between model attempts (except first)
+            if attempt_idx > 0:
+                delay = min(2 ** (attempt_idx - 1), 4)  # 1s, 2s, 4s max
+                logger.info(f"Waiting {delay}s before trying next model...")
+                time.sleep(delay)
+            
             # Check if this is an OpenRouter model (contains / or matches configured model)
             is_openrouter = "/" in model or (env_openrouter and model == env_openrouter)
             
             if is_openrouter:
                 if not OPENROUTER_API_KEY or "your-openrouter-api-key" in OPENROUTER_API_KEY:
-                    print(f"[Warn] Skipping {model}: OpenRouter API key not set or is placeholder", flush=True)
+                    logger.warn(f"Skipping {model}: OpenRouter API key not set or is placeholder")
+                    continue
+                
+                # Validate API key format
+                try:
+                    validate_api_key(OPENROUTER_API_KEY, "OPENROUTER_API_KEY", allow_placeholder=False)
+                except ValueError as e:
+                    logger.warn(f"Skipping {model}: {e}")
                     continue
                 
                 response = requests.post(
@@ -152,35 +172,45 @@ def score_relevance_with_pool(objective, content, initial_model=None):
                 elif "```" in response_text:
                     response_text = response_text.split("```")[1].split("```")[0].strip()
                 
-                parsed = json.loads(response_text)
+                # Use safe JSON parsing with fallback
+                parsed = safe_json_load(
+                    response_text,
+                    default={"score": 0, "reasoning": "JSON parse failed"},
+                    logger=logger
+                )
                 return parsed.get('score', 0), parsed.get('reasoning', 'No reasoning provided'), model
             else:
-                print(f"[Warn] Model {model} failed with status {response.status_code}: {response.text}", flush=True)
+                logger.warn(f"Model {model} failed with status {response.status_code}: {response.text[:100]}")
                 
         except Exception as e:
-            print(f"[Warn] Model {model} error: {e}", flush=True)
+            logger.warn(f"Model {model} error: {e}")
             continue # Try next model
 
     return 0, "All models failed to score content", "failures"
 
 def update_status(status_data):
     """Write status to JSON file for MCP server to read"""
-    try:
-        os.makedirs(os.path.dirname(STATUS_FILE), exist_ok=True)
-        with open(STATUS_FILE, 'w') as f:
-            json.dump(status_data, f, indent=2)
-    except Exception as e:
-        print(f"[Error] Failed to write status file: {e}", file=sys.stderr)
+    success = safe_file_write(
+        STATUS_FILE,
+        json.dumps(status_data, indent=2),
+        mode='w',
+        create_dirs=True,
+        logger=logger
+    )
+    if not success:
+        logger.error(f"Failed to write status file: {STATUS_FILE}")
 
 def log_telemetry(data):
     """Append structured telemetry to a log file"""
-    try:
-        os.makedirs(os.path.dirname(TELEMETRY_FILE), exist_ok=True)
-        # We append JSON lines for easier parsing later
-        with open(TELEMETRY_FILE, 'a', encoding='utf-8') as f:
-            f.write(json.dumps(data) + "\n")
-    except Exception as e:
-        print(f"[Error] Failed to write telemetry: {e}", file=sys.stderr)
+    success = safe_file_write(
+        TELEMETRY_FILE,
+        json.dumps(data) + "\n",
+        mode='a',
+        create_dirs=True,
+        logger=logger
+    )
+    if not success:
+        logger.warn(f"Failed to write telemetry to {TELEMETRY_FILE}")
 
 def main():
     parser = argparse.ArgumentParser(description="Semantic Bridge Monitor")
@@ -196,10 +226,10 @@ def main():
     if not primary_model:
         primary_model = env_openrouter or env_ollama or "llama3"
 
-    print(f"Starting Semantic Bridge Monitor (Enhanced)...", flush=True)
-    print(f"Objective: {args.objective}", flush=True)
-    print(f"Target: CDP Port {args.port}", flush=True)
-    print(f"Model Strategy: {primary_model} -> Fallback Pool", flush=True)
+    logger.info(f"Starting Semantic Bridge Monitor (Enhanced)...")
+    logger.info(f"Objective: {args.objective}")
+    logger.info(f"Target: CDP Port {args.port}")
+    logger.info(f"Model Strategy: {primary_model} -> Fallback Pool")
     
     while True:
         timestamp = datetime.now().isoformat()
@@ -222,10 +252,10 @@ def main():
                 "status": decision
             }
             
-            print(f"[{timestamp}] Score: {score}/100 ({model_used}) - {decision} - {content['title'][:50]}...", flush=True)
+            logger.info(f"[{timestamp}] Score: {score}/100 ({model_used}) - {decision} - {content['title'][:50]}...")
             
             if score < 40:
-                print(f"   DRIFT WARNING: {reasoning}", flush=True)
+                logger.warn(f"   DRIFT WARNING: {reasoning}")
             
             # Telemetry Data
             telemetry_entry = {
@@ -240,25 +270,28 @@ def main():
             
             # Auto-KB Update for high relevance
             if score >= 80:
-                try:
-                    t_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    kb_entry = f"\n\n## Insight Captured: {content['title']} ({t_now})\n" \
-                               f"- **Source**: {content['url']}\n" \
-                               f"- **Relevance**: {score}/100\n" \
-                               f"- **Context**: {reasoning}\n" \
-                               f"- **Objective**: {args.objective}\n" \
-                               f"- **Model**: {model_used}\n"
-                    
-                    os.makedirs(os.path.dirname(KB_FILE), exist_ok=True)
-                    with open(KB_FILE, 'a', encoding='utf-8') as kb:
-                        kb.write(kb_entry)
-                    print(f"   [+] Saved insight to knowledge_base.md", flush=True)
-                    
+                t_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                kb_entry = f"\n\n## Insight Captured: {content['title']} ({t_now})\n" \
+                           f"- **Source**: {content['url']}\n" \
+                           f"- **Relevance**: {score}/100\n" \
+                           f"- **Context**: {reasoning}\n" \
+                           f"- **Objective**: {args.objective}\n" \
+                           f"- **Model**: {model_used}\n"
+                
+                success = safe_file_write(
+                    KB_FILE,
+                    kb_entry,
+                    mode='a',
+                    create_dirs=True,
+                    logger=logger
+                )
+                
+                if success:
+                    logger.info(f"   [+] Saved insight to knowledge_base.md")
                     status["kb_update"] = "Insight saved"
                     telemetry_entry["decision"] = "SAVED_TO_KB"
-                    
-                except Exception as e:
-                    print(f"   [!] Failed to update KB: {e}", file=sys.stderr)
+                else:
+                    logger.error(f"   [!] Failed to update KB: {KB_FILE}")
             
             # Log Telemetry
             log_telemetry(telemetry_entry)
@@ -271,7 +304,7 @@ def main():
                 "error": "Could not fetch browser content",
                 "status": "DISCONNECTED"
             }
-            print(f"[{timestamp}] CDP Disconnected", flush=True)
+            logger.warn(f"[{timestamp}] CDP Disconnected")
 
         update_status(status)
         time.sleep(args.interval)
