@@ -271,12 +271,20 @@ def main():
     
     args = parser.parse_args()
     
-    success = generate_repo_structure(args.repo_root, args.output)
-    
-    if not success:
-        exit(1)
-    
-    print("\n✨ Repository structure ready for browser!")
+    try:
+        success = generate_repo_structure(args.repo_root, args.output)
+        
+        if not success:
+            sys.exit(1)
+        
+        print("\n✨ Repository structure ready for browser!")
+        sys.exit(0)
+    except KeyboardInterrupt:
+        print("\nStructure generation interrupted by user")
+        sys.exit(0)
+    except Exception as e:
+        print(f"Error generating repository structure: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == '__main__':

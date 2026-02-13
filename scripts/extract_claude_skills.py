@@ -348,15 +348,24 @@ def main():
     
     args = parser.parse_args()
     
-    extractor = SkillExtractor(verbose=args.verbose)
-    
-    if not args.dry_run:
-        count = extractor.extract_all_skills()
-        print(f"\n✓ Successfully extracted {count} skills to {EXTRACTED_DIR}")
+    try:
+        extractor = SkillExtractor(verbose=args.verbose)
+        
+        if not args.dry_run:
+            count = extractor.extract_all_skills()
+            print(f"\n✓ Successfully extracted {count} skills to {EXTRACTED_DIR}")
+            return 0
+        else:
+            print("Dry run - no files created")
+            return 0
+    except KeyboardInterrupt:
+        print("\nSkill extraction interrupted by user")
         return 0
-    else:
-        print("Dry run - no files created")
-        return 0
+    except Exception as e:
+        print(f"Error extracting skills: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
+        return 1
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -485,6 +485,15 @@ echo.
 pause
 
 python scripts\config_manager.py
+if errorlevel 1 (
+    echo.
+    echo ERROR: Configuration manager encountered an error
+    pause
+) else (
+    echo.
+    echo Configuration updated successfully
+    pause
+)
 goto MAIN_MENU
 
 REM ============================================================================

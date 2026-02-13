@@ -541,14 +541,15 @@ class LibraryGenerator:
 
 def main():
     """Main entry point"""
+    logger = ResilientLogger(__name__)
     try:
         generator = LibraryGenerator()
         generator.run()
+        sys.exit(0)
     except KeyboardInterrupt:
-        logger = ResilientLogger(__name__)
         logger.warn("Library generation interrupted by user")
+        sys.exit(0)
     except Exception as e:
-        logger = ResilientLogger(__name__)
         logger.critical(
             f"Fatal error in library generation: {e}",
             exc_info=True
@@ -557,7 +558,7 @@ def main():
             "Action: Check the error traceback above for details. "
             "Ensure all paths are correctly configured and dependencies are installed."
         )
-        raise
+        sys.exit(1)
 
 
 if __name__ == "__main__":

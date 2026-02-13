@@ -310,4 +310,12 @@ def main():
         time.sleep(args.interval)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+        sys.exit(0)
+    except KeyboardInterrupt:
+        logger.info("Watchtower stopped by user")
+        sys.exit(0)
+    except Exception as e:
+        logger.error(f"Watchtower encountered an error: {e}")
+        sys.exit(1)

@@ -220,8 +220,16 @@ class ProvenanceTracker:
 
 def main():
     """Main entry point"""
-    tracker = ProvenanceTracker()
-    tracker.run()
+    try:
+        tracker = ProvenanceTracker()
+        tracker.run()
+        sys.exit(0)
+    except KeyboardInterrupt:
+        print("\nProvenance build interrupted by user")
+        sys.exit(0)
+    except Exception as e:
+        print(f"Error building provenance index: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
