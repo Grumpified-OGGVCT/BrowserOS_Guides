@@ -1,10 +1,10 @@
 {
   "test_run": {
-    "timestamp": "2026-02-12T21:57:04.762698",
-    "duration_seconds": 0.084606,
+    "timestamp": "2026-02-13T00:45:49.324172",
+    "duration_seconds": 0.092156,
     "total_tests": 13,
-    "passed": 10,
-    "failed": 3,
+    "passed": 9,
+    "failed": 4,
     "fixed": 0
   },
   "results": {
@@ -14,7 +14,7 @@
     "search_index": "FAIL",
     "website_html": "PASS",
     "website_css": "PASS",
-    "website_js": "PASS",
+    "website_js": "FAIL",
     "workflow_json": "PASS",
     "ollama_key": "PASS",
     "openrouter_key": "FAIL",
@@ -26,7 +26,7 @@
   "manual_review_needed": [
     {
       "test": "doc_links",
-      "issue": "Broken internal links: README.md -> .github/workflows/README.md#-how-to-trigger-workflows, MCP_AGENTIC_GUIDE.md -> BrowserOS_Workflows_KnowledgeBase.md, MCP_AGENTIC_GUIDE.md -> ADVANCED_TECHNIQUES.md, MCP_AGENTIC_GUIDE.md -> ../USE_CASE_MATRIX.md, MCP_AGENTIC_GUIDE.md -> ../Workflows/",
+      "issue": "Broken internal links: README.md -> ./MCP_SERVER_INTEGRATION.md, README.md -> CROSS_PLATFORM_SETUP.md, README.md -> WINDOWS_SETUP.md, README.md -> .github/workflows/README.md#-how-to-trigger-workflows, README.md -> WORKFLOW_VERIFICATION_REPORT.md",
       "severity": "low",
       "suggested_fix": "Fix broken links in documentation"
     }

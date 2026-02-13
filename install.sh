@@ -78,7 +78,7 @@ main() {
     echo
 
     # Check Python installation
-    echo "[1/6] Checking Python installation..."
+    echo "[1/8] Checking Python installation..."
     
     if command -v python3 &> /dev/null; then
         PYTHON_CMD="python3"
