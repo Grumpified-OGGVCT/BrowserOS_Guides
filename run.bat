@@ -86,38 +86,40 @@ echo ===========================================================================
 echo.
 echo What would you like to do?
 echo.
-echo   1. Start MCP Server (Port 3100)
-echo   2. Update Knowledge Base (research pipeline)
-echo   3. Run Self-Test
-echo   4. Validate Knowledge Base
-echo   5. Monitor WhatsApp Integration
-echo   6. Generate Library Artifacts
-echo   7. Build Provenance Index
-echo   8. Generate Workflow
-echo   9. Extract Claude Skills
-echo   A. Generate Repository Structure
-echo   B. Security Scan
-echo   C. Check for and Install System Updates
-echo   D. Configure Settings
-echo   E. View Documentation
+echo   1. Configure Settings
+echo   2. Check for and Install System Updates
+echo   3. Start MCP Server (Port 3100)
+echo   4. Launch Watchtower (Evolution Monitor)
+echo   5. Update Knowledge Base (research pipeline)
+echo   6. Run Self-Test
+echo   7. Validate Knowledge Base
+echo   8. Generate Library Artifacts
+echo   9. Workflow Generator
+echo   A. Monitor WhatsApp Integration
+echo   B. Build Provenance Index
+echo   C. Security Scan
+echo   D. Generate Repository Structure
+echo   E. Extract Claude Skills
+echo   F. View Documentation
 echo   0. Exit
 echo.
-set /p CHOICE="Enter your choice [0-9,A-E]: "
+set /p CHOICE="Enter your choice [0-9,A-F]: "
 
-if "%CHOICE%"=="1" goto START_MCP
-if "%CHOICE%"=="2" goto UPDATE_KB
-if "%CHOICE%"=="3" goto SELF_TEST
-if "%CHOICE%"=="4" goto VALIDATE_KB
-if "%CHOICE%"=="5" goto MONITOR_WHATSAPP
-if "%CHOICE%"=="6" goto GEN_LIBRARY
-if "%CHOICE%"=="7" goto BUILD_PROVENANCE
-if "%CHOICE%"=="8" goto WORKFLOW_GEN
-if "%CHOICE%"=="9" goto EXTRACT_SKILLS
-if /i "%CHOICE%"=="A" goto GEN_STRUCTURE
-if /i "%CHOICE%"=="B" goto SECURITY_SCAN
-if /i "%CHOICE%"=="C" goto CHECK_UPDATES
-if /i "%CHOICE%"=="D" goto CONFIGURE
-if /i "%CHOICE%"=="E" goto DOCUMENTATION
+if "%CHOICE%"=="1" goto CONFIGURE
+if "%CHOICE%"=="2" goto CHECK_UPDATES
+if "%CHOICE%"=="3" goto START_MCP
+if "%CHOICE%"=="4" goto WATCHTOWER
+if "%CHOICE%"=="5" goto UPDATE_KB
+if "%CHOICE%"=="6" goto SELF_TEST
+if "%CHOICE%"=="7" goto VALIDATE_KB
+if "%CHOICE%"=="8" goto GEN_LIBRARY
+if "%CHOICE%"=="9" goto WORKFLOW_GEN
+if /i "%CHOICE%"=="A" goto MONITOR_WHATSAPP
+if /i "%CHOICE%"=="B" goto BUILD_PROVENANCE
+if /i "%CHOICE%"=="C" goto SECURITY_SCAN
+if /i "%CHOICE%"=="D" goto GEN_STRUCTURE
+if /i "%CHOICE%"=="E" goto EXTRACT_SKILLS
+if /i "%CHOICE%"=="F" goto DOCUMENTATION
 if "%CHOICE%"=="0" goto EXIT
 
 echo Invalid choice. Please try again.
@@ -418,6 +420,31 @@ if errorlevel 1 (
     echo SUCCESS: No critical security issues found
     pause
 )
+goto MAIN_MENU
+
+REM ============================================================================
+REM Launch Watchtower
+REM ============================================================================
+:WATCHTOWER
+cls
+echo ================================================================================
+echo    The Watchtower (Semantic Bridge Monitor)
+echo ================================================================================
+echo.
+echo Launching Real-time Learning ^& Healing Monitor...
+echo - Monitoring active browser tab
+echo - Detecting drift from objective
+echo - Capturing autonomous insights for Knowledge Base
+echo.
+set /p OBJ="Enter your current research objective: "
+if "%OBJ%"=="" set OBJ="General BrowserOS Research"
+
+echo.
+echo Starting Watchtower with Objective: "%OBJ%"
+echo.
+
+python scripts\semantic_bridge.py --objective "%OBJ%"
+pause
 goto MAIN_MENU
 
 REM ============================================================================

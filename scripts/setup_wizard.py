@@ -382,35 +382,52 @@ Configure how to connect to each service:
         print_success("Connection modes configured")
     
     def configure_models(self):
-        """Configure AI models"""
-        print_section("Step 4: Model Selection")
+        """Configure AI models with cascading fallback (Swarm -> FB1 -> FB2)"""
+        print_section("Step 4: Tiered Model Selection")
         
         print("""
-Select which AI models to use for analysis:
+Select your primary reasoning strategy and cascading fallbacks:
 
-Ollama Cloud Models:
-  • kimi-k2.5:cloud - Kimi K2.5 (recommended for workflow validation)
-  • llama2 - Meta Llama 2
-  • codellama - Code Llama (optimized for code)
+  1. Primary Strategy - Can be 'Swarm Mode' (dynamic routing) or a static model.
+  2. First Fallback  - Static model used if primary fails.
+  3. Second Fallback - Final static model used if all else fails.
 
-OpenRouter Models:
-  • anthropic/claude-3-sonnet - Claude 3 Sonnet (recommended)
-  • anthropic/claude-3-opus - Claude 3 Opus (most capable)
-  • openai/gpt-4-turbo - GPT-4 Turbo
-  • meta-llama/llama-3-70b - Llama 3 70B
+Note: Signify frontier models with size/cloud tags (e.g., ':cloud', ':123b-cloud').
 """)
         
-        # Ollama Model
-        current = self.config.get('OLLAMA_MODEL', 'kimi-k2.5:cloud')
-        model = get_input("Ollama model", default=current)
-        self.config['OLLAMA_MODEL'] = model
+        # Swarm Toggle
+        print("--- Mode Toggle ---")
+        use_swarm = yes_no("Enable Swarm Mode as primary logic?", 
+                          default=(self.config.get("USE_SWARM", "true").lower() == "true"))
+        self.config["USE_SWARM"] = "true" if use_swarm else "false"
         
-        # OpenRouter Model
-        current = self.config.get('OPENROUTER_MODEL', 'anthropic/claude-3-sonnet')
-        model = get_input("OpenRouter model", default=current)
-        self.config['OPENROUTER_MODEL'] = model
+        if use_swarm:
+            self.config["PRIMARY_MODEL"] = "swarm"
+            print_success("Primary strategy: AGENT SWARM")
+        else:
+            current_p = self.config.get("PRIMARY_MODEL", "glm-5:cloud")
+            if current_p == "swarm": current_p = "glm-5:cloud"
+            p = get_input("Static Primary Model", default=current_p)
+            self.config["PRIMARY_MODEL"] = p
+            print_success(f"Primary model: {p}")
+
+        # Fallback 1
+        print("\n--- First Fallback (Tier 2/Ollama Cloud) ---")
+        current_fb1 = self.config.get("FALLBACK_MODEL_1", "deepseek-v3.2:cloud")
+        fb1 = get_input("1st Fallback Model", default=current_fb1)
+        self.config["FALLBACK_MODEL_1"] = fb1
         
-        print_success("Models configured")
+        # Fallback 2
+        print("\n--- Second Fallback (Tier 3/OpenRouter) ---")
+        current_fb2 = self.config.get("FALLBACK_MODEL_2", "anthropic/claude-3-sonnet")
+        fb2 = get_input("2nd Fallback Model", default=current_fb2)
+        self.config["FALLBACK_MODEL_2"] = fb2
+
+        # Support old logic
+        self.config["OLLAMA_MODEL"] = self.config["PRIMARY_MODEL"]
+        self.config["OPENROUTER_MODEL"] = fb2
+        
+        print_success("Tiered model routing configured")
     
     def configure_research_options(self):
         """Configure research pipeline options"""

@@ -175,7 +175,7 @@ Expected response:
 
 ## Next Steps
 
-- Read [MCP_SERVER_INTEGRATION.md](./MCP_SERVER_INTEGRATION.md) for full API documentation
+- Read [MCP_SERVER_INTEGRATION.md](build-docs/02-implementation/MCP_SERVER_INTEGRATION.md) for full API documentation
 - Read [ARCHITECTURE.md](./ARCHITECTURE.md) for system design details
 - Browse [library/templates/](./library/templates/) for workflow templates
 - Check [BrowserOS/ANTI_PATTERNS_AND_CONSTRAINTS.md](./BrowserOS/ANTI_PATTERNS_AND_CONSTRAINTS.md) for limitations

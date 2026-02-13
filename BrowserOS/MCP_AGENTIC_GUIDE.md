@@ -886,12 +886,12 @@ except BrowserError as e:
 ### **Get Started**
 1. **Quick Start**: [AUTOMATION_QUICKSTART.md](../AUTOMATION_QUICKSTART.md)
 2. **Deployment**: [DEPLOYMENT.md](../DEPLOYMENT.md)
-3. **Core KB**: [BrowserOS_Workflows_KnowledgeBase.md](BrowserOS_Workflows_KnowledgeBase.md)
+3. **Core KB**: [BrowserOS_Workflows_KnowledgeBase.md](Research/BrowserOS_Workflows_KnowledgeBase.md)
 
 ### **Advanced**
-1. **Advanced Techniques**: [ADVANCED_TECHNIQUES.md](ADVANCED_TECHNIQUES.md)
-2. **Use Cases**: [USE_CASE_MATRIX.md](../USE_CASE_MATRIX.md)
-3. **Workflow Library**: [Workflows](../Workflows/)
+1. **Advanced Techniques**: [ADVANCED_TECHNIQUES.md](Research/ADVANCED_TECHNIQUES.md)
+2. **Use Cases**: [USE_CASE_MATRIX.md](USE_CASE_MATRIX.md)
+3. **Workflow Library**: [Workflows](Workflows/)
 
 ### **Community**
 - GitHub Discussions

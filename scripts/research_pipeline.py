@@ -11,7 +11,17 @@ import os
 import sys
 import json
 import requests
+from dotenv import load_dotenv
 from datetime import datetime
+
+# Force UTF-8 encoding for Windows console
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
+# Load environment variables
+load_dotenv()
+
 from pathlib import Path
 from typing import List, Dict, Any
 import hashlib
@@ -53,21 +63,24 @@ class AIResearcher:
     """AI-powered research assistant using Ollama and OpenRouter"""
     
     def __init__(self):
-        self.ollama_url = "https://api.ollama.ai/v1/chat/completions"
+        # Use local Ollama instance by default
+        self.ollama_url = "http://localhost:11434/v1/chat/completions"
         self.openrouter_url = "https://openrouter.ai/api/v1/chat/completions"
+        print(f"DEBUG: OpenRouter URL: {self.openrouter_url}")
         self.session = requests.Session()
     
-    def query_ollama(self, prompt: str, model: str = "llama2") -> str:
+    def query_ollama(self, prompt: str, model: str = "llama3") -> str:
         """Query Ollama API for research"""
-        if not OLLAMA_API_KEY:
-            print("⚠️ Ollama API key not configured, skipping...")
-            return ""
+        # For local Ollama, we don't strictly need a key, even if env var has a placeholder
         
         try:
             headers = {
-                "Authorization": f"Bearer {OLLAMA_API_KEY}",
                 "Content-Type": "application/json"
             }
+            
+            # valid key check
+            if OLLAMA_API_KEY and "your-ollama-api-key" not in OLLAMA_API_KEY:
+                 headers["Authorization"] = f"Bearer {OLLAMA_API_KEY}"
             
             data = {
                 "model": model,
@@ -91,9 +104,9 @@ class AIResearcher:
             print(f"❌ Ollama API error: {e}")
             return ""
     
-    def query_openrouter(self, prompt: str, model: str = "anthropic/claude-3-sonnet") -> str:
+    def query_openrouter(self, prompt: str, model: str = "x-ai/grok-4.1-fast") -> str:
         """Query OpenRouter API for enhanced research"""
-        if not OPENROUTER_API_KEY:
+        if not OPENROUTER_API_KEY or "your-openrouter-api-key" in OPENROUTER_API_KEY:
             print("⚠️ OpenRouter API key not configured, skipping...")
             return ""
         
@@ -124,7 +137,12 @@ class AIResearcher:
             return result.get("choices", [{}])[0].get("message", {}).get("content", "")
         
         except Exception as e:
-            print(f"❌ OpenRouter API error: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                print(f"❌ OpenRouter API error: {e}")
+                print(f"🔍 Response body: {e.response.text}")
+            else:
+                print(f"❌ OpenRouter API error: {e}")
+
             return ""
 
 

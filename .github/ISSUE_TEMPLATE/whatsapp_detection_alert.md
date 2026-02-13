@@ -45,10 +45,10 @@ The WhatsApp Integration Monitor found matching code, commits, branches, or issu
 
 ## 🔗 Resources
 
-- **Monitoring Report**: [WHATSAPP_WATCH_REPORT.md](../WHATSAPP_WATCH_REPORT.md)
-- **WhatsApp Schemas**: [library/schemas/whatsapp/whatsapp_tools.json](../library/schemas/whatsapp/whatsapp_tools.json)
-- **Workflow Templates**: [BrowserOS/Workflows/Communication/](../BrowserOS/Workflows/Communication/)
-- **Integration Guide**: [WHATSAPP_INTEGRATION_READINESS.md](../WHATSAPP_INTEGRATION_READINESS.md)
+- **Monitoring Report**: [WHATSAPP_WATCH_REPORT.md](../../WHATSAPP_WATCH_REPORT.md)
+- **WhatsApp Schemas**: [library/schemas/whatsapp/whatsapp_tools.json](../../library/schemas/whatsapp/whatsapp_tools.json)
+- **Workflow Templates**: [BrowserOS/Workflows/Communication/](../../BrowserOS/Workflows/Communication/)
+- **Integration Guide**: [WHATSAPP_INTEGRATION_READINESS.md](../../build-docs/07-whatsapp-monitoring/WHATSAPP_INTEGRATION_READINESS.md)
 
 ## ⏰ Timeline
 

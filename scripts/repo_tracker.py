@@ -19,6 +19,10 @@ except ImportError:
     GITHUB_AVAILABLE = False
     print("⚠️ PyGithub not installed. Install with: pip install PyGithub")
 
+from dotenv import load_dotenv
+load_dotenv()
+
+
 
 @dataclass
 class RepoState:
@@ -61,12 +65,26 @@ class GitHubRepoTracker:
             return
         
         github_token = os.getenv("GITHUB_TOKEN")
-        if not github_token:
-            print("⚠️ GITHUB_TOKEN not set - using public API (limited rate)")
-            self.github = Github()
-        else:
-            self.github = Github(github_token)
         
+        # Check for placeholder or empty token
+        if not github_token or "your-github-token" in github_token:
+            print("⚠️ GITHUB_TOKEN not set or invalid - using public API (limited rate)")
+            self.github = Github()
+            self._connect_to_repo()
+            return
+
+        # Try authenticated first
+        try:
+            self.github = Github(github_token)
+            self._connect_to_repo()
+        except Exception as e:
+            print(f"⚠️ Authenticated connection failed: {e}")
+            print("🔄 Falling back to public API...")
+            self.github = Github()
+            self._connect_to_repo()
+
+    def _connect_to_repo(self):
+        """Helper to connect to the specific repository"""
         try:
             self.repo = self.github.get_repo(self.repo_name)
             print(f"✓ Connected to {self.repo_name}")
@@ -75,7 +93,6 @@ class GitHubRepoTracker:
             error_msg = str(e) if hasattr(e, '__str__') else type(e).__name__
             print(f"❌ Failed to connect to {self.repo_name}: {error_msg}")
             print("   This may be due to rate limiting or network issues.")
-            print("   Set GITHUB_TOKEN environment variable for higher rate limits.")
             self.repo = None
     
     def load_state(self) -> RepoState:

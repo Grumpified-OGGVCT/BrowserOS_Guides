@@ -576,8 +576,8 @@ clients. Schedule at optimal times for each platform. Track engagement."
       // Auto-discovered during scan
     ],
     "xss_payloads": [
-      "<script>alert('XSS')</script>",
-      "<img src=x onerror=alert('XSS')>",
+      "&lt;script&gt;alert('XSS')&lt;/script&gt;",
+      "&lt;img src=x onerror=alert('XSS')&gt;",
       "javascript:alert('XSS')"
       // 50+ payload variations
     ]
