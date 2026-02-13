@@ -104,7 +104,7 @@ class AIResearcher:
             print(f"❌ Ollama API error: {e}")
             return ""
     
-    def query_openrouter(self, prompt: str, model: str = "google/gemini-2.0-flash-001") -> str:
+    def query_openrouter(self, prompt: str, model: str = "x-ai/grok-4.1-fast") -> str:
         """Query OpenRouter API for enhanced research"""
         if not OPENROUTER_API_KEY or "your-openrouter-api-key" in OPENROUTER_API_KEY:
             print("⚠️ OpenRouter API key not configured, skipping...")

@@ -253,7 +253,7 @@ To download:
 ## 📚 Related Documentation
 
 - [WORKFLOW_TRIGGER_GUIDE.md](../../WORKFLOW_TRIGGER_GUIDE.md) - Detailed trigger guide
-- [WORKFLOW_VERIFICATION_REPORT.md](../../WORKFLOW_VERIFICATION_REPORT.md) - Testing report
+- [WORKFLOW_VERIFICATION_REPORT.md](../../build-docs/05-final-verification/WORKFLOW_VERIFICATION_REPORT.md) - Testing report
 - [AUTOMATION_QUICKSTART.md](../../AUTOMATION_QUICKSTART.md) - Automation overview
 - [SECURITY-POLICY.md](../../SECURITY-POLICY.md) - Security guidelines
 

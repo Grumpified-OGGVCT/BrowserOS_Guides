@@ -91,7 +91,7 @@ OPENROUTER:
   sdk:
     library: "openai"  # OpenAI-compatible SDK
     api_base: "https://openrouter.ai/api/v1"
-    model: "google/gemini-2.0-flash-001"
+    model: "x-ai/grok-4.1-fast"
     options:
       temperature: 0.7
       max_tokens: 4000

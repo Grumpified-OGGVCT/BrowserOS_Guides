@@ -1,7 +1,7 @@
 {
   "test_run": {
-    "timestamp": "2026-02-13T09:17:52.277020",
-    "duration_seconds": 0.257214,
+    "timestamp": "2026-02-13T12:49:41.539212",
+    "duration_seconds": 0.537035,
     "total_tests": 13,
     "passed": 13,
     "failed": 0,
@@ -26,7 +26,7 @@
   "manual_review_needed": [
     {
       "test": "doc_links",
-      "issue": "Broken internal links: QUICKSTART_MCP.md -> ./MCP_SERVER_INTEGRATION.md, MCP_AGENTIC_GUIDE.md -> BrowserOS_Workflows_KnowledgeBase.md, MCP_AGENTIC_GUIDE.md -> ADVANCED_TECHNIQUES.md, MCP_AGENTIC_GUIDE.md -> ../USE_CASE_MATRIX.md, MCP_AGENTIC_GUIDE.md -> ../Workflows/",
+      "issue": "Broken internal links: README.md -> ./tutorials/first-workflow.md, README.md -> ./tutorials/common-patterns.md, README.md -> ./tutorials/error-handling.md, README.md -> ./tutorials/performance.md, README.md -> ./tutorials/custom-steps.md",
       "severity": "low",
       "suggested_fix": "Fix broken links in documentation"
     }

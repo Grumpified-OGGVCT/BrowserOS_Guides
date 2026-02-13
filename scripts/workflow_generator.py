@@ -32,6 +32,55 @@ except ImportError:
 
 
 class AIWorkflowGenerator:
+
+
+    def _extract_json(self, text: str) -> Optional[Dict[str, Any]]:
+        """Simply and robustly extract JSON from any preamble/postamble"""
+        if not text: return None
+        start = text.find("{")
+        end = text.rfind("}")
+        if start == -1 or end == -1: return None
+        try:
+            return json.loads(text[start:end+1])
+        except Exception as e:
+            print(f"Extraction failed: {e}")
+            return None
+
+        try:
+            return json.loads(text)
+        except:
+            pass
+            
+        import re
+        # Try markdown block
+        match = re.search(r"```(?:json)?\s*(.*?)\s*```", text, re.DOTALL)
+        if match:
+            try: return json.loads(match.group(1))
+            except: pass
+            
+        # Try finding the largest block between matched braces
+        stack = 0
+        first_brace = -1
+        for i, char in enumerate(text):
+            if char == "{":
+                if stack == 0: first_brace = i
+                stack += 1
+            elif char == "}":
+                stack -= 1
+                if stack == 0 and first_brace != -1:
+                    candidate = text[first_brace:i+1]
+                    try: return json.loads(candidate)
+                    except: pass
+        
+        # Last resort: try any { } pair found from ends
+        start = text.find("{")
+        end = text.rfind("}")
+        if start != -1 and end != -1:
+            try: return json.loads(text[start:end+1])
+            except: pass
+            
+        return None
+
     """
     AI-Powered Workflow Generator
     
@@ -138,7 +187,7 @@ class AIWorkflowGenerator:
         if not self.api_key:
             raise ValueError("OLLAMA_API_KEY environment variable required")
         
-        self.base_url = "https://api.ollama.ai/v1"
+        self.base_url = "http://localhost:11434/v1"
         
         # Load configuration if available
         self.config = self._load_config()
@@ -151,7 +200,7 @@ class AIWorkflowGenerator:
             self.model = self.config['sdk']['model']
             source = "Config File"
         else:
-            self.model = "glm-5"
+            self.model = "glm-5:cloud"
             source = "Default (Fallback)"
         
         print(f"✅ Initialized AI Workflow Generator")
@@ -314,7 +363,8 @@ class AIWorkflowGenerator:
         
         # Parse response
         try:
-            idea = json.loads(response)
+            idea = self._extract_json(response)
+            if idea is None: raise json.JSONDecodeError('No JSON found', response, 0)
             
             # Check if AI also rejected it
             if idea.get('rejected'):
@@ -369,7 +419,8 @@ class AIWorkflowGenerator:
         
         # Parse workflow JSON
         try:
-            workflow = json.loads(response)
+            workflow = self._extract_json(response)
+            if workflow is None: Path("debug_response.txt").write_text(response); raise json.JSONDecodeError('No JSON found', response, 0)
             
             # Add metadata
             workflow['metadata'] = workflow.get('metadata', {})
@@ -409,7 +460,8 @@ class AIWorkflowGenerator:
         
         # Parse validation results
         try:
-            validation = json.loads(response)
+            validation = self._extract_json(response)
+            if validation is None: raise json.JSONDecodeError('No JSON found', response, 0)
             validation['validated_at'] = datetime.utcnow().isoformat()
             validation['model'] = self.model
             

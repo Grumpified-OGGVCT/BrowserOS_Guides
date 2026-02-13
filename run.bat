@@ -431,7 +431,7 @@ echo ===========================================================================
 echo    The Watchtower (Semantic Bridge Monitor)
 echo ================================================================================
 echo.
-echo Launching Real-time Learning & Healing Monitor...
+echo Launching Real-time Learning ^& Healing Monitor...
 echo - Monitoring active browser tab
 echo - Detecting drift from objective
 echo - Capturing autonomous insights for Knowledge Base
