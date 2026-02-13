@@ -85,34 +85,80 @@ echo ===========================================================================
 echo.
 echo What would you like to do?
 echo.
-echo   1. Update Knowledge Base (research pipeline)
-echo   2. Run Self-Test
-echo   3. Generate Workflow
+echo   1. Start MCP Server (Port 3100)
+echo   2. Update Knowledge Base (research pipeline)
+echo   3. Run Self-Test
 echo   4. Validate Knowledge Base
-echo   5. Extract Claude Skills
-echo   6. Generate Repository Structure
-echo   7. Security Scan
-echo   8. Check for and Install System Updates
-echo   9. Configure Settings
-echo   A. View Documentation
+echo   5. Monitor WhatsApp Integration
+echo   6. Generate Library Artifacts
+echo   7. Build Provenance Index
+echo   8. Generate Workflow
+echo   9. Extract Claude Skills
+echo   A. Generate Repository Structure
+echo   B. Security Scan
+echo   C. Check for and Install System Updates
+echo   D. Configure Settings
+echo   E. View Documentation
 echo   0. Exit
 echo.
-set /p CHOICE="Enter your choice [0-9,A]: "
+set /p CHOICE="Enter your choice [0-9,A-E]: "
 
-if "%CHOICE%"=="1" goto UPDATE_KB
-if "%CHOICE%"=="2" goto SELF_TEST
-if "%CHOICE%"=="3" goto WORKFLOW_GEN
+if "%CHOICE%"=="1" goto START_MCP
+if "%CHOICE%"=="2" goto UPDATE_KB
+if "%CHOICE%"=="3" goto SELF_TEST
 if "%CHOICE%"=="4" goto VALIDATE_KB
-if "%CHOICE%"=="5" goto EXTRACT_SKILLS
-if "%CHOICE%"=="6" goto GEN_STRUCTURE
-if "%CHOICE%"=="7" goto SECURITY_SCAN
-if "%CHOICE%"=="8" goto CHECK_UPDATES
-if "%CHOICE%"=="9" goto CONFIGURE
-if /i "%CHOICE%"=="A" goto DOCUMENTATION
+if "%CHOICE%"=="5" goto MONITOR_WHATSAPP
+if "%CHOICE%"=="6" goto GEN_LIBRARY
+if "%CHOICE%"=="7" goto BUILD_PROVENANCE
+if "%CHOICE%"=="8" goto WORKFLOW_GEN
+if "%CHOICE%"=="9" goto EXTRACT_SKILLS
+if /i "%CHOICE%"=="A" goto GEN_STRUCTURE
+if /i "%CHOICE%"=="B" goto SECURITY_SCAN
+if /i "%CHOICE%"=="C" goto CHECK_UPDATES
+if /i "%CHOICE%"=="D" goto CONFIGURE
+if /i "%CHOICE%"=="E" goto DOCUMENTATION
 if "%CHOICE%"=="0" goto EXIT
 
 echo Invalid choice. Please try again.
 timeout /t 2 >nul
+goto MAIN_MENU
+
+REM ============================================================================
+REM Start MCP Server
+REM ============================================================================
+:START_MCP
+cls
+echo ================================================================================
+echo    Start MCP Server
+echo ================================================================================
+echo.
+echo Starting HTTP MCP server on port 3100...
+echo.
+echo The server will be available at: http://localhost:3100/mcp
+echo Health check endpoint: http://localhost:3100/health
+echo.
+echo To connect from BrowserOS:
+echo   1. Open BrowserOS
+echo   2. Go to Settings ^-^> Connected Apps
+echo   3. Click 'Add Custom App'
+echo   4. Enter URL: http://localhost:3100/mcp
+echo   5. Name: BrowserOS Knowledge Base
+echo.
+echo Press Ctrl+C to stop the server
+echo.
+pause
+
+REM Check if Node.js is available
+where node >nul 2>&1
+if errorlevel 1 (
+    echo ERROR: Node.js not found
+    echo Please install Node.js 14+ to run the MCP server
+    pause
+) else (
+    set MCP_SERVER_PORT=3100
+    node server\mcp-server.js
+)
+pause
 goto MAIN_MENU
 
 REM ============================================================================
@@ -165,6 +211,84 @@ if errorlevel 1 (
 ) else (
     echo.
     echo SUCCESS: All tests passed
+    pause
+)
+goto MAIN_MENU
+
+REM ============================================================================
+REM Monitor WhatsApp Integration
+REM ============================================================================
+:MONITOR_WHATSAPP
+cls
+echo ================================================================================
+echo    Monitor WhatsApp Integration
+echo ================================================================================
+echo.
+echo Checking BrowserOS repositories for WhatsApp integration development...
+echo This will search for keywords across multiple repositories.
+echo.
+pause
+
+python scripts\monitor_whatsapp.py
+if errorlevel 1 (
+    echo.
+    echo ERROR: Monitoring failed
+    pause
+) else (
+    echo.
+    echo SUCCESS: Monitoring complete
+    echo.
+    echo Report saved to: WHATSAPP_WATCH_REPORT.md
+    pause
+)
+goto MAIN_MENU
+
+REM ============================================================================
+REM Generate Library Artifacts
+REM ============================================================================
+:GEN_LIBRARY
+cls
+echo ================================================================================
+echo    Generate Library Artifacts
+echo ================================================================================
+echo.
+echo Generating executable workflow templates and pattern index...
+echo.
+
+python scripts\generate_library.py
+if errorlevel 1 (
+    echo.
+    echo ERROR: Library generation failed
+    pause
+) else (
+    echo.
+    echo SUCCESS: Library artifacts generated
+    pause
+)
+goto MAIN_MENU
+
+REM ============================================================================
+REM Build Provenance Index
+REM ============================================================================
+:BUILD_PROVENANCE
+cls
+echo ================================================================================
+echo    Build Provenance Index
+echo ================================================================================
+echo.
+echo Linking KB documentation to BrowserOS source code...
+echo This creates forensic traceability for all documented features.
+echo.
+
+python scripts\build_provenance.py
+if errorlevel 1 (
+    echo.
+    echo ERROR: Provenance build failed
+    pause
+) else (
+    echo.
+    echo SUCCESS: Provenance index built
+    echo See: library\provenance_index.json
     pause
 )
 goto MAIN_MENU

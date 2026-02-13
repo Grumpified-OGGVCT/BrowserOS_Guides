@@ -61,10 +61,39 @@ if %MAJOR% EQU 3 if %MINOR% LSS 11 (
 echo OK: Python version is compatible
 
 REM ============================================================================
+REM Check Node.js Installation
+REM ============================================================================
+echo.
+echo [2/8] Checking Node.js installation...
+
+where node >nul 2>&1
+if errorlevel 1 (
+    echo WARNING: Node.js is not installed or not in PATH
+    echo Node.js is required for the MCP server
+    echo.
+    echo Install Node.js 14+:
+    echo   Download from: https://nodejs.org/
+    echo.
+    echo Press any key to continue without Node.js ^(MCP server will not be available^)...
+    pause >nul
+) else (
+    for /f "tokens=1" %%i in ('node --version 2^>^&1') do set NODE_VERSION=%%i
+    set NODE_VERSION=!NODE_VERSION:v=!
+    echo Found: Node.js !NODE_VERSION!
+    
+    REM Check version is 14+
+    for /f "tokens=1 delims=." %%a in ("!NODE_VERSION!") do set NODE_MAJOR=%%a
+    if !NODE_MAJOR! LSS 14 (
+        echo WARNING: Node.js 14+ recommended, found v!NODE_VERSION!
+        echo Some MCP server features may not work properly
+    )
+)
+
+REM ============================================================================
 REM Check Git Installation
 REM ============================================================================
 echo.
-echo [2/6] Checking Git installation...
+echo [3/8] Checking Git installation...
 git --version >nul 2>&1
 if errorlevel 1 (
     echo WARNING: Git is not installed or not in PATH
@@ -83,7 +112,7 @@ REM ============================================================================
 REM Check pip
 REM ============================================================================
 echo.
-echo [3/6] Checking pip installation...
+echo [4/8] Checking pip installation...
 python -m pip --version >nul 2>&1
 if errorlevel 1 (
     echo ERROR: pip is not available
@@ -102,7 +131,7 @@ REM ============================================================================
 REM Install Python Dependencies
 REM ============================================================================
 echo.
-echo [4/6] Installing Python dependencies...
+echo [5/8] Installing Python dependencies...
 echo This may take a few minutes...
 echo.
 
@@ -131,14 +160,42 @@ if exist requirements.txt (
 )
 
 REM ============================================================================
+REM Install Node.js Dependencies
+REM ============================================================================
+echo.
+echo [6/8] Installing Node.js dependencies...
+
+where node >nul 2>&1
+if not errorlevel 1 (
+    where npm >nul 2>&1
+    if not errorlevel 1 (
+        if exist package.json (
+            npm install
+            if errorlevel 1 (
+                echo WARNING: Failed to install Node.js dependencies
+                echo MCP server may not work properly
+            ) else (
+                echo OK: Node.js dependencies installed
+            )
+        ) else (
+            echo WARNING: package.json not found
+        )
+    )
+) else (
+    echo Skipping Node.js dependencies ^(Node.js not installed^)
+)
+
+REM ============================================================================
 REM Create Directory Structure
 REM ============================================================================
 echo.
-echo [5/6] Creating directory structure...
+echo [7/8] Creating directory structure...
 
 if not exist logs mkdir logs
 if not exist BrowserOS\Research mkdir BrowserOS\Research
 if not exist BrowserOS\Workflows mkdir BrowserOS\Workflows
+if not exist library\templates mkdir library\templates
+if not exist library\schemas mkdir library\schemas
 
 echo OK: Directories created
 
@@ -146,7 +203,7 @@ REM ============================================================================
 REM Check/Create .env file
 REM ============================================================================
 echo.
-echo [6/6] Checking configuration...
+echo [8/8] Checking configuration...
 
 if not exist .env (
     if exist .env.template (
