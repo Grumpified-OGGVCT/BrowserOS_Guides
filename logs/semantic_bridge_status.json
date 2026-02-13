@@ -1,0 +1,14 @@
+{
+  "active": true,
+  "timestamp": "2026-02-13T12:35:15.528351",
+  "objective": "test",
+  "current_tab": {
+    "title": "Default Side Panel Title",
+    "url": "chrome-extension://bflpfmnmnokmjhmgnolecpppdbdophmk/sidepanel.html",
+    "id": "3F7FBD0F581B2F8DA8D0574EC58712E8"
+  },
+  "relevance_score": 70,
+  "reasoning": "The context contains information about a side panel and its URL, which seems partially related to the test objective. However, it lacks specific details about what 'test' refers to or what is being tested.",
+  "model_used": "llama3",
+  "status": "ON_TRACK"
+}

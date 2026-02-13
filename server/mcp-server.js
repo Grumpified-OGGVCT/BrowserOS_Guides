@@ -579,7 +579,7 @@ const tools = {
       }
 
       // Start new process
-      log.info(`Starting Semantic Bridge Monitor for objective: "${objective}" on port ${port}`);
+      log.info(`Starting Semantic Bridge Monitor for objective: "\${objective}" on port \${port}`);
       const args = [
         path.join(REPO_ROOT, 'scripts', 'semantic_bridge.py'),
         '--objective', objective,
