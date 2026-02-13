@@ -1,0 +1,34 @@
+{
+  "name": "semantic_bridge_monitor",
+  "description": "Activates a real-time semantic watchtower that monitors the active browser tab via CDP. It compares the visual/text content against the provided 'objective' using a local LLM. If relevance drops, it logs a Drift Warning. If high relevance is found, it extracts insights to the Knowledge Base.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["start", "stop", "status", "update_objective"],
+        "description": "The operation to perform. 'start' launches the background watcher. 'status' returns current drift score and warnings."
+      },
+      "objective": {
+        "type": "string",
+        "description": "The active user goal/objective to score content against. Required for 'start' and 'update_objective'."
+      },
+      "poll_interval": {
+        "type": "integer",
+        "default": 5,
+        "description": "Seconds between CDP snapshots (default: 5)."
+      },
+      "min_relevance_score": {
+        "type": "integer",
+        "default": 40,
+        "description": "Score (0-100) below which a Drift Warning is triggered."
+      },
+      "auto_kb_update": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether to automatically extract and save high-relevance content to knowledge_base.md."
+      }
+    },
+    "required": ["action"]
+  }
+}

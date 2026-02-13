@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server/mcp-server.js",
     "mcp-server": "BROWSEROS_GUIDES_PORT=3100 node server/mcp-server.js",
+    "mcp-server:watch": "BROWSEROS_GUIDES_PORT=3100 node --watch server/mcp-server.js",
     "mcp-server:dev": "BROWSEROS_GUIDES_LOG_LEVEL=debug BROWSEROS_GUIDES_PORT=3100 node server/mcp-server.js",
     "generate-library": "python scripts/generate_library.py",
     "enhance-sources": "python scripts/enhance_sources.py",

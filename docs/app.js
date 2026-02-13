@@ -169,7 +169,10 @@ function performSearch(query, filter) {
     
     // Filter by category
     if (filter === 'workflows') {
-        documents = documents.filter(doc => doc.category === 'Workflow');
+        documents = documents.filter(doc => 
+            doc.category.includes('Workflow') || 
+            doc.category === 'Library Template'
+        );
     } else if (filter === 'usecases') {
         documents = documents.filter(doc => doc.category === 'Use Case');
     } else if (filter === 'docs') {

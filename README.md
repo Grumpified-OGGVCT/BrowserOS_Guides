@@ -42,7 +42,7 @@ This repository has evolved into an **operational intelligence layer** for Brows
 **Option 1: MCP Server (Recommended for BrowserOS)**
 ```bash
 npm run mcp-server
-# Add to BrowserOS: http://localhost:3100/mcp
+# Add to BrowserOS: http://localhost:3100/sse
 ```
 
 **Option 2: Interactive Website**

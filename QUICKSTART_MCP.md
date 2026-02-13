@@ -17,7 +17,7 @@ cd BrowserOS_Guides
 npm run mcp-server
 ```
 
-The server will start on `http://localhost:3100/mcp`
+The server will start on `http://localhost:3100/mcp` (REST) and `http://localhost:3100/sse` (SSE).
 
 ### Step 2: Add to BrowserOS
 
@@ -26,7 +26,7 @@ The server will start on `http://localhost:3100/mcp`
 3. Click **"Add Custom App"**
 4. Fill in:
    - **Name**: `BrowserOS Workflows KB`
-   - **URL**: `http://localhost:3100/mcp`
+   - **URL**: `http://localhost:3100/sse`
    - **Description**: `BrowserOS Workflows Knowledge Base - Provides workflow documentation, validation, and 917+ workflow templates`
 5. Click **"Add Server"**
 

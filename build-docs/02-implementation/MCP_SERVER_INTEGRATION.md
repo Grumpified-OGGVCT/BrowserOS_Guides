@@ -6,14 +6,13 @@ This document describes how to connect the BrowserOS_Guides knowledge base as an
 
 ## Connection Information
 
-### HTTP Endpoint
-```
-http://localhost:3100/mcp
-```
+### HTTP Endpoints
+- **REST (POST)**: `http://localhost:3100/mcp`
+- **SSE (GET)**: `http://localhost:3100/sse`
 
 **Production (when deployed)**:
 ```
-https://browseros-guides.example.com/mcp
+https://browseros-guides.example.com/sse
 ```
 
 ### Server Description
@@ -215,7 +214,7 @@ The MCP server exposes the following tools that agents can use:
 3. Click "Add Custom App"
 4. Enter the following:
    - **Name**: `BrowserOS Workflows KB`
-   - **URL**: `http://localhost:3100/mcp` (or your deployed URL)
+   - **URL**: `http://localhost:3100/sse` (or your deployed URL)
    - **Description**: `BrowserOS Workflows Knowledge Base - Self-aware intelligence layer providing workflow documentation, executable templates, anti-patterns catalog, and ground truth validation.`
 5. Click "Add Server"
 

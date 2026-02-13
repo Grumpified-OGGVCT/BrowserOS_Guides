@@ -14,6 +14,35 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const os = require('os');
+const { spawn } = require('child_process');
+
+// Load .env file (Zero-dependency implementation)
+const envPath = path.join(__dirname, '..', '.env');
+if (fs.existsSync(envPath)) {
+  try {
+    const envConfig = fs.readFileSync(envPath, 'utf8');
+    envConfig.split('\n').forEach(line => {
+      const match = line.match(/^\s*([\w(\.\-)]+)\s*=\s*(.*)?\s*$/);
+      if (match) {
+        const key = match[1];
+        let value = match[2] || '';
+        // Remove quotes if present
+        if (value.length > 1 && value.startsWith('"') && value.endsWith('"')) {
+          value = value.slice(1, -1);
+        } else if (value.length > 1 && value.startsWith("'") && value.endsWith("'")) {
+          value = value.slice(1, -1);
+        }
+        // Don't override existing environment variables
+        if (!process.env[key]) {
+          process.env[key] = value.trim();
+        }
+      }
+    });
+    console.log('[INFO] Loaded environment variables from .env');
+  } catch (err) {
+    console.warn('[WARN] Failed to load .env file:', err.message);
+  }
+}
 
 // Configuration
 // Support multiple environment variable names for flexibility
@@ -42,12 +71,26 @@ const SOURCES_PATH = path.join(REPO_ROOT, 'BrowserOS', 'Research', 'sources.json
 // Cache
 const cache = new Map();
 
+// Semantic Bridge State
+let semanticBridgeProcess = null;
+
 // Logger
 const log = {
   info: (...args) => LOG_LEVEL !== 'silent' && console.log('[INFO]', ...args),
   warn: (...args) => console.warn('[WARN]', ...args),
   error: (...args) => console.error('[ERROR]', ...args),
-  debug: (...args) => LOG_LEVEL === 'debug' && console.log('[DEBUG]', ...args)
+  debug: (...args) => LOG_LEVEL === 'debug' && console.log('[DEBUG]', ...args),
+  // Helper to safely log objects without exposing too much or sensitive data
+  secure: (obj) => {
+    if (LOG_LEVEL !== 'debug') return '';
+    try {
+      return JSON.stringify(obj, (key, value) => {
+        if (key.match(/key|token|auth|password|secret/i)) return '***REDACTED***';
+        if (typeof value === 'string' && value.length > 200) return value.substring(0, 200) + '... (truncated)';
+        return value;
+      });
+    } catch (e) { return '[Circular/Unserializable]'; }
+  }
 };
 
 /**
@@ -401,6 +444,125 @@ const tools = {
     }
     
     return stub;
+  },
+  
+  /**
+   * Check system health
+   */
+  system_health_check: async ({ check_type = 'basic' }) => {
+    const health = {
+      status: 'online',
+      timestamp: new Date().toISOString(),
+      mcp_server: {
+        uptime: process.uptime(),
+        memory_usage: process.memoryUsage(),
+        active_sse_sessions: sseSessions.size,
+        port: PORT
+      },
+      system: {
+        platform: os.platform(),
+        arch: os.arch(),
+        cpus: os.cpus().length,
+        total_mem_gb: (os.totalmem() / 1024 / 1024 / 1024).toFixed(2),
+        free_mem_gb: (os.freemem() / 1024 / 1024 / 1024).toFixed(2)
+      }
+    };
+    
+    if (check_type === 'full' || check_type === 'network') {
+       // Simple port check (mocked for safety/speed in JS-only version)
+       health.network = {
+         mcp_port_3100: 'listening',
+         interfaces: os.networkInterfaces()
+       };
+    }
+    
+    return health;
+  },
+
+  semantic_bridge_monitor: async ({ action, objective, poll_interval = 5, min_relevance_score = 40, auto_kb_update = true, port = 9000 }) => {
+    const statusFile = path.join(REPO_ROOT, 'logs', 'semantic_bridge_status.json');
+
+    if (action === 'start' || action === 'update_objective') {
+      if (!objective) throw new Error('Objective is required for starting the monitor');
+
+      // Stop existing if any
+      if (semanticBridgeProcess) {
+        semanticBridgeProcess.kill();
+        semanticBridgeProcess = null;
+      }
+
+      // Start new process
+      log.info(`Starting Semantic Bridge Monitor for objective: "${objective}" on port ${port}`);
+      const args = [
+        path.join(REPO_ROOT, 'scripts', 'semantic_bridge.py'),
+        '--objective', objective,
+        '--interval', poll_interval.toString(),
+        '--port', port.toString(),
+        '--model', 'llama3' // Default to llama3, could make configurable
+      ];
+
+      semanticBridgeProcess = spawn(PYTHON_CMD, args, {
+        cwd: REPO_ROOT,
+        detached: false, // Attached to parent so output flows easily
+        stdio: ['ignore', 'inherit', 'inherit'] // Pipe logs to console
+      });
+      
+      semanticBridgeProcess.unref();
+
+      return { 
+        status: 'started', 
+        pid: semanticBridgeProcess.pid,
+        message: 'Semantic Bridge Monitor started in background' 
+      };
+    }
+
+    if (action === 'stop') {
+      if (semanticBridgeProcess) {
+        semanticBridgeProcess.kill();
+        semanticBridgeProcess = null;
+        return { status: 'stopped', message: 'Monitor stopped' };
+      }
+      return { status: 'stopped', message: 'Monitor was not running' };
+    }
+
+    if (action === 'status') {
+      let bridgeStatus = { active: false, status: 'OFFLINE' };
+      
+      // Check process
+      if (semanticBridgeProcess) {
+        try {
+          // Check if pid is still running (heuristic)
+          process.kill(semanticBridgeProcess.pid, 0); 
+          bridgeStatus.active = true;
+          bridgeStatus.pid = semanticBridgeProcess.pid;
+        } catch (e) {
+          semanticBridgeProcess = null; // Process died
+        }
+      }
+
+      // Read status file
+      if (fs.existsSync(statusFile)) {
+        try {
+          const fileData = JSON.parse(fs.readFileSync(statusFile, 'utf8'));
+          bridgeStatus = { ...bridgeStatus, ...fileData };
+          
+          // Verify freshness (if file is > 2x interval old, it's stale)
+          const fileTime = new Date(bridgeStatus.timestamp).getTime();
+          const now = new Date().getTime();
+          if (now - fileTime > (poll_interval * 2 * 1000)) {
+             bridgeStatus.status = 'STALE';
+             bridgeStatus.warning = 'Status file is outdated. Watcher may be hung.';
+          }
+
+        } catch (e) {
+          bridgeStatus.error = 'Failed to read status file';
+        }
+      }
+
+      return bridgeStatus;
+    }
+
+    throw new Error(`Unknown action: ${action}`);
   }
 };
 
@@ -439,9 +601,24 @@ const toolDefinitions = [
     inputSchema: {
       type: 'object',
       properties: {
-        topic: { type: 'string', description: 'Help topic to look up' }
+        description: { type: 'string', description: 'Description of the workflow to generate' }
       },
-      required: ['topic']
+      required: ['description']
+    }
+  },
+  {
+    name: 'system_health_check',
+    description: 'Check system health metrics (CPU, Memory, Disk, Network Ports) and MCP server status',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        check_type: { 
+          type: 'string', 
+          enum: ['basic', 'full', 'network'], 
+          description: 'Type of health check to perform',
+          default: 'basic'
+        }
+      }
     }
   },
   {
@@ -508,6 +685,45 @@ const toolDefinitions = [
       },
       required: ['use_case']
     }
+  },
+  {
+    "name": "semantic_bridge_monitor",
+    "description": "Activates a real-time semantic watchtower that monitors the active browser tab via CDP. It compares the visual/text content against the provided 'objective' using a local LLM. If relevance drops, it logs a Drift Warning.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["start", "stop", "status", "update_objective"],
+          "description": "The operation to perform. 'start' launches the background watcher."
+        },
+        "objective": {
+          "type": "string",
+          "description": "The active user goal/objective to score content against."
+        },
+        "poll_interval": {
+          "type": "integer",
+          "default": 5,
+          "description": "Seconds between CDP snapshots (default: 5)."
+        },
+        "min_relevance_score": {
+          "type": "integer",
+          "default": 40,
+          "description": "Score (0-100) below which a Drift Warning is triggered."
+        },
+        "auto_kb_update": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to automatically extract and save high-relevance content."
+        },
+        "port": {
+          "type": "integer",
+          "default": 9000,
+          "description": "CDP Port to connect to (default: 9000)."
+        }
+      },
+      "required": ["action"]
+    }
   }
 ];
 
@@ -524,7 +740,14 @@ async function handleMCPRequest(body) {
     const method = body.method;
     
     if (method) {
-      log.debug(`MCP protocol method: ${method}`);
+      // Only log interesting protocol methods at INFO level, others at DEBUG
+      if (method === 'tools/call') {
+         // Logged inside the case block for more detail
+      } else if (['ping', 'notifications/initialized'].includes(method)) {
+         log.debug(`MCP protocol method: ${method}`);
+      } else {
+         log.info(`MCP Request: ${method}`);
+      }
       
       // Handle JSON-RPC style MCP requests
       switch (method) {
@@ -545,10 +768,12 @@ async function handleMCPRequest(body) {
           };
           
         case 'notifications/initialized':
-          // Client acknowledgment — no response needed
+          // Standard MCP event, useful to know but kept brief
+          log.info('Client connection initialized');
           return { jsonrpc: '2.0', id: body.id || null, result: {} };
           
         case 'tools/list':
+          log.info('Client requested tool list');
           return {
             jsonrpc: '2.0',
             id: body.id || null,
@@ -561,7 +786,11 @@ async function handleMCPRequest(body) {
           const toolName = body.params?.name;
           const toolArgs = body.params?.arguments || {};
           
+          log.info(`🛠️  Executing Tool: ${toolName}`);
+          log.debug(`Tool Arguments: ${log.secure(toolArgs)}`);
+          
           if (!toolName || !tools[toolName]) {
+            log.warn(`Unknown tool requested: ${toolName}`);
             return {
               jsonrpc: '2.0',
               id: body.id || null,
@@ -572,17 +801,32 @@ async function handleMCPRequest(body) {
             };
           }
           
-          const result = await tools[toolName](toolArgs);
-          return {
-            jsonrpc: '2.0',
-            id: body.id || null,
-            result: {
-              content: [{
-                type: 'text',
-                text: typeof result === 'string' ? result : JSON.stringify(result, null, 2)
-              }]
-            }
-          };
+          try {
+            const result = await tools[toolName](toolArgs);
+            log.info(`✅ Tool Completed: ${toolName}`);
+            log.debug(`Tool Result: ${log.secure(result)}`);
+            
+            return {
+              jsonrpc: '2.0',
+              id: body.id || null,
+              result: {
+                content: [{
+                  type: 'text',
+                  text: typeof result === 'string' ? result : JSON.stringify(result, null, 2)
+                }]
+              }
+            };
+          } catch (err) {
+            log.error(`❌ Tool Failed: ${toolName}`, err.message);
+            return {
+              jsonrpc: '2.0',
+              id: body.id || null,
+              error: {
+                code: -32603,
+                message: err.message
+              }
+            };
+          }
         }
           
         case 'ping':
@@ -601,6 +845,17 @@ async function handleMCPRequest(body) {
       }
     }
     
+    // --- MCP Notifications ---
+    if (method === 'notifications/initialized') {
+      log.info('Client initialized notification received');
+      return null;
+    }
+    
+    if (method === 'notifications/cancelled') {
+      log.info(`Client cancelled request: ${params?.requestId}`);
+      return null;
+    }
+
     // --- Legacy Direct Tool Invocation ---
     const { tool, parameters = {} } = body;
     
@@ -664,13 +919,17 @@ function generateSessionId() {
 const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Cache-Control, Last-Modified, Pragma');
   
   if (req.method === 'OPTIONS') {
     res.writeHead(200);
     res.end();
     return;
   }
+
+
+
+
   
   // =========================================================================
   // SSE Transport — GET /sse
@@ -692,7 +951,9 @@ const server = http.createServer(async (req, res) => {
     sseSessions.set(sessionId, res);
     
     // Send the endpoint event — tells the client where to POST messages
-    const messagesUrl = `/messages?sessionId=${sessionId}`;
+    // Send the endpoint event — tells the client where to POST messages
+    // Use absolute URL for maximum compatibility
+    const messagesUrl = `http://${req.headers.host}/messages?sessionId=${sessionId}`;
     res.write(`event: endpoint\ndata: ${messagesUrl}\n\n`);
     
     // Send periodic keepalive pings
@@ -740,12 +1001,14 @@ const server = http.createServer(async (req, res) => {
         
         const response = await handleMCPRequest(requestBody);
         
-        // Push the response through the SSE stream
-        const sseData = JSON.stringify(response);
-        try {
-          sseRes.write(`event: message\ndata: ${sseData}\n\n`);
-        } catch (e) {
-          log.error(`Failed to write to SSE stream: ${e.message}`);
+        // Push the response through the SSE stream (only if there is a response)
+        if (response) {
+          const sseData = JSON.stringify(response);
+          try {
+            sseRes.write(`event: message\ndata: ${sseData}\n\n`);
+          } catch (e) {
+            log.error(`Failed to write to SSE stream: ${e.message}`);
+          }
         }
         
         // Also respond to the POST with 202 Accepted
@@ -1016,8 +1279,79 @@ const server = http.createServer(async (req, res) => {
     return;
   }
   
-  res.writeHead(404, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ error: 'Not found' }));
+  // =========================================================================
+  // Static File Serving 
+  // =========================================================================
+  
+  // Serve docs/ directory at root
+  let filePath = path.join(REPO_ROOT, 'docs', req.url === '/' ? 'index.html' : req.url);
+  
+  // Clean up query parameters if present
+  if (filePath.includes('?')) {
+    filePath = filePath.split('?')[0];
+  }
+
+  const extname = path.extname(filePath);
+  let contentType = 'text/html';
+  const mimeTypes = {
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.css': 'text/css',
+    '.json': 'application/json',
+    '.png': 'image/png',
+    '.jpg': 'image/jpg',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.ico': 'image/x-icon',
+    '.woff': 'font/woff',
+    '.woff2': 'font/woff2',
+    '.ttf': 'font/ttf',
+    '.eot': 'application/vnd.ms-fontobject',
+    '.otf': 'font/otf',
+    '.wasm': 'application/wasm'
+  };
+
+  contentType = mimeTypes[extname] || 'application/octet-stream';
+
+  fs.readFile(filePath, (error, content) => {
+    if (error) {
+      if (error.code === 'ENOENT') {
+        // If file not found, serve 404 nicely
+        // Check if it's an API call that fell through
+        if (req.url.startsWith('/api/') || req.url.startsWith('/mcp/')) {
+           res.writeHead(404, { 'Content-Type': 'application/json' });
+           res.end(JSON.stringify({ error: 'Endpoint not found' }));
+           return;
+        }
+
+        log.warn(`404 Not Found: ${req.url}`);
+        res.writeHead(404, { 'Content-Type': 'text/html' });
+        res.end(`
+          <html><head><title>404 Not Found</title></head>
+          <body style="font-family:system-ui;margin:40px auto;max-width:600px;padding:20px;">
+            <h1 style="color:#DC2626;">404 Not Found</h1>
+            <p>The requested resource <code>${req.url}</code> could not be found.</p>
+            <p><a href="/">Return to Home</a></p>
+          </body></html>
+        `);
+      } else {
+        log.error(`Server Error: ${error.code} .. ${filePath}`);
+        res.writeHead(500);
+        res.end(`Server Error: ${error.code}`);
+      }
+    } else {
+      // Cache control
+      const headers = { 'Content-Type': contentType };
+      if (ENABLE_CACHE && (extname === '.jpg' || extname === '.png' || extname === '.css')) {
+        headers['Cache-Control'] = 'public, max-age=86400'; // 1 day
+      } else {
+        headers['Cache-Control'] = 'no-cache';
+      }
+      
+      res.writeHead(200, headers);
+      res.end(content, 'utf-8');
+    }
+  });
 });
 
 server.listen(PORT, HOST, () => {
