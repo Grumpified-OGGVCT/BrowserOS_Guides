@@ -258,6 +258,7 @@ if errorlevel 1 (
     echo You can run it again later with: python scripts\setup_wizard.py
     pause
     exit /b 1
+)
 
 echo.
 echo [Setup] Generating initial library artifacts...

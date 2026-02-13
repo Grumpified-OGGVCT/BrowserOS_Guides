@@ -35,49 +35,68 @@ class AIWorkflowGenerator:
 
 
     def _extract_json(self, text: str) -> Optional[Dict[str, Any]]:
-        """Simply and robustly extract JSON from any preamble/postamble"""
+        """Simply and robustly extract JSON from any preamble/postamble.
+        
+        Tries several strategies in sequence:
+        1. JSON between the outermost '{' and '}'.
+        2. Entire text as JSON.
+        3. JSON inside a fenced markdown code block.
+        4. Largest balanced-brace JSON block.
+        5. Last-resort outermost '{' ... '}' again.
+        """
         if not text: return None
+        
+        import re
+        
+        # First attempt: JSON between the outermost braces (original primary behavior)
         start = text.find("{")
         end = text.rfind("}")
-        if start == -1 or end == -1: return None
-        try:
-            return json.loads(text[start:end+1])
-        except Exception as e:
-            print(f"Extraction failed: {e}")
-            return None
-
+        if start != -1 and end != -1:
+            try:
+                return json.loads(text[start:end+1])
+            except Exception as e:
+                # Keep debug output but continue to other strategies instead of returning early
+                print(f"Extraction failed using outermost braces: {e}")
+        
+        # Second attempt: parse the entire text as JSON
         try:
             return json.loads(text)
         except:
             pass
             
-        import re
-        # Try markdown block
+        # Third attempt: JSON inside a fenced markdown code block
         match = re.search(r"```(?:json)?\s*(.*?)\s*```", text, re.DOTALL)
         if match:
-            try: return json.loads(match.group(1))
-            except: pass
+            try:
+                return json.loads(match.group(1))
+            except:
+                pass
             
-        # Try finding the largest block between matched braces
+        # Fourth attempt: find the largest block between matched braces
         stack = 0
         first_brace = -1
         for i, char in enumerate(text):
             if char == "{":
-                if stack == 0: first_brace = i
+                if stack == 0:
+                    first_brace = i
                 stack += 1
             elif char == "}":
                 stack -= 1
                 if stack == 0 and first_brace != -1:
                     candidate = text[first_brace:i+1]
-                    try: return json.loads(candidate)
-                    except: pass
+                    try:
+                        return json.loads(candidate)
+                    except:
+                        pass
         
-        # Last resort: try any { } pair found from ends
+        # Fifth attempt (last resort): try any outermost '{' ... '}' pair again
         start = text.find("{")
         end = text.rfind("}")
         if start != -1 and end != -1:
-            try: return json.loads(text[start:end+1])
-            except: pass
+            try:
+                return json.loads(text[start:end+1])
+            except:
+                pass
             
         return None
 

@@ -110,8 +110,8 @@ def score_relevance_with_pool(objective, content, initial_model=None):
             is_openrouter = "/" in model or (env_openrouter and model == env_openrouter)
             
             if is_openrouter:
-                if not OPENROUTER_API_KEY:
-                    print(f"[Warn] Skipping {model}: OpenRouter API key not set", flush=True)
+                if not OPENROUTER_API_KEY or "your-openrouter-api-key" in OPENROUTER_API_KEY:
+                    print(f"[Warn] Skipping {model}: OpenRouter API key not set or is placeholder", flush=True)
                     continue
                 
                 response = requests.post(

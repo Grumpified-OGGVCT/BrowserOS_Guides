@@ -501,40 +501,40 @@ const tools = {
   },
 
   chat_with_model: async ({ message, model = 'llama3', mode = 'chat', system_prompt = null }) => {
-    return new Promise(async (resolve, reject) => {
-      let finalSystemPrompt = system_prompt || "You are a helpful AI assistant.";
-      
-      // Mode: Docs (Retrieval Augmented Generation)
-      if (mode === 'docs') {
-        try {
-          // Internal call to query_knowledge
-          const kbResults = await tools.query_knowledge({ query: message, format: 'markdown' });
-          if (kbResults && kbResults.length > 0) {
-            finalSystemPrompt += "\n\nCONTEXT FROM KNOWLEDGE BASE:\n" + kbResults + "\n\nUse this context to answer the user's question if relevant.";
-          }
-        } catch (e) {
-          log.warn('Failed to fetch docs context:', e);
+    let finalSystemPrompt = system_prompt || "You are a helpful AI assistant.";
+    
+    // Mode: Docs (Retrieval Augmented Generation)
+    if (mode === 'docs') {
+      try {
+        // Internal call to query_knowledge
+        const kbResults = await tools.query_knowledge({ query: message, format: 'markdown' });
+        if (kbResults && kbResults.length > 0) {
+          finalSystemPrompt += "\n\nCONTEXT FROM KNOWLEDGE BASE:\n" + kbResults + "\n\nUse this context to answer the user's question if relevant.";
         }
+      } catch (e) {
+        log.warn('Failed to fetch docs context:', e);
       }
-      
-      // Mode: Codex (Repository Context)
-      // For now, this is a lightweight implementation that lists files or reads a specific file if mentioned
-      // Future: Use a proper vector search for code
-      if (mode === 'codex') {
-          finalSystemPrompt += "\n\nYou are in CODEX mode. You have access to the file structure. Ask the user which files they want to analyze.";
-      }
+    }
+    
+    // Mode: Codex (Repository Context)
+    // For now, this is a lightweight implementation that lists files or reads a specific file if mentioned
+    // Future: Use a proper vector search for code
+    if (mode === 'codex') {
+        finalSystemPrompt += "\n\nYou are in CODEX mode. You have access to the file structure. Ask the user which files they want to analyze.";
+    }
 
-      const args = [
-        path.join(REPO_ROOT, 'scripts', 'ai_chat.py'),
-        message,
-        '--model', model,
-        '--json-output'
-      ];
+    const args = [
+      path.join(REPO_ROOT, 'scripts', 'ai_chat.py'),
+      message,
+      '--model', model,
+      '--json-output'
+    ];
 
-      if (finalSystemPrompt) {
-        args.push('--system', finalSystemPrompt);
-      }
+    if (finalSystemPrompt) {
+      args.push('--system', finalSystemPrompt);
+    }
 
+    return new Promise((resolve, reject) => {
       const ps = spawn(PYTHON_CMD, args);
       
       let stdout = '';
@@ -579,7 +579,7 @@ const tools = {
       }
 
       // Start new process
-      log.info(`Starting Semantic Bridge Monitor for objective: "\${objective}" on port \${port}`);
+      log.info(`Starting Semantic Bridge Monitor for objective: "${objective}" on port ${port}`);
       const args = [
         path.join(REPO_ROOT, 'scripts', 'semantic_bridge.py'),
         '--objective', objective,

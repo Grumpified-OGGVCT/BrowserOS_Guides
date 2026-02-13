@@ -299,3 +299,11 @@ WORKFLOW_TEST_RESULTS.json
 WORKFLOW_TRIGGER_REPORT.json
 *.volume
 .env.env.backup.*
+
+# Generated test/swarm verification directories (test artifacts)
+generated_swarm_*/
+generated_*/
+
+# Runtime log files (runtime artifacts)
+logs/telemetry.json
+logs/semantic_bridge_status.json
