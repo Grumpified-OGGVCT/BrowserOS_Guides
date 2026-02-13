@@ -1,7 +1,7 @@
 [
   {
     "url": "https://docs.browseros.com",
-    "accessed": "2026-02-11T22:19:00Z",
+    "accessed": "2026-02-13T11:56:48.619633",
     "author": "BrowserOS Team",
     "type": "official_documentation",
     "abstract": "Official BrowserOS documentation covering workflows, API references, and user guides",
@@ -13,7 +13,7 @@
   },
   {
     "url": "https://github.com/browseros-ai/BrowserOS",
-    "accessed": "2026-02-11T22:19:00Z",
+    "accessed": "2026-02-13T11:56:49.619816",
     "author": "browseros-ai",
     "type": "github_repository",
     "abstract": "Main BrowserOS repository with source code, issues, PRs, and examples",
@@ -33,7 +33,7 @@
   },
   {
     "url": "https://github.com/browseros-ai/BrowserOS-agent",
-    "accessed": "2026-02-12T21:00:00Z",
+    "accessed": "2026-02-13T11:56:50.633559",
     "author": "browseros-ai",
     "type": "github_repository",
     "abstract": "TypeScript-based agent that orchestrates workflows and MCP tools for BrowserOS",
@@ -51,7 +51,7 @@
   },
   {
     "url": "https://github.com/browseros-ai/moltyflow",
-    "accessed": "2026-02-12T21:00:00Z",
+    "accessed": "2026-02-13T11:56:51.772776",
     "author": "browseros-ai",
     "type": "github_repository",
     "abstract": "StackOverflow for AI agents - inter-agent communication and knowledge sharing platform",
@@ -68,7 +68,7 @@
   },
   {
     "url": "https://github.com/browseros-ai/old-browseros-agent",
-    "accessed": "2026-02-12T21:00:00Z",
+    "accessed": "2026-02-13T11:56:52.794184",
     "author": "browseros-ai",
     "type": "github_repository",
     "abstract": "Legacy agent submodule - reference for understanding architectural evolution",
@@ -85,7 +85,7 @@
   },
   {
     "url": "https://github.com/browser-use/workflow-use",
-    "accessed": "2026-02-11T22:19:00Z",
+    "accessed": "2026-02-13T11:56:54.411958",
     "author": "browser-use",
     "type": "github_repository",
     "abstract": "Deterministic self-healing workflows repository (RPA 2.0) with Generation Mode and CLI tools",

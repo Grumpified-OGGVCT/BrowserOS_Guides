@@ -26,9 +26,10 @@ KB_FILE = os.path.join("BrowserOS", "Research", "knowledge_base.md")
 # Model Pool Configuration
 # The script will try these models in order until one succeeds
 MODEL_POOL = [
+    "glm-5:cloud",
+    "gemini-3-flash-preview:cloud",
     "minimax-m2.5:cloud",
     "llama3.2:latest",
-    "llama3",
     "phi3:mini"
 ]
 

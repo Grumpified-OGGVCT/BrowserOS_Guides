@@ -500,6 +500,72 @@ const tools = {
     });
   },
 
+  chat_with_model: async ({ message, model = 'llama3', mode = 'chat', system_prompt = null }) => {
+    return new Promise(async (resolve, reject) => {
+      let finalSystemPrompt = system_prompt || "You are a helpful AI assistant.";
+      
+      // Mode: Docs (Retrieval Augmented Generation)
+      if (mode === 'docs') {
+        try {
+          // Internal call to query_knowledge
+          const kbResults = await tools.query_knowledge({ query: message, format: 'markdown' });
+          if (kbResults && kbResults.length > 0) {
+            finalSystemPrompt += "\n\nCONTEXT FROM KNOWLEDGE BASE:\n" + kbResults + "\n\nUse this context to answer the user's question if relevant.";
+          }
+        } catch (e) {
+          log.warn('Failed to fetch docs context:', e);
+        }
+      }
+      
+      // Mode: Codex (Repository Context)
+      // For now, this is a lightweight implementation that lists files or reads a specific file if mentioned
+      // Future: Use a proper vector search for code
+      if (mode === 'codex') {
+          finalSystemPrompt += "\n\nYou are in CODEX mode. You have access to the file structure. Ask the user which files they want to analyze.";
+      }
+
+      const args = [
+        path.join(REPO_ROOT, 'scripts', 'ai_chat.py'),
+        message,
+        '--model', model,
+        '--json-output'
+      ];
+
+      if (finalSystemPrompt) {
+        args.push('--system', finalSystemPrompt);
+      }
+
+      const ps = spawn(PYTHON_CMD, args);
+      
+      let stdout = '';
+      let stderr = '';
+
+      ps.stdout.on('data', (data) => stdout += data.toString());
+      ps.stderr.on('data', (data) => stderr += data.toString());
+
+      ps.on('close', (code) => {
+        if (code !== 0) {
+          resolve({
+             content: [{ type: 'text', text: `Chat Error (Exit ${code}): ${stderr}` }],
+             isError: true
+          });
+          return;
+        }
+
+        try {
+           const result = JSON.parse(stdout.trim());
+           resolve({
+             content: [{ type: 'text', text: result.response }]
+           });
+        } catch (e) {
+           resolve({
+             content: [{ type: 'text', text: stdout || stderr }]
+           });
+        }
+      });
+    });
+  },
+
   semantic_bridge_monitor: async ({ action, objective, poll_interval = 5, min_relevance_score = 40, auto_kb_update = true, port = 9000 }) => {
     const statusFile = path.join(REPO_ROOT, 'logs', 'semantic_bridge_status.json');
 
@@ -513,7 +579,7 @@ const tools = {
       }
 
       // Start new process
-      log.info(`Starting Semantic Bridge Monitor for objective: "${objective}" on port ${port}`);
+      log.info(`Starting Semantic Bridge Monitor for objective: "\${objective}" on port \${port}`);
       const args = [
         path.join(REPO_ROOT, 'scripts', 'semantic_bridge.py'),
         '--objective', objective,
@@ -545,6 +611,7 @@ const tools = {
       }
       return { status: 'stopped', message: 'Monitor was not running' };
     }
+    
 
     if (action === 'status') {
       let bridgeStatus = { active: false, status: 'OFFLINE' };
@@ -797,6 +864,19 @@ const toolDefinitions = [
         include_error_handling: { type: 'boolean', default: true }
       },
       required: ['use_case']
+    }
+  },
+  {
+    name: 'chat_with_model',
+    description: 'Engage in a direct conversation with a specific AI model (e.g., Llama3, GLM-5, Gemini) for quick questions or advice.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', description: 'The message or question to send to the model' },
+        model: { type: 'string', description: 'Model to use (default: llama3)', default: 'llama3' },
+        system_prompt: { type: 'string', description: 'Optional context or persona for the model' }
+      },
+      required: ['message']
     }
   },
   {

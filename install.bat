@@ -258,6 +258,13 @@ if errorlevel 1 (
     echo You can run it again later with: python scripts\setup_wizard.py
     pause
     exit /b 1
+
+echo.
+echo [Setup] Generating initial library artifacts...
+python scripts\generate_library.py
+if errorlevel 1 (
+    echo WARNING: Failed to generate library artifacts
+    echo You can run this later from the main menu
 )
 
 echo.
