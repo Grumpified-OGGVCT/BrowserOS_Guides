@@ -511,6 +511,196 @@ const server = http.createServer(async (req, res) => {
     return;
   }
   
+  // Workflow Generator API endpoint
+  if (req.url === '/api/generate-workflow' && req.method === 'POST') {
+    let body = '';
+    
+    // FIX H04: Rate limiting check
+    const clientIP = req.socket.remoteAddress || req.connection.remoteAddress || 'unknown';
+    
+    // Check concurrent generations
+    const currentActive = activeGenerations.get(clientIP) || 0;
+    if (currentActive >= MAX_CONCURRENT_PER_IP) {
+      res.writeHead(429, { 
+        'Content-Type': 'application/json',
+        'Retry-After': '30'
+      });
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Too many concurrent requests',
+        details: `You can have a maximum of ${MAX_CONCURRENT_PER_IP} workflow generations running at once. Please wait for your current request to complete.`,
+        retry_after: 30
+      }));
+      return;
+    }
+    
+    // Check hourly limit
+    const requestTimes = generationHistory.get(clientIP) || [];
+    const oneHourAgo = Date.now() - (60 * 60 * 1000);
+    const recentRequests = requestTimes.filter(time => time > oneHourAgo);
+    
+    if (recentRequests.length >= MAX_REQUESTS_PER_HOUR) {
+      res.writeHead(429, { 
+        'Content-Type': 'application/json',
+        'Retry-After': '3600'
+      });
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Hourly rate limit exceeded',
+        details: `You can generate a maximum of ${MAX_REQUESTS_PER_HOUR} workflows per hour. Please try again later.`,
+        retry_after: 3600,
+        requests_remaining: 0
+      }));
+      return;
+    }
+    
+    // Track this request
+    recentRequests.push(Date.now());
+    generationHistory.set(clientIP, recentRequests);
+    activeGenerations.set(clientIP, currentActive + 1);
+    
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    
+    req.on('end', async () => {
+      try {
+        const { use_case, industry, complexity } = JSON.parse(body);
+        
+        if (!use_case) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: false,
+            error: 'use_case is required'
+          }));
+          return;
+        }
+        
+        log.info(`🤖 Generating workflow for: ${use_case}`);
+        
+        // Spawn Python workflow generator
+        const { spawn } = require('child_process');
+        const python = spawn('python3', [
+          path.join(REPO_ROOT, 'scripts', 'workflow_generator.py'),
+          'full',
+          '--use-case', use_case,
+          '--industry', industry || 'general',
+          '--complexity', complexity || 'medium',
+          '--output-dir', path.join(REPO_ROOT, 'generated_workflows')
+        ]);
+        
+        let stdout = '';
+        let stderr = '';
+        
+        python.stdout.on('data', (data) => {
+          stdout += data.toString();
+          log.debug('Workflow generator output:', data.toString());
+        });
+        
+        python.stderr.on('data', (data) => {
+          stderr += data.toString();
+          log.debug('Workflow generator error:', data.toString());
+        });
+        
+        // FIX: Add subprocess timeout
+        const processTimeout = setTimeout(() => {
+          python.kill('SIGTERM');
+          log.error('Workflow generator process timed out after 60s');
+        }, GENERATION_TIMEOUT);
+        
+        python.on('close', (code) => {
+          clearTimeout(processTimeout);
+          
+          // FIX H04: Decrement active count
+          const currentActive = activeGenerations.get(clientIP) || 1;
+          activeGenerations.set(clientIP, Math.max(0, currentActive - 1));
+          
+          if (code !== 0) {
+            log.error(`Workflow generator exited with code ${code}`);
+            log.error(`stderr: ${stderr}`);
+            
+            // Check if it was a safety rejection
+            if (stderr.includes('REJECTED') || stdout.includes('REJECTED')) {
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({
+                success: false,
+                rejected: true,
+                reason: 'safety_violation',
+                message: 'This use case was rejected by safety filters. See SAFETY_POLICY.md for details.',
+                details: stderr || stdout,
+                disclaimer: 'Safety filters apply to the public hosted generator. Private instances can be configured differently.'
+              }));
+              return;
+            }
+            
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+              success: false,
+              error: 'Failed to generate workflow',
+              details: stderr || 'Unknown error',
+              note: 'Check if OLLAMA_API_KEY is set'
+            }));
+            return;
+          }
+          
+          // Try to parse the generated workflow
+          try {
+            // Extract JSON from output (workflow generator prints multiple things)
+            const jsonMatch = stdout.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+              const workflow = JSON.parse(jsonMatch[0]);
+              
+              log.info(`✅ Generated workflow: ${workflow.name || 'Untitled'}`);
+              
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({
+                success: true,
+                workflow,
+                metadata: {
+                  generated_at: new Date().toISOString(),
+                  model: 'kimi-k2.5:cloud',
+                  safety_checked: true
+                },
+                disclaimer: '⚠️ Generated by AI. Review before use. Ensure compliance with target website ToS and applicable laws.'
+              }));
+            } else {
+              // Return raw output if no JSON found
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({
+                success: true,
+                raw_output: stdout,
+                note: 'Could not parse workflow JSON, returning raw output'
+              }));
+            }
+          } catch (parseError) {
+            log.error('Failed to parse workflow JSON:', parseError.message);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+              success: true,
+              raw_output: stdout,
+              parse_error: parseError.message
+            }));
+          }
+        });
+        
+      } catch (error) {
+        log.error('Generate workflow error:', error.message);
+        
+        // FIX H04: Decrement active count on error
+        const currentActive = activeGenerations.get(clientIP) || 1;
+        activeGenerations.set(clientIP, Math.max(0, currentActive - 1));
+        
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: false,
+          error: error.message
+        }));
+      }
+    });
+    
+    return;
+  }
+  
   res.writeHead(404, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({ error: 'Not found' }));
 });

@@ -32,7 +32,100 @@ class KimiWorkflowGenerator:
     
     This class uses Kimi (Moonshot AI's latest model) to generate
     realistic, production-ready BrowserOS workflows based on use cases.
+    
+    SAFETY DISCLAIMER:
+    This public workflow generator includes safety filters to prevent generation
+    of NSFW or illegal content for public safety and legal compliance.
+    
+    Users running their own private instances can modify or disable these filters
+    as appropriate for their use case. This generator is designed for the public
+    hosted version and errs on the side of caution.
+    
+    See: docs/SAFETY_POLICY.md for full details
     """
+    
+    # Context-aware safety patterns
+    # NOTE: These only apply to the PUBLIC hosted generator
+    # Private instances can modify this list as needed
+    
+    # Pattern format: (pattern, category, confidence_threshold)
+    # Higher confidence = more certain it's malicious
+    SAFETY_PATTERNS = {
+        'nsfw': [
+            ('porn', 0.9),
+            ('nsfw', 0.9),
+            ('adult content', 0.8),
+            ('sex', 0.7),  # Lower confidence - could be "sex education"
+            ('xxx', 0.9),
+            ('escort', 0.8),
+            ('dating app hack', 1.0),
+            ('tinder bot', 0.9),
+            ('onlyfans', 0.7),  # Could be legitimate creator tools
+            ('camgirl', 0.9),
+            ('nude', 0.8),
+            ('explicit', 0.6),  # Lower - could be "explicit consent"
+        ],
+        'illegal': [
+            # Specific malicious intent - HIGH confidence
+            ('hack into', 1.0),
+            ('crack password', 1.0),
+            ('exploit vulnerab', 1.0),
+            ('ddos attack', 1.0),
+            ('credential stuff', 1.0),
+            ('brute force password', 1.0),
+            ('steal data', 1.0),
+            ('steal credit card', 1.0),
+            ('fraud', 0.9),
+            ('phishing', 1.0),
+            ('identity theft', 1.0),
+            ('fake id', 1.0),
+            ('counterfeit', 0.9),
+            ('pirate software', 0.9),
+            ('bypass paywall', 0.9),
+            ('bypass drm', 0.9),
+            ('cheat on exam', 1.0),
+            ('plagiarism tool', 1.0),
+            ('essay mill', 1.0),
+            ('fake review', 0.9),
+            ('spam bot', 0.9),
+            ('fake account creation', 0.9),
+            ('buy followers', 0.8),
+            ('clickfarm', 0.9),
+            ('carding', 1.0),
+            # Generic terms - LOWER confidence (need context)
+            ('hack', 0.5),  # Could be "hackathon" or "growth hack"
+            ('crack', 0.5),  # Could be "crack the code" (solve)
+            ('exploit', 0.4),  # Could be "exploit opportunity"
+        ],
+        'privacy': [
+            ('scrape email', 1.0),
+            ('scrape phone', 1.0),
+            ('scrape personal data', 1.0),
+            ('harvest emails', 1.0),
+            ('dox', 1.0),
+            ('doxxing', 1.0),
+            ('stalk', 0.9),
+            ('track someone', 0.9),
+            ('spy on', 1.0),
+            ('monitor spouse', 1.0),
+            ('employee spy', 1.0),
+            ('keylogger', 1.0),
+            ('screenshot spy', 0.9),
+        ]
+    }
+    
+    # Legitimate contexts that should NOT be flagged
+    LEGITIMATE_CONTEXTS = [
+        'payment flow', 'payment process', 'checkout', 'e-commerce',
+        'process payment', 'payment gateway', 'stripe', 'paypal',
+        'security audit', 'security test', 'penetration test', 'pentest',
+        'own website', 'own site', 'my website', 'my application',
+        'test environment', 'development', 'staging',
+        'authorized', 'permission', 'consent', 'opt-in',
+        'compliance', 'gdpr', 'legal', 'terms of service',
+        'growth hack', 'life hack', 'productivity hack',
+        'hack together', 'hackathon', 'hack day'
+    ]
     
     def __init__(self, api_key: Optional[str] = None):
         """Initialize the workflow generator"""
@@ -50,6 +143,87 @@ class KimiWorkflowGenerator:
         print(f"✅ Initialized Kimi Workflow Generator")
         print(f"   Model: {self.model}")
         print(f"   API: Ollama Cloud")
+        print(f"   Safety: Enabled (NSFW/Illegal content filtering)")
+        print(f"")
+        print(f"   ℹ️  DISCLAIMER: Safety filters apply to public hosted instances.")
+        print(f"       Private instances can be configured differently for specific use cases.")
+    
+    def check_safety(self, use_case: str, industry: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Context-aware safety check for use cases
+        
+        NOTE: This safety check is designed for the PUBLIC hosted generator.
+        Users running private instances can modify or disable this method
+        as appropriate for their specific use cases and legal jurisdictions.
+        
+        Args:
+            use_case: The workflow use case to check
+            industry: Optional industry context
+            
+        Returns:
+            Dict with 'safe': bool and 'reason': str if unsafe
+        """
+        use_case_lower = use_case.lower()
+        industry_lower = (industry or '').lower()
+        combined = f"{use_case_lower} {industry_lower}"
+        
+        # First, check for legitimate contexts that should override flags
+        is_legitimate = False
+        for context in self.LEGITIMATE_CONTEXTS:
+            if context in combined:
+                is_legitimate = True
+                break
+        
+        # Track highest confidence match for each category
+        matches = {
+            'nsfw': {'confidence': 0, 'pattern': None},
+            'illegal': {'confidence': 0, 'pattern': None},
+            'privacy': {'confidence': 0, 'pattern': None}
+        }
+        
+        # Check all patterns
+        for category, patterns in self.SAFETY_PATTERNS.items():
+            for pattern, confidence in patterns:
+                if pattern in combined:
+                    if confidence > matches[category]['confidence']:
+                        matches[category]['confidence'] = confidence
+                        matches[category]['pattern'] = pattern
+        
+        # Determine if we should reject based on confidence and context
+        CONFIDENCE_THRESHOLD = 0.8  # Require 80% confidence to reject
+        
+        for category, match in matches.items():
+            confidence = match['confidence']
+            pattern = match['pattern']
+            
+            if confidence >= CONFIDENCE_THRESHOLD:
+                # High confidence match - but check if legitimate context overrides
+                if is_legitimate and confidence < 1.0:
+                    # Legitimate context found, and not 100% confident it's bad
+                    # Let it through with a warning
+                    continue
+                
+                # Reject this use case
+                category_messages = {
+                    'nsfw': 'NSFW content detected: Use case contains prohibited adult/explicit material',
+                    'illegal': 'Illegal activity detected: Use case involves prohibited actions that may violate laws',
+                    'privacy': 'Privacy violation detected: Use case involves unauthorized data collection or surveillance'
+                }
+                
+                return {
+                    'safe': False,
+                    'category': category,
+                    'reason': category_messages[category],
+                    'pattern': pattern,
+                    'confidence': confidence,
+                    'note': 'If this is a legitimate use case, please clarify the context in your request'
+                }
+        
+        return {
+            'safe': True,
+            'confidence': 1.0 - max(m['confidence'] for m in matches.values()),
+            'note': 'Use case passed safety checks'
+        }
     
     def _load_config(self) -> Dict:
         """Load configuration from config.yml"""
@@ -94,10 +268,29 @@ class KimiWorkflowGenerator:
         Returns:
             Dict with workflow idea and metadata
         """
+        # SAFETY CHECK - Run before any AI generation
+        # NOTE: Public safety filter - can be modified for private instances
+        safety_check = self.check_safety(use_case, industry)
+        if not safety_check['safe']:
+            print(f"❌ REJECTED: {safety_check['reason']}")
+            print(f"   ℹ️  This safety filter applies to the public hosted generator.")
+            print(f"       Private instances can be configured for different use cases.")
+            return {
+                'rejected': True,
+                'reason': 'safety_violation',
+                'category': safety_check['category'],
+                'explanation': safety_check['reason'],
+                'keyword_triggered': safety_check.get('keyword', 'unknown'),
+                'use_case': use_case,
+                'industry': industry,
+                'generated_at': datetime.utcnow().isoformat()
+            }
+        
         print(f"\n🤖 Generating workflow idea for: {use_case}")
         if industry:
             print(f"   Industry: {industry}")
         print(f"   Complexity: {complexity}")
+        print(f"   Safety: ✅ Passed")
         
         # Construct prompt for Kimi
         prompt = self._build_workflow_idea_prompt(use_case, industry, complexity)
@@ -108,11 +301,18 @@ class KimiWorkflowGenerator:
         # Parse response
         try:
             idea = json.loads(response)
+            
+            # Check if AI also rejected it
+            if idea.get('rejected'):
+                print(f"❌ AI Rejected: {idea.get('explanation', 'Safety violation')}")
+                return idea
+            
             idea['generated_at'] = datetime.utcnow().isoformat()
             idea['model'] = self.model
             idea['use_case'] = use_case
             idea['industry'] = industry
             idea['complexity'] = complexity
+            idea['safety_checked'] = True
             
             print(f"✅ Generated workflow idea: {idea.get('title', 'Untitled')}")
             return idea
@@ -127,6 +327,7 @@ class KimiWorkflowGenerator:
                 'use_case': use_case,
                 'industry': industry,
                 'complexity': complexity,
+                'safety_checked': True,
                 'raw_response': response
             }
     
@@ -291,87 +492,276 @@ class KimiWorkflowGenerator:
         
         industry_context = f" in the {industry} industry" if industry else ""
         
-        prompt = f"""Generate a creative and realistic workflow idea for BrowserOS.
+        prompt = f"""You are an expert BrowserOS workflow designer helping someone solve a real problem with browser automation.
 
+THE REQUEST:
 Use Case: {use_case}{industry_context}
 Complexity Level: {complexity}
 
+YOUR MISSION:
+Create a thoughtful, detailed workflow idea that feels personal and actionable - not generic AI-speak. 
+Think like a helpful colleague explaining a solution over coffee, not a robot listing features.
+
+IMPORTANT: Write descriptions that:
+- Tell a micro-story: "Imagine you're..." or "Picture this scenario..."
+- Use concrete examples: specific websites, real data points, actual user pain points
+- Explain the "why" behind each step: "This matters because..."
+- Include relatable details: time savings, frustration solved, impact on daily work
+- Sound human: use natural language, avoid jargon unless explaining it
+
 Respond with ONLY a JSON object in this exact format:
 {{
-  "title": "Short descriptive title",
-  "description": "2-3 sentence description of what this workflow does",
-  "use_case": "The problem this solves",
-  "steps_overview": ["Step 1 summary", "Step 2 summary", "Step 3 summary"],
-  "input_required": ["What inputs the user needs to provide"],
-  "output_produced": ["What outputs the workflow generates"],
-  "estimated_duration": "Time to complete (e.g., '2-5 minutes')",
+  "title": "Compelling, specific title that describes the outcome",
+  "description": "3-4 sentences painting a vivid picture. Start with the user's pain point, describe the transformation, end with the value delivered. Use concrete numbers and real scenarios.",
+  "use_case": "The actual problem being solved - be specific about WHO faces this and WHEN",
+  "steps_overview": [
+    "Step 1: Detailed action with why it matters",
+    "Step 2: Next action explaining the technique used",
+    "Step 3: Outcome with specific result expected",
+    "Add 4-8 steps with personality and detail"
+  ],
+  "input_required": [
+    "Specific input #1: Why you need this and example format",
+    "Specific input #2: Context on where to find this",
+    "Be concrete: 'Your competitor's product page URL (e.g., https://competitor.com/products)'"
+  ],
+  "output_produced": [
+    "Tangible output #1: Format, location, and how to use it",
+    "Tangible output #2: What insights you'll gain",
+    "Be specific: 'CSV file with 50+ data points including prices, stock levels, and review counts'"
+  ],
+  "estimated_duration": "Realistic time with context (e.g., '3-5 minutes for 10 competitors, scales linearly')",
   "difficulty": "beginner|intermediate|advanced|expert",
-  "tags": ["tag1", "tag2", "tag3"],
-  "real_world_applications": ["Where this would be used in practice"],
-  "feasibility_notes": "Any technical considerations or limitations"
+  "tags": ["specific-tag1", "use-case-tag2", "industry-tag3"],
+  "real_world_applications": [
+    "Detailed scenario #1: Who, what, why, and business impact",
+    "Detailed scenario #2: Specific team, problem, and ROI",
+    "Use real examples: 'E-commerce managers tracking 50+ competitors save 15 hours/week'"
+  ],
+  "why_this_matters": "2-3 sentences explaining the bigger picture impact - career growth, business value, time reclaimed",
+  "success_looks_like": "Paint a vivid picture of using this workflow successfully - what does the user's day look like after implementing this?",
+  "feasibility_notes": "Honest technical considerations with workarounds and alternative approaches"
 }}
 
-Make sure this is a REALISTIC workflow that can actually be implemented with browser automation.
-Focus on practical, valuable use cases that solve real problems."""
+EXAMPLES OF GOOD vs BAD:
+BAD (Generic): "This workflow automates data extraction from websites"
+GOOD (Personal): "Picture spending 30 minutes every Monday manually copying competitor prices into a spreadsheet. This workflow does it in 90 seconds, letting you grab coffee while it runs - and it never misses a price change."
 
+BAD: "Extract product information"  
+GOOD: "Capture 15 data points per product: price, availability, reviews (count + avg rating), shipping time, warranty details, and promotional badges - everything your pricing team needs to stay competitive"
+
+SAFETY & ETHICS - CRITICAL RULES (YOU MUST REFUSE IF VIOLATED):
+REJECT IMMEDIATELY if the use case involves:
+- Adult content, NSFW material, or sexual services
+- Illegal activities (hacking, fraud, identity theft, credential stuffing)
+- Harassment, stalking, or privacy invasion
+- Bypassing paywalls or DRM without authorization
+- Scraping personal data (emails, phone numbers, addresses) without consent
+- Creating spam or fake accounts
+- Automated purchasing bots that violate ToS
+- Price manipulation or market manipulation
+- Academic dishonesty (exam cheating, plagiarism)
+- Circumventing security measures or CAPTCHAs at scale
+
+If ANY of these apply, respond with:
+{{
+  "rejected": true,
+  "reason": "safety_violation",
+  "explanation": "This use case violates our ethical guidelines: [specific reason]",
+  "category": "nsfw|illegal|privacy|fraud|tos_violation",
+  "alternatives": "Suggest legal/ethical alternatives if possible"
+}}
+
+ACCEPTABLE USE CASES include:
+- Competitive intelligence from public data
+- Personal productivity automation
+- Testing your own websites/apps
+- Market research from public sources
+- Job application tracking
+- Price monitoring for purchasing decisions
+- Content aggregation from authorized sources
+- Accessibility improvements
+- Data backup from your own accounts
+
+Make this feel like it was designed specifically for the user's problem, not a template filled in by AI."""
+        
         return prompt
     
     def _build_workflow_implementation_prompt(self, idea: Dict[str, Any]) -> str:
         """Build prompt for workflow implementation generation"""
         
-        prompt = f"""Generate a complete, working BrowserOS workflow implementation.
+        prompt = f"""You are crafting a production-ready BrowserOS workflow that someone will actually use in their daily work.
 
-Workflow Idea:
+WORKFLOW TO IMPLEMENT:
 Title: {idea.get('title')}
 Description: {idea.get('description')}
 Use Case: {idea.get('use_case')}
+
+YOUR MISSION:
+Create a complete, thoughtful workflow implementation that feels like it was hand-crafted by an expert - not auto-generated.
+
+KEY PRINCIPLES:
+1. **Descriptive Step Names**: Instead of "Click button", write "Click Add to Cart button to select product for comparison"
+2. **Realistic Selectors**: Use plausible CSS selectors based on common patterns (e.g., data-testid=product-price, .product-card h2)
+3. **Helpful Comments**: Each step name should explain WHY this step matters, not just WHAT it does
+4. **Smart Error Handling**: Include fallback selectors, wait conditions, and retry logic
+5. **Extractable Patterns**: Show where data is captured and how it is stored
+6. **Variable Names**: Use descriptive variables like competitor_prices not data1
+
+AVAILABLE STEP TYPES:
+- navigate: Go to URL (include wait_for: load, networkidle, or selector)
+- click: Click element (use wait_after for page transitions)
+- input: Type into fields (include wait_before for field focus)
+- extract: Grab data (specify output variable name and what data represents)
+- wait: Explicit waits (use for dynamic content, specify condition)
+- scroll: Scroll page (useful for lazy-loaded content)
+- conditional: If/then logic (check for element existence, text content)
+- loop: Repeat steps (for multiple items, pages, etc.)
+- script: Run custom JavaScript (for complex operations)
 
 Respond with ONLY a valid BrowserOS workflow JSON in this format:
 {{
   "name": "{idea.get('title', 'Workflow')}",
   "description": "{idea.get('description', '')}",
   "version": "1.0.0",
+  "author": "BrowserOS AI Generator",
   "steps": [
     {{
       "type": "navigate",
-      "name": "Open website",
-      "url": "https://example.com",
-      "wait_for": "load"
+      "name": "Navigate to competitor's product catalog page",
+      "url": "{{{{competitor_url}}}}/products",
+      "wait_for": "networkidle",
+      "timeout": 10000,
+      "comment": "Using networkidle ensures all product tiles have loaded"
     }},
     {{
-      "type": "click",
-      "name": "Click button",
-      "selector": "#button-id",
-      "wait_after": 1000
+      "type": "wait",
+      "name": "Wait for product grid to render",
+      "selector": ".product-grid, [data-testid='product-list']",
+      "timeout": 5000,
+      "comment": "Fallback selectors handle different site structures"
     }},
     {{
       "type": "extract",
-      "name": "Extract data",
-      "selector": ".data-class",
-      "output": "extracted_data"
+      "name": "Extract product names and prices from first page",
+      "selector": ".product-card",
+      "multiple": true,
+      "fields": {{
+        "name": ".product-title, h2.title",
+        "price": ".price-current, [data-price]",
+        "availability": ".stock-status"
+      }},
+      "output": "products_page_1",
+      "comment": "Captures structured data for each product found"
+    }},
+    {{
+      "type": "conditional",
+      "name": "Check if pagination exists",
+      "condition": "element_exists",
+      "selector": ".pagination .next-page",
+      "on_true": "continue",
+      "on_false": "skip_to_export",
+      "comment": "Only paginate if multiple pages exist"
     }}
   ],
+  "variables": {{
+    "competitor_url": {{
+      "type": "string",
+      "required": true,
+      "description": "Full URL to competitor's website (e.g., https://competitor.com)",
+      "example": "https://example-competitor.com"
+    }},
+    "max_pages": {{
+      "type": "number",
+      "required": false,
+      "default": 5,
+      "description": "Maximum number of product pages to scrape"
+    }}
+  }},
+  "outputs": {{
+    "products_page_1": {{
+      "type": "array",
+      "description": "Product data from first page",
+      "format": "Array of objects with name, price, availability"
+    }},
+    "total_products_found": {{
+      "type": "number",
+      "description": "Count of total products extracted"
+    }}
+  }},
   "error_handling": {{
     "retry_count": 3,
     "retry_delay": 2000,
-    "on_error": "continue"
+    "on_error": "continue",
+    "fallback_selectors": true,
+    "screenshot_on_error": true,
+    "comment": "Takes debug screenshots when steps fail"
+  }},
+  "performance": {{
+    "estimated_duration": "{idea.get('estimated_duration', '2-5 minutes')}",
+    "rate_limit": "1 request per 2 seconds",
+    "memory_usage": "low",
+    "comment": "Respectful crawling with delays between requests"
   }},
   "metadata": {{
     "category": "appropriate-category",
     "tags": {json.dumps(idea.get('tags', []))},
-    "difficulty": "{idea.get('difficulty', 'intermediate')}"
+    "difficulty": "{idea.get('difficulty', 'intermediate')}",
+    "use_cases": {json.dumps(idea.get('real_world_applications', []))[:200]},
+    "created_at": "{{{{timestamp}}}}",
+    "tested": false
   }}
 }}
 
-Requirements:
-1. Use realistic URLs and selectors (examples are fine, but make them plausible)
-2. Include proper error handling
-3. Add comments in step names explaining what each step does
-4. Include data extraction and output where appropriate
-5. Use appropriate step types: navigate, click, input, extract, wait, conditional, loop
-6. Make it COMPLETE and RUNNABLE (with minor customization by user)
+BEST PRACTICES TO FOLLOW:
+- Use multiple fallback selectors: .selector1, .selector2, data-attr
+- Add waits before interactions: wait_before, wait_after
+- Include timeout values: Be realistic (5-10 seconds for most operations)
+- Use variables for user inputs: variable_name
+- Comment complex steps: Explain the why in the comment field
+- Handle pagination: Loop through results, track page numbers
+- Extract structured data: Use fields object for related data points
+- Plan for errors: Retry logic, fallbacks, graceful degradation
+- Document outputs: What data is captured and in what format
+- Rate limiting: Respect target sites with delays
 
-Respond with ONLY the JSON, no additional text."""
+SAFETY & COMPLIANCE - MANDATORY CHECKS:
+DO NOT generate workflows that:
+- Access adult/NSFW content or services
+- Violate website Terms of Service
+- Bypass authentication or authorization
+- Extract private/personal data without consent
+- Automate illegal activities
+- Create spam or fake engagement
+- Perform credential stuffing or brute force attacks
+- Circumvent paywalls without authorization
+- Scrape at rates that could be considered DoS
+- Harvest emails/phones for unsolicited contact
+
+REQUIRED SAFETY FEATURES in every workflow:
+1. Rate limiting with respectful delays (min 1-2 seconds between requests)
+2. User-Agent identification (not spoofing)
+3. Respect for robots.txt (check before scraping)
+4. No credential storage in workflow (use secure variable placeholders)
+5. Clear documentation of data usage and retention
+6. Timeout limits to prevent runaway processes
+7. Error handling that fails gracefully without retrying indefinitely
+
+If this workflow idea violates safety guidelines, respond with:
+{{
+  "rejected": true,
+  "reason": "safety_violation",
+  "category": "specific_category",
+  "explanation": "Detailed reason why this cannot be implemented"
+}}
+
+MAKE IT FEEL HANDCRAFTED:
+- Selectors should look like they came from inspecting real pages
+- Comments should sound like a senior developer explaining to a junior
+- Variable names should be self-documenting
+- Error handling should anticipate real-world failures
+
+Respond with ONLY the JSON, no additional text before or after."""
 
         return prompt
     
@@ -380,35 +770,143 @@ Respond with ONLY the JSON, no additional text."""
         
         workflow_json = json.dumps(workflow, indent=2)
         
-        prompt = f"""Validate this BrowserOS workflow for technical feasibility and real-world applicability.
+        prompt = f"""You are a senior BrowserOS engineer reviewing a workflow before it goes to production.
 
-Workflow:
+WORKFLOW TO VALIDATE:
 {workflow_json}
 
-Analyze the workflow and respond with ONLY a JSON object in this format:
+YOUR MISSION:
+Provide an honest, detailed technical review that will actually help improve this workflow.
+Think like a code reviewer who cares about quality - be thorough but constructive.
+
+VALIDATION CHECKLIST:
+
+1. **Selector Reality Check**
+   - Are the CSS selectors realistic? (e.g., based on common patterns like .product-card, [data-testid], etc.)
+   - Are there fallback selectors for brittle elements?
+   - Will these selectors work across different site structures?
+
+2. **Error Handling Assessment**
+   - Is retry logic sufficient for flaky elements?
+   - Are timeouts realistic? (not too short to fail, not too long to hang)
+   - What happens if a step fails? Is there graceful degradation?
+   - Are screenshots captured on errors for debugging?
+
+3. **Step Logic & Flow**
+   - Are steps in the right order?
+   - Are waits placed appropriately (after navigation, before clicks)?
+   - Does pagination logic make sense?
+   - Are conditionals checking the right things?
+
+4. **Real-World Applicability**
+   - Would this actually work on modern websites?
+   - Does it handle dynamic content (SPAs, lazy loading)?
+   - Is it rate-limited to avoid bans?
+   - Will it work across different browsers?
+
+5. **Security & Ethics** [CRITICAL - AUTO-REJECT IF FAILED]
+   - Are there hardcoded credentials? (RED FLAG - REJECT)
+   - Does it access NSFW or illegal content? (RED FLAG - REJECT)
+   - Does it respect robots.txt?
+   - Is rate limiting respectful?
+   - Any data privacy concerns?
+   - Does it violate any website ToS?
+   - Could it be used for harassment or stalking? (RED FLAG - REJECT)
+   - Does it extract personal data without consent? (RED FLAG - REJECT)
+   - Does it bypass security measures unethically? (RED FLAG - REJECT)
+   - Could it enable illegal activities? (RED FLAG - REJECT)
+
+IMMEDIATE REJECTION CRITERIA:
+If the workflow involves ANY of these, set feasible: false and explain:
+- Adult/NSFW content access
+- Illegal activities (hacking, fraud, identity theft)
+- Privacy violations (scraping personal data without consent)
+- ToS violations (credential stuffing, automated account creation)
+- Harassment or stalking capabilities
+- Bypassing paywalls/DRM without authorization
+- Creating spam or fake engagement
+- Academic dishonesty tools
+- Market manipulation
+- DoS-like request rates
+
+For rejected workflows, respond with:
+{{
+  "feasible": false,
+  "rejected": true,
+  "rejection_reason": "safety_violation",
+  "feasibility_score": 0,
+  "category": "nsfw|illegal|privacy|fraud|harassment|tos_violation",
+  "issues": ["Specific safety violation identified"],
+  "verdict": "This workflow cannot be approved due to [specific safety concern]. It violates ethical guidelines and/or laws."
+}}
+
+6. **Data Quality**
+   - Are extracted fields comprehensive enough?
+   - Is the output format useful?
+   - Are variable names descriptive?
+   - Is data normalized/cleaned?
+
+7. **Performance & Reliability**
+   - Will this complete in reasonable time?
+   - Is memory usage reasonable?
+   - Can it run unattended?
+   - How often will it need maintenance?
+
+8. **User Experience**
+   - Are the required inputs clearly documented?
+   - Will the outputs be immediately useful?
+   - Are error messages helpful?
+   - Is the complexity appropriate for the claimed difficulty level?
+
+Respond with ONLY a JSON object in this format:
 {{
   "feasible": true/false,
   "feasibility_score": 0-100,
-  "issues": ["List of problems or concerns", "Another issue"],
-  "recommendations": ["Suggested improvements", "Another suggestion"],
-  "security_concerns": ["Any security issues"],
-  "performance_notes": ["Performance considerations"],
+  "confidence": "high|medium|low",
+  "issues": [
+    "Specific issue #1: What's wrong and why it matters",
+    "Specific issue #2: Concrete example of the problem",
+    "Be detailed: 'Selector .product-price is too generic and will break on PLP vs PDP pages'"
+  ],
+  "recommendations": [
+    "Actionable fix #1: Exactly what to change and why",
+    "Actionable fix #2: Include code example if relevant",
+    "Be specific: 'Add fallback selector: .product-price, [data-product-price], .price-wrapper .current'"
+  ],
+  "security_concerns": [
+    "Security issue #1: Severity level and mitigation",
+    "Note: Empty array if no issues"
+  ],
+  "performance_notes": [
+    "Performance insight #1: Impact and optimization suggestion",
+    "Example: 'Extracting 100+ products per page may timeout - consider batching'"
+  ],
+  "missing_edge_cases": [
+    "Edge case #1: Scenario not handled and how to fix",
+    "Example: 'No handling for 'Out of Stock' products - add conditional check'"
+  ],
   "estimated_reliability": "high|medium|low",
+  "reliability_explanation": "Why you rated it this way - what could go wrong?",
   "real_world_score": 0-100,
-  "verdict": "Short summary of overall assessment"
+  "real_world_explanation": "Will this actually work in production? Be honest.",
+  "maintenance_burden": "low|medium|high",
+  "maintenance_notes": "How often will this break? What requires updates?",
+  "verdict": "2-3 sentence summary: Is this production-ready? What's the biggest risk? Would you deploy this?",
+  "improvements_if_time": [
+    "Nice-to-have #1: Additional feature that would make this better",
+    "Nice-to-have #2: Quality-of-life improvement"
+  ]
 }}
 
-Check for:
-- Are the selectors realistic and likely to work?
-- Is the error handling adequate?
-- Are the steps in logical order?
-- Would this actually work on real websites?
-- Are there security issues (like hardcoded credentials)?
-- Is the workflow practical and useful?
-- Are there missing steps or edge cases?
+BE HONEST AND DETAILED:
+DONT say: Selectors might not work
+DO say: Selector .product is too generic - most e-commerce sites use more specific patterns like .product-card, .product-tile, or data-component=ProductCard. This will likely grab unrelated elements.
 
-Be honest and critical. The goal is to ensure only high-quality workflows."""
+DONT say: Add error handling
+DO say: Missing try-catch around network requests. If site returns 503, workflow will hang. Add timeout: 10000 and retry_count: 3 with exponential backoff.
 
+Your goal is to ensure this workflow will actually work in production, is safe, ethical, and legal, and will make the user successful."""
+        
         return prompt
 
 
