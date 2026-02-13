@@ -132,13 +132,14 @@ while true; do
             echo "Starting HTTP MCP server on port 3100..."
             echo
             echo "The server will be available at: http://localhost:3100/mcp"
+            echo "SSE endpoint for BrowserOS: http://localhost:3100/sse"
             echo "Health check endpoint: http://localhost:3100/health"
             echo
             echo "To connect from BrowserOS:"
             echo "  1. Open BrowserOS"
             echo "  2. Go to Settings → Connected Apps"
             echo "  3. Click 'Add Custom App'"
-            echo "  4. Enter URL: http://localhost:3100/mcp"
+            echo "  4. Enter URL: http://localhost:3100/sse"
             echo "  5. Name: BrowserOS Knowledge Base"
             echo
             echo "Press Ctrl+C to stop the server"

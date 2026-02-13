@@ -646,16 +646,130 @@ async function handleMCPRequest(body) {
 }
 
 /**
+ * SSE Transport — Active Sessions
+ * BrowserOS custom apps connect via SSE transport:
+ *   1. Client GETs /sse → receives SSE stream with POST endpoint URL
+ *   2. Client POSTs JSON-RPC messages to /messages?sessionId=xxx
+ *   3. Server pushes responses back via the SSE stream
+ */
+const sseSessions = new Map();
+
+function generateSessionId() {
+  return 'mcp-' + Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 10);
+}
+
+/**
  * HTTP Server
  */
 const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
   if (req.method === 'OPTIONS') {
     res.writeHead(200);
     res.end();
+    return;
+  }
+  
+  // =========================================================================
+  // SSE Transport — GET /sse
+  // BrowserOS connects here to establish the event stream
+  // =========================================================================
+  if (req.url === '/sse' && req.method === 'GET') {
+    const sessionId = generateSessionId();
+    
+    log.info(`📡 SSE client connected (session: ${sessionId})`);
+    
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+      'X-Accel-Buffering': 'no'
+    });
+    
+    // Store the SSE response for this session
+    sseSessions.set(sessionId, res);
+    
+    // Send the endpoint event — tells the client where to POST messages
+    const messagesUrl = `/messages?sessionId=${sessionId}`;
+    res.write(`event: endpoint\ndata: ${messagesUrl}\n\n`);
+    
+    // Send periodic keepalive pings
+    const keepalive = setInterval(() => {
+      try {
+        res.write(': keepalive\n\n');
+      } catch (e) {
+        clearInterval(keepalive);
+      }
+    }, 30000);
+    
+    // Clean up on disconnect
+    req.on('close', () => {
+      log.info(`📡 SSE client disconnected (session: ${sessionId})`);
+      clearInterval(keepalive);
+      sseSessions.delete(sessionId);
+    });
+    
+    return;
+  }
+  
+  // =========================================================================
+  // SSE Transport — POST /messages?sessionId=xxx
+  // BrowserOS sends JSON-RPC messages here
+  // =========================================================================
+  const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+  
+  if (parsedUrl.pathname === '/messages' && req.method === 'POST') {
+    const sessionId = parsedUrl.searchParams.get('sessionId');
+    const sseRes = sessionId ? sseSessions.get(sessionId) : null;
+    
+    if (!sessionId || !sseRes) {
+      log.error(`Invalid or expired session: ${sessionId}`);
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Invalid or expired session ID' }));
+      return;
+    }
+    
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', async () => {
+      try {
+        const requestBody = JSON.parse(body);
+        log.info(`🔧 SSE message (${sessionId}): ${requestBody.method || requestBody.tool || 'unknown'}`);
+        
+        const response = await handleMCPRequest(requestBody);
+        
+        // Push the response through the SSE stream
+        const sseData = JSON.stringify(response);
+        try {
+          sseRes.write(`event: message\ndata: ${sseData}\n\n`);
+        } catch (e) {
+          log.error(`Failed to write to SSE stream: ${e.message}`);
+        }
+        
+        // Also respond to the POST with 202 Accepted
+        res.writeHead(202, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'accepted' }));
+        
+      } catch (error) {
+        log.error('SSE message error:', error.message);
+        
+        const errorResponse = {
+          jsonrpc: '2.0',
+          id: null,
+          error: { code: -32700, message: 'Parse error: ' + error.message }
+        };
+        
+        try {
+          sseRes.write(`event: message\ndata: ${JSON.stringify(errorResponse)}\n\n`);
+        } catch (e) { /* SSE stream dead */ }
+        
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: error.message }));
+      }
+    });
+    
     return;
   }
   
@@ -910,10 +1024,13 @@ server.listen(PORT, HOST, () => {
   log.info('='.repeat(60));
   log.info('🚀 BrowserOS_Guides MCP Server');
   log.info('='.repeat(60));
-  log.info(`📡 Listening on http://${HOST}:${PORT}/mcp`);
-  log.info(`✅ Health check: http://${HOST}:${PORT}/mcp/health`);
+  log.info(`📡 REST endpoint: http://${HOST}:${PORT}/mcp`);
+  log.info(`📡 SSE endpoint:  http://${HOST}:${PORT}/sse`);
+  log.info(`✅ Health check:  http://${HOST}:${PORT}/mcp/health`);
   log.info(`🔧 Available tools: ${Object.keys(tools).length}`);
   log.info(`📚 Loaded workflows: ${knowledgeBase.workflows.length}`);
+  log.info('');
+  log.info('BrowserOS Custom App URL: http://localhost:' + PORT + '/sse');
   log.info('='.repeat(60));
 });
 
