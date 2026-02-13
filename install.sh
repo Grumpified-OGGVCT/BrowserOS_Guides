@@ -307,10 +307,9 @@ main() {
     echo
     echo "[2/9] Checking Node.js installation..."
     
-    if [ "$LAST_STATE" != "node_checked" ] && [ "$LAST_STATE" != "git_checked" ] && \
-       [ "$LAST_STATE" != "pip_checked" ] && [ "$LAST_STATE" != "dependencies_installed" ] && \
-       [ "$LAST_STATE" != "node_dependencies_installed" ] && [ "$LAST_STATE" != "directories_created" ] && \
-       [ "$LAST_STATE" != "env_configured" ] && [ "$LAST_STATE" != "setup_complete" ]; then
+    if [ -z "$LAST_STATE" ] || \
+       [ "$LAST_STATE" = "prerequisites_checked" ] || \
+       [ "$LAST_STATE" = "python_checked" ]; then
         
         if command -v node &> /dev/null; then
             NODE_VERSION=$(node --version 2>&1 | sed 's/v//')
@@ -374,10 +373,10 @@ main() {
     echo
     echo "[3/9] Checking Git installation..."
     
-    if [ "$LAST_STATE" != "git_checked" ] && [ "$LAST_STATE" != "pip_checked" ] && \
-       [ "$LAST_STATE" != "dependencies_installed" ] && [ "$LAST_STATE" != "node_dependencies_installed" ] && \
-       [ "$LAST_STATE" != "directories_created" ] && [ "$LAST_STATE" != "env_configured" ] && \
-       [ "$LAST_STATE" != "setup_complete" ]; then
+    if [ -z "$LAST_STATE" ] || \
+       [ "$LAST_STATE" = "prerequisites_checked" ] || \
+       [ "$LAST_STATE" = "python_checked" ] || \
+       [ "$LAST_STATE" = "node_checked" ]; then
         
         if command -v git &> /dev/null; then
             GIT_VERSION=$(git --version | awk '{print $3}')
@@ -425,9 +424,11 @@ main() {
     echo
     echo "[4/9] Checking pip installation..."
     
-    if [ "$LAST_STATE" != "pip_checked" ] && [ "$LAST_STATE" != "dependencies_installed" ] && \
-       [ "$LAST_STATE" != "node_dependencies_installed" ] && [ "$LAST_STATE" != "directories_created" ] && \
-       [ "$LAST_STATE" != "env_configured" ] && [ "$LAST_STATE" != "setup_complete" ]; then
+    if [ -z "$LAST_STATE" ] || \
+       [ "$LAST_STATE" = "prerequisites_checked" ] || \
+       [ "$LAST_STATE" = "python_checked" ] || \
+       [ "$LAST_STATE" = "node_checked" ] || \
+       [ "$LAST_STATE" = "git_checked" ]; then
         
         if $PYTHON_CMD -m pip --version &> /dev/null; then
             print_success "pip is available"
@@ -466,9 +467,12 @@ main() {
     echo "This may take a few minutes..."
     echo
 
-    if [ "$LAST_STATE" != "dependencies_installed" ] && [ "$LAST_STATE" != "node_dependencies_installed" ] && \
-       [ "$LAST_STATE" != "directories_created" ] && [ "$LAST_STATE" != "env_configured" ] && \
-       [ "$LAST_STATE" != "setup_complete" ]; then
+    if [ -z "$LAST_STATE" ] || \
+       [ "$LAST_STATE" = "prerequisites_checked" ] || \
+       [ "$LAST_STATE" = "python_checked" ] || \
+       [ "$LAST_STATE" = "node_checked" ] || \
+       [ "$LAST_STATE" = "git_checked" ] || \
+       [ "$LAST_STATE" = "pip_checked" ]; then
 
         # Upgrade pip, setuptools, wheel
         $PYTHON_CMD -m pip install --upgrade pip setuptools wheel --quiet
@@ -541,8 +545,13 @@ main() {
     echo
     echo "[6/9] Installing Node.js dependencies..."
     
-    if [ "$LAST_STATE" != "node_dependencies_installed" ] && [ "$LAST_STATE" != "directories_created" ] && \
-       [ "$LAST_STATE" != "env_configured" ] && [ "$LAST_STATE" != "setup_complete" ]; then
+    if [ -z "$LAST_STATE" ] || \
+       [ "$LAST_STATE" = "prerequisites_checked" ] || \
+       [ "$LAST_STATE" = "python_checked" ] || \
+       [ "$LAST_STATE" = "node_checked" ] || \
+       [ "$LAST_STATE" = "git_checked" ] || \
+       [ "$LAST_STATE" = "pip_checked" ] || \
+       [ "$LAST_STATE" = "dependencies_installed" ]; then
         
         if command -v node &> /dev/null && command -v npm &> /dev/null; then
             if [ -f package.json ]; then
@@ -580,8 +589,14 @@ main() {
     echo
     echo "[7/9] Creating directory structure..."
     
-    if [ "$LAST_STATE" != "directories_created" ] && [ "$LAST_STATE" != "env_configured" ] && \
-       [ "$LAST_STATE" != "setup_complete" ]; then
+    if [ -z "$LAST_STATE" ] || \
+       [ "$LAST_STATE" = "prerequisites_checked" ] || \
+       [ "$LAST_STATE" = "python_checked" ] || \
+       [ "$LAST_STATE" = "node_checked" ] || \
+       [ "$LAST_STATE" = "git_checked" ] || \
+       [ "$LAST_STATE" = "pip_checked" ] || \
+       [ "$LAST_STATE" = "dependencies_installed" ] || \
+       [ "$LAST_STATE" = "node_dependencies_installed" ]; then
         
         mkdir -p logs
         mkdir -p BrowserOS/Research
@@ -601,7 +616,9 @@ main() {
     echo
     echo "[8/9] Checking configuration..."
     
-    if [ "$LAST_STATE" != "env_configured" ] && [ "$LAST_STATE" != "setup_complete" ]; then
+    if [ -z "$LAST_STATE" ] || \
+       [ "$LAST_STATE" != "env_configured" ] && \
+       [ "$LAST_STATE" != "setup_complete" ]; then
         
         if [ ! -f .env ]; then
             if [ -f .env.template ]; then
