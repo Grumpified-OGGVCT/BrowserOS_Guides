@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 BrowserOS Workflow Generator - AI-Powered Workflow Creation
-Uses GLM-5 via Ollama Cloud API to generate realistic, working workflows
+Uses specified AI model (default: GLM-5) via Ollama Cloud API to generate realistic, working workflows
 
 This script is the core of the self-growing workflow library system.
 """
@@ -31,11 +31,11 @@ except ImportError:
     load_config = None
 
 
-class GLMWorkflowGenerator:
+class AIWorkflowGenerator:
     """
-    AI-Powered Workflow Generator using GLM-5
+    AI-Powered Workflow Generator
     
-    This class uses GLM-5 to generate
+    This class uses an AI model (GLM-5, Kimi, Llama3, etc.) to generate
     realistic, production-ready BrowserOS workflows based on use cases.
     
     SAFETY DISCLAIMER:
@@ -132,21 +132,30 @@ class GLMWorkflowGenerator:
         'hack together', 'hackathon', 'hack day'
     ]
     
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
         """Initialize the workflow generator"""
         self.api_key = api_key or os.getenv('OLLAMA_API_KEY')
         if not self.api_key:
             raise ValueError("OLLAMA_API_KEY environment variable required")
         
-        # GLM-5 model name
-        self.model = "glm-5"
         self.base_url = "https://api.ollama.ai/v1"
         
         # Load configuration if available
         self.config = self._load_config()
         
-        print(f"✅ Initialized GLM-5 Workflow Generator")
-        print(f"   Model: {self.model}")
+        # Determine model: CLI override > Config > Default
+        if model:
+            self.model = model
+            source = "CLI Argument"
+        elif self.config and 'sdk' in self.config and 'model' in self.config['sdk']:
+            self.model = self.config['sdk']['model']
+            source = "Config File"
+        else:
+            self.model = "glm-5"
+            source = "Default (Fallback)"
+        
+        print(f"✅ Initialized AI Workflow Generator")
+        print(f"   Model: {self.model} ({source})")
         print(f"   API: Ollama Cloud")
         print(f"   Safety: Enabled (NSFW/Illegal content filtering)")
         print(f"")
@@ -263,7 +272,7 @@ class GLMWorkflowGenerator:
         complexity: str = "medium"
     ) -> Dict[str, Any]:
         """
-        Generate a workflow idea using GLM-5
+        Generate a workflow idea using the configured AI model
         
         Args:
             use_case: What the workflow should accomplish
@@ -297,10 +306,10 @@ class GLMWorkflowGenerator:
         print(f"   Complexity: {complexity}")
         print(f"   Safety: ✅ Passed")
         
-        # Construct prompt for GLM-5
+        # Construct prompt for AI
         prompt = self._build_workflow_idea_prompt(use_case, industry, complexity)
         
-        # Call GLM-5 via Ollama Cloud API
+        # Call AI via Ollama Cloud API
         response = self._call_model(prompt, max_tokens=2000)
         
         # Parse response
@@ -323,7 +332,7 @@ class GLMWorkflowGenerator:
             return idea
             
         except json.JSONDecodeError:
-            print("⚠️  GLM-5 response was not valid JSON, wrapping in structure")
+            print(f"⚠️  {self.model} response was not valid JSON, wrapping in structure")
             return {
                 'title': f"Workflow for {use_case}",
                 'description': response,
@@ -355,7 +364,7 @@ class GLMWorkflowGenerator:
         # Construct prompt for implementation
         prompt = self._build_workflow_implementation_prompt(idea)
         
-        # Call GLM-5 with larger token limit
+        # Call AI with larger token limit
         response = self._call_model(prompt, max_tokens=4000)
         
         # Parse workflow JSON
@@ -395,7 +404,7 @@ class GLMWorkflowGenerator:
         # Construct validation prompt
         prompt = self._build_validation_prompt(workflow)
         
-        # Call GLM-5 for analysis
+        # Call AI for analysis
         response = self._call_model(prompt, max_tokens=2000)
         
         # Parse validation results
@@ -432,7 +441,7 @@ class GLMWorkflowGenerator:
     
     def _call_model(self, prompt: str, max_tokens: int = 2000) -> str:
         """
-        Call GLM-5 via Ollama Cloud API
+        Call AI model via Ollama Cloud API
         
         Args:
             prompt: The prompt to send
@@ -449,7 +458,7 @@ class GLMWorkflowGenerator:
         }
         
         payload = {
-            'model': self.model,  # Must be "glm-5"
+            'model': self.model,
             'messages': [
                 {
                     'role': 'system',
@@ -918,8 +927,11 @@ Your goal is to ensure this workflow will actually work in production, is safe, 
 def main():
     """CLI interface for workflow generator"""
     parser = argparse.ArgumentParser(
-        description='Generate BrowserOS workflows using GLM-5 AI'
+        description='Generate BrowserOS workflows using AI'
     )
+    
+    # Global arguments
+    parser.add_argument('--model', help='Override AI model (e.g., llama3, glm-5)')
     
     subparsers = parser.add_subparsers(dest='command', help='Command to run')
     
@@ -962,7 +974,7 @@ def main():
     
     # Initialize generator
     try:
-        generator = GLMWorkflowGenerator()
+        generator = AIWorkflowGenerator(model=args.model)
     except ValueError as e:
         print(f"❌ {e}")
         print("Set OLLAMA_API_KEY environment variable")
