@@ -673,7 +673,7 @@ This matrix enables the BrowserOS agent suite to automatically select the **Best
 
 ### 3. The "Workflow Architect" (Generator)
 - **Target:** deepseek-v3.2:cloud
-- **Reason:** Superior at large-scale agentic task synthesis—outputting structured, bug-free JSON.
+- **Reason:** Superior at large-scale agentic task synthesisï¿½outputting structured, bug-free JSON.
 
 ### 4. The "Visionary UI Operator" (Interactive Mode)
 - **Target:** qwen3-vl:235b-cloud
@@ -687,6 +687,15 @@ This matrix enables the BrowserOS agent suite to automatically select the **Best
 
 
 # ?? BrowserOS Model Capabilities & Tiered Routing Matrix (PRO)
+
+> **Note on Routing Matrices (Maintenance)**
+>
+> This PRO / advanced routing matrix intentionally mirrors the structure of the earlier
+> **"BrowserOS Model Capabilities & Routing Matrix"** section, but adds deeper, production-focused
+> guidance (tiering, scenario hints, and deployment notes). The earlier matrix is kept as a
+> simplified, onboarding-friendly quick reference, while **this PRO matrix is the canonical source**
+> for model routing details. When updating models, tiers, or recommendations, update this PRO
+> matrix first and then sync any necessary changes back to the basic matrix.
 
 This matrix enables the BrowserOS agent suite to automatically select the **Best in Class** model for specific sub-tasks, partitioned by reasoning intensity and cloud-tethering requirements.
 
