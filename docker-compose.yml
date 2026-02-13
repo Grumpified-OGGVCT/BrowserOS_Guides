@@ -95,15 +95,14 @@ services:
     networks:
       - browseros-network
     
-    # Pull models on startup
-    # entrypoint: ["/bin/sh", "-c"]
-    # command:
-    #   - |
-    #     ollama serve &
-    #     sleep 10
-    #     ollama pull llama2
-    #     ollama pull codellama
-    #     wait
+    # Pull configured model on startup
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        ollama serve &
+        sleep 10
+        ollama pull ${OLLAMA_MODEL:-kimi-k2.5:cloud} || echo "Model pull skipped"
+        wait
     
     deploy:
       resources:

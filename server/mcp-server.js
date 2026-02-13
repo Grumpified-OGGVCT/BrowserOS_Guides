@@ -13,6 +13,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const os = require('os');
 
 // Configuration
 // Support multiple environment variable names for flexibility
@@ -20,6 +21,15 @@ const PORT = process.env.MCP_SERVER_PORT || process.env.MCP_PORT || process.env.
 const HOST = process.env.MCP_HOST || process.env.BROWSEROS_GUIDES_HOST || 'localhost';
 const ENABLE_CACHE = process.env.BROWSEROS_GUIDES_ENABLE_CACHE === 'true';
 const LOG_LEVEL = process.env.BROWSEROS_GUIDES_LOG_LEVEL || 'info';
+
+// Rate limiting state
+const activeGenerations = new Map();   // IP -> active count
+const generationHistory = new Map();   // IP -> [timestamps]
+const MAX_CONCURRENT_PER_IP = 3;
+const MAX_REQUESTS_PER_HOUR = 20;
+
+// Cross-platform Python command
+const PYTHON_CMD = os.platform() === 'win32' ? 'python' : 'python3';
 
 // Paths
 const REPO_ROOT = path.join(__dirname, '..');
@@ -395,16 +405,207 @@ const tools = {
 };
 
 /**
+ * MCP Protocol Tool Definitions (for tools/list responses)
+ */
+const toolDefinitions = [
+  {
+    name: 'query_knowledge',
+    description: 'Search the BrowserOS Knowledge Base for information on workflows, setup, MCP, and more',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Search query' },
+        category: { type: 'string', description: 'Optional category filter' },
+        format: { type: 'string', enum: ['markdown', 'json'], default: 'markdown' }
+      },
+      required: ['query']
+    }
+  },
+  {
+    name: 'validate_workflow',
+    description: 'Validate a BrowserOS workflow JSON against the graph definition schema',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        workflow: { type: 'object', description: 'Workflow object to validate' },
+        strict: { type: 'boolean', default: false }
+      },
+      required: ['workflow']
+    }
+  },
+  {
+    name: 'get_help',
+    description: 'Get help on a specific BrowserOS topic',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        topic: { type: 'string', description: 'Help topic to look up' }
+      },
+      required: ['topic']
+    }
+  },
+  {
+    name: 'list_workflows',
+    description: 'List available BrowserOS workflow examples',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        category: { type: 'string', description: 'Optional category filter' }
+      }
+    }
+  },
+  {
+    name: 'get_workflow_details',
+    description: 'Get detailed information about a specific workflow',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Workflow name' }
+      },
+      required: ['name']
+    }
+  },
+  {
+    name: 'search_documentation',
+    description: 'Full-text search across BrowserOS documentation and guides',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Search query' },
+        max_results: { type: 'number', default: 10 }
+      },
+      required: ['query']
+    }
+  },
+  {
+    name: 'get_step_template',
+    description: 'Get a template for a specific workflow step type',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        step_type: { type: 'string', description: 'Step type (navigate, click, extract, etc.)' }
+      },
+      required: ['step_type']
+    }
+  },
+  {
+    name: 'check_sources',
+    description: 'Check the status and freshness of knowledge base sources',
+    inputSchema: {
+      type: 'object',
+      properties: {}
+    }
+  },
+  {
+    name: 'generate_workflow_stub',
+    description: 'Generate a starter workflow template for a given use case',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        use_case: { type: 'string', description: 'Description of the workflow use case' },
+        difficulty: { type: 'string', enum: ['beginner', 'intermediate', 'advanced'], default: 'intermediate' },
+        include_error_handling: { type: 'boolean', default: true }
+      },
+      required: ['use_case']
+    }
+  }
+];
+
+/**
  * MCP Request Handler
+ * Supports both MCP protocol methods (initialize, tools/list, tools/call, ping)
+ * and the legacy direct tool invocation format ({ tool, parameters }).
  */
 async function handleMCPRequest(body) {
   const startTime = Date.now();
   
   try {
+    // --- MCP Protocol Method Handling ---
+    const method = body.method;
+    
+    if (method) {
+      log.debug(`MCP protocol method: ${method}`);
+      
+      // Handle JSON-RPC style MCP requests
+      switch (method) {
+        case 'initialize':
+          return {
+            jsonrpc: '2.0',
+            id: body.id || null,
+            result: {
+              protocolVersion: '2024-11-05',
+              serverInfo: {
+                name: 'browseros-knowledge-base',
+                version: '1.0.0'
+              },
+              capabilities: {
+                tools: { listChanged: false }
+              }
+            }
+          };
+          
+        case 'notifications/initialized':
+          // Client acknowledgment — no response needed
+          return { jsonrpc: '2.0', id: body.id || null, result: {} };
+          
+        case 'tools/list':
+          return {
+            jsonrpc: '2.0',
+            id: body.id || null,
+            result: {
+              tools: toolDefinitions
+            }
+          };
+          
+        case 'tools/call': {
+          const toolName = body.params?.name;
+          const toolArgs = body.params?.arguments || {};
+          
+          if (!toolName || !tools[toolName]) {
+            return {
+              jsonrpc: '2.0',
+              id: body.id || null,
+              error: {
+                code: -32602,
+                message: toolName ? `Unknown tool: ${toolName}` : 'Missing tool name'
+              }
+            };
+          }
+          
+          const result = await tools[toolName](toolArgs);
+          return {
+            jsonrpc: '2.0',
+            id: body.id || null,
+            result: {
+              content: [{
+                type: 'text',
+                text: typeof result === 'string' ? result : JSON.stringify(result, null, 2)
+              }]
+            }
+          };
+        }
+          
+        case 'ping':
+          return { jsonrpc: '2.0', id: body.id || null, result: {} };
+          
+        default:
+          log.debug(`Unrecognized MCP method: ${method}`);
+          return {
+            jsonrpc: '2.0',
+            id: body.id || null,
+            error: {
+              code: -32601,
+              message: `Method not found: ${method}`
+            }
+          };
+      }
+    }
+    
+    // --- Legacy Direct Tool Invocation ---
     const { tool, parameters = {} } = body;
     
     if (!tool) {
-      throw new Error('Missing required field: tool');
+      throw new Error('Missing required field: tool (or use MCP protocol with "method" field)');
     }
     
     if (!tools[tool]) {
@@ -580,7 +781,7 @@ const server = http.createServer(async (req, res) => {
         
         // Spawn Python workflow generator
         const { spawn } = require('child_process');
-        const python = spawn('python3', [
+        const python = spawn(PYTHON_CMD, [
           path.join(REPO_ROOT, 'scripts', 'workflow_generator.py'),
           'full',
           '--use-case', use_case,

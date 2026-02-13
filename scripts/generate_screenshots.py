@@ -46,7 +46,9 @@ def get_chrome_paths():
         chromedriver_path = chromedriver_path or '/usr/local/bin/chromedriver'
     elif system == 'Windows':
         chrome_binary = chrome_binary or 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
-        chromedriver_path = chromedriver_path or 'C:\\chromedriver.exe'
+        # Prefer chromedriver from PATH; fall back to common install locations
+        import shutil
+        chromedriver_path = chromedriver_path or shutil.which('chromedriver') or 'chromedriver.exe'
     else:
         raise RuntimeError(f"Unsupported platform: {system}")
     

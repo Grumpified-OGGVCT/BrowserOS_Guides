@@ -24,6 +24,16 @@ except ImportError:
     TRACKER_AVAILABLE = False
     print("⚠️ repo_tracker not available")
 
+# Load configuration via config_loader (with env var fallback)
+try:
+    from config_loader import get_config
+    _cfg = get_config()
+    _ollama_cfg = _cfg.ollama.http if _cfg.ollama else {}
+    _openrouter_cfg = _cfg.openrouter.http if _cfg.openrouter else {}
+except Exception:
+    _ollama_cfg = {}
+    _openrouter_cfg = {}
+
 # Configuration
 REPO_ROOT = Path(__file__).parent.parent
 KB_PATH = REPO_ROOT / "BrowserOS" / "Research" / "BrowserOS_Workflows_KnowledgeBase.md"
@@ -32,9 +42,9 @@ RAW_DIR = REPO_ROOT / "BrowserOS" / "Research" / "raw"
 BROWSEROS_REPO = RAW_DIR / "browseros-ai-BrowserOS"
 REPO_STATE_PATH = REPO_ROOT / "BrowserOS" / "Research" / "repo_state.json"
 
-# API Configuration
-OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY")
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+# API Configuration (config_loader values take precedence, env vars as fallback)
+OLLAMA_API_KEY = _ollama_cfg.get("api_key") or os.getenv("OLLAMA_API_KEY")
+OPENROUTER_API_KEY = _openrouter_cfg.get("api_key") or os.getenv("OPENROUTER_API_KEY")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 FORCE_UPDATE = os.getenv("FORCE_UPDATE", "false").lower() == "true"
 

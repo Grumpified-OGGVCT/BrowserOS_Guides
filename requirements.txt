@@ -31,6 +31,7 @@ jsonschema>=4.20.0     # For workflow validation
 
 # Optional: Additional web scraping tools
 selenium>=4.15.0        # Required for screenshot generation (scripts/generate_screenshots.py)
+Pillow>=10.0.0          # Required for WebP conversion (scripts/convert_screenshots_webp.py)
 # playwright>=1.40.0     # Uncomment if needed for browser automation
 
 # Optional: Semantic search (Phase 8 - not yet required)

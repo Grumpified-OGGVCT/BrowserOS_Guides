@@ -14,7 +14,7 @@ npm run mcp-server
 # Server starts at http://localhost:3100/mcp
 ```
 
-**📖 [Quick Start Guide](./QUICKSTART_MCP.md)** | **🏗️ [Architecture](./ARCHITECTURE.md)** | **📡 [MCP Integration](./MCP_SERVER_INTEGRATION.md)**
+**📖 [Quick Start Guide](./QUICKSTART_MCP.md)** | **🏗️ [Architecture](./ARCHITECTURE.md)** | **📡 [MCP Integration](./build-docs/02-implementation/MCP_SERVER_INTEGRATION.md)**
 
 [![GitHub Actions](https://img.shields.io/badge/automation-GitHub%20Actions-blue)](/.github/workflows/update-kb.yml)
 [![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://www.python.org/)
@@ -685,11 +685,11 @@ This repository uses GitHub Actions to automate maintenance and updates:
 - 📋 [View All Workflows](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/actions)
 - 🚀 [Trigger Workflows](.github/workflows/README.md#-how-to-trigger-workflows)
 - 📊 [Workflow Documentation](.github/workflows/README.md)
-- 🔍 [Verification Report](WORKFLOW_VERIFICATION_REPORT.md)
+- 🔍 [Verification Report](build-docs/05-final-verification/WORKFLOW_VERIFICATION_REPORT.md)
 
 **For Detailed Workflow Information**:
 - [Workflow Trigger Guide](WORKFLOW_TRIGGER_GUIDE.md) - Comprehensive guide to triggering and monitoring workflows
-- [Workflow Verification Report](WORKFLOW_VERIFICATION_REPORT.md) - Testing and verification status
+- [Workflow Verification Report](build-docs/05-final-verification/WORKFLOW_VERIFICATION_REPORT.md) - Testing and verification status
 
 ---
 

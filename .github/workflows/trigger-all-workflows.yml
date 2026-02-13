@@ -65,7 +65,7 @@ jobs:
               workflow_id: 'self-test.yml',
               ref: 'main',
               inputs: {
-                force_fix: true
+                force_fix: 'true'
               }
             });
             console.log('✅ Self-Test workflow triggered successfully');

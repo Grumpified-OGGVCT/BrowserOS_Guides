@@ -71,6 +71,7 @@ COPY --from=dependencies /usr/local/bin /usr/local/bin
 # Copy application code
 COPY scripts/ /app/scripts/
 COPY BrowserOS/ /app/BrowserOS/
+COPY library/ /app/library/
 COPY config.yml /app/
 COPY requirements.txt /app/
 
@@ -83,7 +84,7 @@ RUN git config --global user.name "BrowserOS KB Bot" && \
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import sys; sys.exit(0)"
+    CMD python -c "from pathlib import Path; assert Path('/app/scripts/research_pipeline.py').exists()"
 
 # Run as non-root user for security
 RUN useradd -m -u 1000 kbuser && \
@@ -105,7 +106,7 @@ COPY package.json ./
 COPY server/ ./server/
 
 # Install any future npm dependencies
-# RUN npm install --production
+RUN npm install --production 2>/dev/null || echo 'No npm dependencies to install'
 
 # Create necessary directories
 RUN mkdir -p /app/BrowserOS /app/logs

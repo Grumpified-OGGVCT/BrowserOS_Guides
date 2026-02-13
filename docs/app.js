@@ -415,25 +415,6 @@ function initializeNavigation() {
     });
 }
 
-// ============================================================================
-// Mobile Menu
-// ============================================================================
-
-function initializeMobileMenu() {
-    const mobileToggle = document.querySelector('.mobile-menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    
-    if (mobileToggle && navLinks) {
-        mobileToggle.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
-            this.classList.toggle('active');
-        });
-    }
-}
-
-// ============================================================================
-// Mobile Menu
-// ============================================================================
 
 function initializeMobileMenu() {
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
@@ -936,7 +917,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('Clipboard error:', err);
                 }
             });
-        };
         };
         
         // Download button

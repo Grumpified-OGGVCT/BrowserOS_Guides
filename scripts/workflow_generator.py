@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 try:
-    from config_loader import load_config
+    from config_loader import get_config as load_config
 except ImportError:
     print("Warning: config_loader not available, using defaults")
     load_config = None
