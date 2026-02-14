@@ -11,6 +11,15 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 import subprocess
 
+# Add scripts directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
+
+# Import resilience utilities
+from utils.resilience import (
+    ResilientLogger, validate_api_key, safe_file_read,
+    safe_file_write, check_dependencies
+)
+
 # Color codes for Windows console
 class Colors:
     HEADER = '\033[95m'
@@ -105,13 +114,26 @@ def yes_no(prompt: str, default: bool = True) -> bool:
             return False
         print_error("Please enter 'y' or 'n'")
 
-def validate_api_key(key: str, provider: str) -> bool:
-    """Validate API key format"""
+def validate_api_key_format(key: str, provider: str) -> bool:
+    """
+    Validate API key format with enhanced checks.
+    
+    Args:
+        key: The API key to validate
+        provider: Provider name for context
+    
+    Returns:
+        bool: True if valid, False otherwise
+    """
     if not key or key == "your-api-key-here" or key.startswith("your-"):
         return False
     
     # Basic length check
     if len(key) < 20:
+        return False
+    
+    # Format validation - alphanumeric, hyphens, underscores, dots
+    if not re.match(r'^[a-zA-Z0-9_\-\.]+$', key):
         return False
     
     return True
@@ -142,6 +164,7 @@ class SetupWizard:
         self.config: Dict[str, Any] = {}
         self.env_file = Path('.env')
         self.repo_root = Path(__file__).parent.parent
+        self.logger = ResilientLogger(__name__)
         
     def run(self):
         """Run the complete setup wizard"""
@@ -201,16 +224,47 @@ You can always reconfigure later using the config_manager.py tool.
             print_info(f"Found existing configuration in {self.env_file}")
             
             try:
-                with open(self.env_file, 'r') as f:
-                    for line in f:
-                        line = line.strip()
-                        if line and not line.startswith('#') and '=' in line:
-                            key, value = line.split('=', 1)
-                            self.config[key.strip()] = value.strip()
+                # Use safe_file_read
+                content = safe_file_read(str(self.env_file), logger=self.logger)
+                if not content:
+                    self.logger.warn("Could not read .env file or file is empty")
+                    return
+                
+                # Parse with validation
+                line_num = 0
+                for line in content.split('\n'):
+                    line_num += 1
+                    line = line.strip()
+                    
+                    # Skip empty lines and comments
+                    if not line or line.startswith('#'):
+                        continue
+                    
+                    # Validate line format
+                    if '=' not in line:
+                        self.logger.warn(f"Malformed .env entry at line {line_num}: missing '=' separator")
+                        continue
+                    
+                    # Split and validate
+                    parts = line.split('=', 1)
+                    if len(parts) != 2:
+                        self.logger.warn(f"Malformed .env entry at line {line_num}: invalid format")
+                        continue
+                    
+                    key, value = parts[0].strip(), parts[1].strip()
+                    
+                    # Validate key format (should be uppercase with underscores)
+                    if not key or not re.match(r'^[A-Z_][A-Z0-9_]*$', key):
+                        self.logger.warn(f"Malformed .env entry at line {line_num}: invalid key format '{key}'")
+                        continue
+                    
+                    self.config[key] = value
                 
                 print_success(f"Loaded {len(self.config)} configuration values")
+                self.logger.info(f"Successfully loaded {len(self.config)} config entries from .env")
             except Exception as e:
                 print_warning(f"Could not load existing config: {e}")
+                self.logger.error(f"Failed to load .env file: {e}", exc_info=True)
     
     def configure_agent_mode(self):
         """Configure agent connection mode"""
@@ -264,8 +318,10 @@ Note: You can skip keys and use local mode, but functionality will be limited.
         # Ollama API Key
         print("\n" + "─" * 40)
         print("Ollama Cloud API Key:")
+        print_info("Format: alphanumeric with hyphens/underscores (min 20 chars)")
+        print_info("Example: ollama_sk_abc123def456ghi789jkl012mno345pqr")
         current = self.config.get('OLLAMA_API_KEY', '')
-        has_valid = validate_api_key(current, 'ollama')
+        has_valid = validate_api_key_format(current, 'ollama')
         
         if has_valid:
             print_success(f"Current key: {current[:10]}...{current[-4:]}")
@@ -280,18 +336,22 @@ Note: You can skip keys and use local mode, but functionality will be limited.
                     print_warning("Skipping Ollama API key - local features only")
                     self.config['OLLAMA_API_KEY'] = ''
                     break
-                elif validate_api_key(key, 'ollama'):
+                elif validate_api_key_format(key, 'ollama'):
                     self.config['OLLAMA_API_KEY'] = key
                     print_success("Ollama API key saved")
+                    self.logger.info("Ollama API key configured")
                     break
                 else:
-                    print_error("Invalid API key format. Please try again or type 'skip'")
+                    print_error("Invalid API key format. Key must be 20+ chars, alphanumeric with -/_ allowed")
+                    self.logger.warn(f"Invalid Ollama API key format provided")
         
         # OpenRouter API Key
         print("\n" + "─" * 40)
         print("OpenRouter API Key:")
+        print_info("Format: alphanumeric with hyphens/underscores (min 20 chars)")
+        print_info("Example: sk-or-v1-abc123def456ghi789jkl012mno345pqr")
         current = self.config.get('OPENROUTER_API_KEY', '')
-        has_valid = validate_api_key(current, 'openrouter')
+        has_valid = validate_api_key_format(current, 'openrouter')
         
         if has_valid:
             print_success(f"Current key: {current[:10]}...{current[-4:]}")
@@ -306,18 +366,22 @@ Note: You can skip keys and use local mode, but functionality will be limited.
                     print_warning("Skipping OpenRouter API key")
                     self.config['OPENROUTER_API_KEY'] = ''
                     break
-                elif validate_api_key(key, 'openrouter'):
+                elif validate_api_key_format(key, 'openrouter'):
                     self.config['OPENROUTER_API_KEY'] = key
                     print_success("OpenRouter API key saved")
+                    self.logger.info("OpenRouter API key configured")
                     break
                 else:
-                    print_error("Invalid API key format. Please try again or type 'skip'")
+                    print_error("Invalid API key format. Key must be 20+ chars, alphanumeric with -/_ allowed")
+                    self.logger.warn(f"Invalid OpenRouter API key format provided")
         
         # GitHub Token
         print("\n" + "─" * 40)
         print("GitHub Token:")
+        print_info("Format: alphanumeric with hyphens/underscores (min 20 chars)")
+        print_info("Example: ghp_abc123def456ghi789jkl012mno345pqr")
         current = self.config.get('GITHUB_TOKEN', '')
-        has_valid = validate_api_key(current, 'github')
+        has_valid = validate_api_key_format(current, 'github')
         
         if has_valid:
             print_success(f"Current token: {current[:10]}...{current[-4:]}")
@@ -332,12 +396,14 @@ Note: You can skip keys and use local mode, but functionality will be limited.
                     print_warning("Skipping GitHub token - public repos only")
                     self.config['GITHUB_TOKEN'] = ''
                     break
-                elif validate_api_key(token, 'github'):
+                elif validate_api_key_format(token, 'github'):
                     self.config['GITHUB_TOKEN'] = token
                     print_success("GitHub token saved")
+                    self.logger.info("GitHub token configured")
                     break
                 else:
-                    print_error("Invalid token format. Please try again or type 'skip'")
+                    print_error("Invalid token format. Key must be 20+ chars, alphanumeric with -/_ allowed")
+                    self.logger.warn(f"Invalid GitHub token format provided")
     
     def configure_connection_modes(self):
         """Configure connection modes for services"""
@@ -467,45 +533,63 @@ Configure performance and concurrency:
         
         # Max workers
         current = self.config.get('MAX_WORKERS', '5')
-        workers = get_input("Maximum concurrent workers (1-20)", default=current)
+        print_info("Valid range: 1-20 workers")
+        workers = get_input("Maximum concurrent workers", default=current)
         try:
             workers_int = int(workers)
             if 1 <= workers_int <= 20:
                 self.config['MAX_WORKERS'] = str(workers_int)
+                self.logger.info(f"Max workers set to {workers_int}")
             else:
+                print_error(f"Value {workers_int} is out of range (1-20)")
                 print_warning("Using default: 5")
                 self.config['MAX_WORKERS'] = '5'
+                self.logger.warn(f"Invalid max workers value {workers_int}, using default")
         except ValueError:
+            print_error(f"'{workers}' is not a valid integer")
             print_warning("Using default: 5")
             self.config['MAX_WORKERS'] = '5'
+            self.logger.warn(f"Invalid max workers input '{workers}', using default")
         
         # Request timeout
         current = self.config.get('REQUEST_TIMEOUT', '60')
-        timeout = get_input("Request timeout in seconds (30-300)", default=current)
+        print_info("Valid range: 30-300 seconds")
+        timeout = get_input("Request timeout in seconds", default=current)
         try:
             timeout_int = int(timeout)
             if 30 <= timeout_int <= 300:
                 self.config['REQUEST_TIMEOUT'] = str(timeout_int)
+                self.logger.info(f"Request timeout set to {timeout_int}s")
             else:
+                print_error(f"Value {timeout_int} is out of range (30-300)")
                 print_warning("Using default: 60")
                 self.config['REQUEST_TIMEOUT'] = '60'
+                self.logger.warn(f"Invalid timeout value {timeout_int}, using default")
         except ValueError:
+            print_error(f"'{timeout}' is not a valid integer")
             print_warning("Using default: 60")
             self.config['REQUEST_TIMEOUT'] = '60'
+            self.logger.warn(f"Invalid timeout input '{timeout}', using default")
         
         # Cache duration
         current = self.config.get('CACHE_DURATION', '7')
-        cache = get_input("Cache duration in days (1-30)", default=current)
+        print_info("Valid range: 1-30 days")
+        cache = get_input("Cache duration in days", default=current)
         try:
             cache_int = int(cache)
             if 1 <= cache_int <= 30:
                 self.config['CACHE_DURATION'] = str(cache_int)
+                self.logger.info(f"Cache duration set to {cache_int} days")
             else:
+                print_error(f"Value {cache_int} is out of range (1-30)")
                 print_warning("Using default: 7")
                 self.config['CACHE_DURATION'] = '7'
+                self.logger.warn(f"Invalid cache duration value {cache_int}, using default")
         except ValueError:
+            print_error(f"'{cache}' is not a valid integer")
             print_warning("Using default: 7")
             self.config['CACHE_DURATION'] = '7'
+            self.logger.warn(f"Invalid cache duration input '{cache}', using default")
         
         print_success("Performance settings configured")
     
@@ -535,8 +619,25 @@ Configure logging and monitoring:
         
         if metrics:
             current = self.config.get('METRICS_PORT', '9090')
+            print_info("Valid range: 1024-65535 (ports below 1024 require root)")
             port = get_input("Metrics port", default=current)
-            self.config['METRICS_PORT'] = port
+            try:
+                port_int = int(port)
+                if 1 <= port_int <= 65535:
+                    self.config['METRICS_PORT'] = str(port_int)
+                    if port_int < 1024:
+                        print_warning("Port below 1024 may require root/admin privileges")
+                    self.logger.info(f"Metrics port set to {port_int}")
+                else:
+                    print_error(f"Port {port_int} is out of range (1-65535)")
+                    print_warning("Using default: 9090")
+                    self.config['METRICS_PORT'] = '9090'
+                    self.logger.warn(f"Invalid port value {port_int}, using default")
+            except ValueError:
+                print_error(f"'{port}' is not a valid port number")
+                print_warning("Using default: 9090")
+                self.config['METRICS_PORT'] = '9090'
+                self.logger.warn(f"Invalid port input '{port}', using default")
         
         print_success("Logging configured")
     
@@ -606,21 +707,42 @@ Configure additional features:
                 import shutil
                 shutil.copy(self.env_file, backup)
                 print_info(f"Backed up existing config to {backup}")
+                self.logger.info(f"Created backup: {backup}")
             
-            # Write new configuration
-            with open(self.env_file, 'w') as f:
-                f.write("# " + "=" * 76 + "\n")
-                f.write("# BrowserOS Knowledge Base - Configuration\n")
-                f.write("# Generated by setup wizard\n")
-                f.write("# " + "=" * 76 + "\n\n")
-                
-                # Write configuration values
-                for key, value in sorted(self.config.items()):
-                    f.write(f"{key}={value}\n")
+            # Build configuration content
+            content = []
+            content.append("# " + "=" * 76)
+            content.append("# BrowserOS Knowledge Base - Configuration")
+            content.append("# Generated by setup wizard")
+            content.append("# " + "=" * 76)
+            content.append("")
             
-            print_success(f"Configuration saved to {self.env_file}")
+            # Write configuration values
+            for key, value in sorted(self.config.items()):
+                content.append(f"{key}={value}")
+            
+            config_text = '\n'.join(content)
+            
+            # Use safe_file_write
+            success = safe_file_write(
+                str(self.env_file),
+                config_text,
+                mode='w',
+                encoding='utf-8',
+                create_dirs=False,
+                logger=self.logger
+            )
+            
+            if success:
+                print_success(f"Configuration saved to {self.env_file}")
+                self.logger.info(f"Configuration written to {self.env_file}")
+            else:
+                print_error(f"Failed to save configuration")
+                self.logger.error("Failed to write configuration file")
+                sys.exit(1)
         except Exception as e:
             print_error(f"Failed to save configuration: {e}")
+            self.logger.error(f"Configuration save error: {e}", exc_info=True)
             sys.exit(1)
     
     def validate_configuration(self):
@@ -629,6 +751,32 @@ Configure additional features:
         
         issues = []
         warnings = []
+        
+        # Validate model names are not empty
+        primary_model = self.config.get('PRIMARY_MODEL', '')
+        if not primary_model or primary_model.strip() == '':
+            issues.append("Primary model name is empty")
+        
+        fallback1 = self.config.get('FALLBACK_MODEL_1', '')
+        if not fallback1 or fallback1.strip() == '':
+            warnings.append("Fallback model 1 is not set - may have limited failover")
+        
+        # Validate port numbers
+        if self.config.get('ENABLE_METRICS') == 'true':
+            try:
+                port = int(self.config.get('METRICS_PORT', '9090'))
+                if not (1 <= port <= 65535):
+                    issues.append(f"Metrics port {port} is out of valid range (1-65535)")
+            except ValueError:
+                issues.append(f"Metrics port is not a valid number")
+        
+        # Validate timeout is positive
+        try:
+            timeout = int(self.config.get('REQUEST_TIMEOUT', '60'))
+            if timeout <= 0:
+                issues.append(f"Request timeout must be positive, got {timeout}")
+        except ValueError:
+            issues.append("Request timeout is not a valid number")
         
         # Check API keys
         if not self.config.get('OLLAMA_API_KEY'):
@@ -640,33 +788,49 @@ Configure additional features:
         if not self.config.get('GITHUB_TOKEN'):
             warnings.append("GitHub token not set - public repos only")
         
-        # Check Python packages
+        # Check Python packages using check_dependencies
         print_info("Checking Python dependencies...")
-        packages = test_python_imports()
+        critical_deps = ['requests', 'yaml', 'dotenv']
+        optional_deps = ['bs4', 'github', 'ollama', 'openai']
         
-        missing = [pkg for pkg, installed in packages.items() if not installed]
-        if missing:
-            issues.append(f"Missing packages: {', '.join(missing)}")
+        critical_installed, critical_missing = check_dependencies(critical_deps, logger=self.logger)
+        optional_installed, optional_missing = check_dependencies(optional_deps, logger=self.logger)
+        
+        if critical_missing:
+            issues.append(f"CRITICAL packages missing: {', '.join(critical_missing)}")
+            print_error(f"  ✗ Critical dependencies missing: {', '.join(critical_missing)}")
+            print_info(f"    Install with: pip install {' '.join(critical_missing)}")
+        
+        if optional_missing:
+            warnings.append(f"Optional packages missing: {', '.join(optional_missing)}")
+            print_warning(f"  ⚠ Optional dependencies missing: {', '.join(optional_missing)}")
         
         # Display results
         if issues:
             print_error("\nConfiguration issues found:")
             for issue in issues:
                 print(f"  ✗ {issue}")
+            self.logger.error(f"Configuration validation failed with {len(issues)} issues")
         
         if warnings:
             print_warning("\nConfiguration warnings:")
             for warning in warnings:
                 print(f"  ⚠ {warning}")
+            self.logger.warn(f"Configuration has {len(warnings)} warnings")
         
         if not issues and not warnings:
             print_success("Configuration is valid!")
+            self.logger.info("Configuration validation passed")
         elif not issues:
             print_success("Configuration is valid (with warnings)")
+            self.logger.info("Configuration validation passed with warnings")
         else:
             print_error("\nPlease fix the issues above before proceeding")
             if not yes_no("\nContinue anyway?", default=False):
+                self.logger.error("Setup aborted due to validation issues")
                 sys.exit(1)
+            else:
+                self.logger.warn("User chose to continue despite validation issues")
     
     def show_summary(self):
         """Show configuration summary"""
@@ -730,6 +894,13 @@ def main():
         sys.exit(1)
     except Exception as e:
         print_error(f"\nSetup failed: {e}")
+        # Use logger if wizard was initialized
+        try:
+            logger = ResilientLogger(__name__)
+            logger.error(f"Setup failed with exception: {e}", exc_info=True)
+        except Exception:
+            # If secondary logging fails, continue with traceback
+            pass
         import traceback
         traceback.print_exc()
         sys.exit(1)

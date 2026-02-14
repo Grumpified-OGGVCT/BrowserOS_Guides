@@ -13,6 +13,10 @@ import json
 import requests
 from dotenv import load_dotenv
 from datetime import datetime
+from utils.resilience import (
+    ResilientLogger, retry_with_backoff, validate_api_key,
+    resilient_request, validate_url, safe_file_write, safe_file_read
+)
 
 # Force UTF-8 encoding for Windows console
 if sys.platform == "win32":
@@ -26,13 +30,16 @@ from pathlib import Path
 from typing import List, Dict, Any
 import hashlib
 
+# Initialize logger
+logger = ResilientLogger(__name__)
+
 # Add repo tracker
 try:
     from repo_tracker import GitHubRepoTracker
     TRACKER_AVAILABLE = True
 except ImportError:
     TRACKER_AVAILABLE = False
-    print("⚠️ repo_tracker not available")
+    logger.warn("repo_tracker not available")
 
 # Load configuration via config_loader (with env var fallback)
 try:
@@ -40,7 +47,9 @@ try:
     _cfg = get_config()
     _ollama_cfg = _cfg.ollama.http if _cfg.ollama else {}
     _openrouter_cfg = _cfg.openrouter.http if _cfg.openrouter else {}
-except Exception:
+except Exception as e:
+    logger.error(f"Failed to load config from config_loader: {e}")
+    logger.info("Falling back to environment variables")
     _ollama_cfg = {}
     _openrouter_cfg = {}
 
@@ -58,6 +67,19 @@ OPENROUTER_API_KEY = _openrouter_cfg.get("api_key") or os.getenv("OPENROUTER_API
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 FORCE_UPDATE = os.getenv("FORCE_UPDATE", "false").lower() == "true"
 
+# Validate API keys (allow placeholders since they're optional)
+try:
+    if OLLAMA_API_KEY:
+        validate_api_key(OLLAMA_API_KEY, "OLLAMA_API_KEY", allow_placeholder=True)
+except ValueError as e:
+    logger.warn(f"OLLAMA_API_KEY validation warning: {e}")
+
+try:
+    if OPENROUTER_API_KEY:
+        validate_api_key(OPENROUTER_API_KEY, "OPENROUTER_API_KEY", allow_placeholder=True)
+except ValueError as e:
+    logger.warn(f"OPENROUTER_API_KEY validation warning: {e}")
+
 
 class AIResearcher:
     """AI-powered research assistant using Ollama and OpenRouter"""
@@ -66,9 +88,10 @@ class AIResearcher:
         # Use local Ollama instance by default
         self.ollama_url = "http://localhost:11434/v1/chat/completions"
         self.openrouter_url = "https://openrouter.ai/api/v1/chat/completions"
-        print(f"DEBUG: OpenRouter URL: {self.openrouter_url}")
+        logger.info(f"OpenRouter URL: {self.openrouter_url}")
         self.session = requests.Session()
     
+    @retry_with_backoff(max_attempts=3, base_delay=2.0)
     def query_ollama(self, prompt: str, model: str = "llama3") -> str:
         """Query Ollama API for research"""
         # For local Ollama, we don't strictly need a key, even if env var has a placeholder
@@ -98,17 +121,21 @@ class AIResearcher:
             response.raise_for_status()
             
             result = response.json()
-            return result.get("choices", [{}])[0].get("message", {}).get("content", "")
+            content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
+            if not content:
+                raise ValueError("Empty response from Ollama API")
+            return content
         
         except Exception as e:
-            print(f"❌ Ollama API error: {e}")
-            return ""
+            logger.error(f"Ollama API error: {e}")
+            raise
     
+    @retry_with_backoff(max_attempts=3, base_delay=2.0)
     def query_openrouter(self, prompt: str, model: str = "x-ai/grok-4.1-fast") -> str:
         """Query OpenRouter API for enhanced research"""
         if not OPENROUTER_API_KEY or "your-openrouter-api-key" in OPENROUTER_API_KEY:
-            print("⚠️ OpenRouter API key not configured, skipping...")
-            return ""
+            logger.warn("OpenRouter API key not configured, skipping...")
+            raise ValueError("OpenRouter API key not configured")
         
         try:
             headers = {
@@ -134,16 +161,18 @@ class AIResearcher:
             response.raise_for_status()
             
             result = response.json()
-            return result.get("choices", [{}])[0].get("message", {}).get("content", "")
+            content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
+            if not content:
+                raise ValueError("Empty response from OpenRouter API")
+            return content
         
         except Exception as e:
             if hasattr(e, 'response') and e.response is not None:
-                print(f"❌ OpenRouter API error: {e}")
-                print(f"🔍 Response body: {e.response.text}")
+                logger.error(f"OpenRouter API error: {e}")
+                logger.error(f"Response body: {e.response.text}")
             else:
-                print(f"❌ OpenRouter API error: {e}")
-
-            return ""
+                logger.error(f"OpenRouter API error: {e}")
+            raise
 
 
 class SourceArchiver:
@@ -153,9 +182,15 @@ class SourceArchiver:
         self.raw_dir = RAW_DIR
         self.raw_dir.mkdir(parents=True, exist_ok=True)
     
+    @retry_with_backoff(max_retries=3, base_delay=1.0)
     def fetch_and_archive(self, url: str) -> str:
         """Fetch URL content and archive it"""
         try:
+            # Validate URL before fetching
+            if not validate_url(url):
+                logger.warn(f"Invalid URL format: {url}")
+                raise ValueError(f"Invalid URL format: {url}")
+            
             # Create hash for filename
             url_hash = hashlib.sha256(url.encode()).hexdigest()
             archive_path = self.raw_dir / f"{url_hash}.html"
@@ -164,11 +199,11 @@ class SourceArchiver:
             if archive_path.exists():
                 age_days = (datetime.now().timestamp() - archive_path.stat().st_mtime) / 86400
                 if age_days < 7 and not FORCE_UPDATE:
-                    print(f"✓ Using cached: {url}")
-                    return archive_path.read_text(encoding='utf-8', errors='ignore')
+                    logger.info(f"Using cached: {url}")
+                    return safe_file_read(archive_path)
             
             # Fetch fresh content
-            print(f"📥 Fetching: {url}")
+            logger.info(f"Fetching: {url}")
             headers = {
                 'User-Agent': 'BrowserOS-KB-Bot/1.0',
                 'Accept': 'text/html,application/xhtml+xml'
@@ -182,14 +217,14 @@ class SourceArchiver:
             
             # Archive content
             content = response.text
-            archive_path.write_text(content, encoding='utf-8')
-            print(f"✅ Archived: {url}")
+            safe_file_write(archive_path, content)
+            logger.info(f"Archived: {url}")
             
             return content
         
         except Exception as e:
-            print(f"❌ Failed to fetch {url}: {e}")
-            return ""
+            logger.error(f"Failed to fetch {url}: {e}")
+            raise
 
 
 class KBResearcher:
@@ -208,29 +243,38 @@ class KBResearcher:
                     repo_name="browseros-ai/BrowserOS",
                     state_file=REPO_STATE_PATH
                 )
-                print("✓ GitHub repository tracker initialized")
+                logger.info("GitHub repository tracker initialized")
             except Exception as e:
-                print(f"⚠️ Could not initialize repo tracker: {e}")
+                logger.warn(f"Could not initialize repo tracker: {e}")
     
     def load_sources(self) -> List[Dict[str, Any]]:
         """Load source manifest"""
         if not SOURCES_PATH.exists():
             return []
-        return json.loads(SOURCES_PATH.read_text())
+        try:
+            content = safe_file_read(SOURCES_PATH)
+            return json.loads(content)
+        except Exception as e:
+            logger.error(f"Failed to load sources from {SOURCES_PATH}: {e}")
+            return []
     
     def save_sources(self):
         """Save updated source manifest"""
-        SOURCES_PATH.write_text(json.dumps(self.sources, indent=2))
+        try:
+            safe_file_write(SOURCES_PATH, json.dumps(self.sources, indent=2))
+        except Exception as e:
+            logger.error(f"Failed to save sources to {SOURCES_PATH}: {e}")
+            raise
     
     def research_from_repo(self) -> Dict[str, str]:
         """Extract information from cloned BrowserOS repository"""
         findings = {}
         
         if not BROWSEROS_REPO.exists():
-            print("⚠️ BrowserOS repository not found")
+            logger.warn("BrowserOS repository not found")
             return findings
         
-        print("📚 Analyzing BrowserOS repository...")
+        logger.info("Analyzing BrowserOS repository...")
         
         # Key files to analyze
         key_files = [
@@ -243,9 +287,12 @@ class KBResearcher:
         for file_path in key_files:
             full_path = BROWSEROS_REPO / file_path
             if full_path.exists():
-                print(f"  📄 Reading {file_path}")
-                content = full_path.read_text(encoding='utf-8', errors='ignore')
-                findings[file_path] = content[:10000]  # Limit size
+                try:
+                    logger.info(f"Reading {file_path}")
+                    content = safe_file_read(full_path)
+                    findings[file_path] = content[:10000]  # Limit size
+                except Exception as e:
+                    logger.error(f"Failed to read {file_path}: {e}")
         
         return findings
     
@@ -255,13 +302,17 @@ class KBResearcher:
         
         for source in self.sources[:6]:  # Limit to avoid rate limits
             url = source['url']
-            content = self.archiver.fetch_and_archive(url)
-            if content:
-                # Extract key information (simplified extraction)
-                findings[url] = content[:5000]
-                
-                # Update access timestamp
-                source['accessed'] = datetime.now().isoformat()
+            try:
+                content = self.archiver.fetch_and_archive(url)
+                if content:
+                    # Extract key information (simplified extraction)
+                    findings[url] = content[:5000]
+                    
+                    # Update access timestamp
+                    source['accessed'] = datetime.now().isoformat()
+            except Exception as e:
+                logger.warn(f"Skipping source {url} due to error: {e}")
+                continue
         
         self.save_sources()
         return findings
@@ -269,22 +320,22 @@ class KBResearcher:
     def get_github_updates(self) -> Dict[str, Any]:
         """Get updates directly from GitHub (commits, releases)"""
         if not self.repo_tracker:
-            print("⚠️ GitHub tracker not available, skipping direct repo updates")
+            logger.warn("GitHub tracker not available, skipping direct repo updates")
             return {}
         
-        print("\n🔍 Checking GitHub repository for updates...")
+        logger.info("Checking GitHub repository for updates...")
         
         # Check if this is first run
         if not self.repo_tracker.state.last_commit_sha:
-            print("📚 First run detected - initializing repository database...")
+            logger.info("First run detected - initializing repository database...")
             return self.repo_tracker.initialize_from_scratch()
         else:
-            print("🔄 Getting incremental updates since last run...")
+            logger.info("Getting incremental updates since last run...")
             return self.repo_tracker.get_incremental_updates()
     
     def synthesize_kb_updates(self, repo_findings: Dict, web_findings: Dict, github_updates: Dict = None) -> str:
         """Use AI to synthesize findings into KB updates"""
-        print("\n🤖 Synthesizing knowledge base updates with AI...")
+        logger.info("Synthesizing knowledge base updates with AI...")
         
         # Create research summary
         summary = "# Research Findings Summary\n\n"
@@ -333,27 +384,38 @@ Research Summary:
 Provide a concise summary of key findings that should update the knowledge base."""
         
         # Try OpenRouter first (more capable), fallback to Ollama
-        insights = self.ai.query_openrouter(prompt)
-        if not insights:
-            insights = self.ai.query_ollama(prompt)
+        insights = None
+        try:
+            insights = self.ai.query_openrouter(prompt)
+            logger.info("AI synthesis complete (OpenRouter)")
+        except Exception as e:
+            logger.warn(f"OpenRouter synthesis failed: {e}, trying Ollama...")
+            try:
+                insights = self.ai.query_ollama(prompt)
+                logger.info("AI synthesis complete (Ollama)")
+            except Exception as e2:
+                logger.error(f"Ollama synthesis also failed: {e2}")
         
         if insights:
-            print("✅ AI synthesis complete")
             return insights
         else:
-            print("⚠️ AI synthesis unavailable, using direct findings")
-            return "Manual review needed - AI analysis unavailable"
+            logger.warn("AI synthesis unavailable, manual review needed")
+            return None
     
     def update_kb(self, insights: str) -> bool:
         """Update knowledge base with new insights"""
         if not KB_PATH.exists():
-            print("❌ Knowledge base file not found")
+            logger.error("Knowledge base file not found")
             return False
         
-        print("\n📝 Updating knowledge base...")
+        logger.info("Updating knowledge base...")
         
         # Read current KB
-        kb_content = KB_PATH.read_text()
+        try:
+            kb_content = safe_file_read(KB_PATH)
+        except Exception as e:
+            logger.error(f"Failed to read knowledge base: {e}")
+            return False
         
         # Add update section (append to end before license section)
         update_section = f"""
@@ -372,7 +434,7 @@ For the most current information, always refer to the official sources listed in
         # Check if we need to update (avoid duplicate updates)
         today = datetime.now().strftime('%Y-%m-%d')
         if f"Auto-generated {today}" in kb_content and not FORCE_UPDATE:
-            print("ℹ️ KB already updated today, skipping...")
+            logger.info("KB already updated today, skipping...")
             return False
         
         # Insert before license section
@@ -382,15 +444,19 @@ For the most current information, always refer to the official sources listed in
             kb_content += update_section
         
         # Write updated KB
-        KB_PATH.write_text(kb_content)
-        print("✅ Knowledge base updated")
-        return True
+        try:
+            safe_file_write(KB_PATH, kb_content)
+            logger.info("Knowledge base updated successfully")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to write knowledge base: {e}")
+            return False
     
     def run(self):
         """Execute full research pipeline with GitHub tracking"""
-        print("=" * 60)
-        print("🚀 Starting AI-Powered KB Research Pipeline with GitHub Tracking")
-        print("=" * 60)
+        logger.info("=" * 60)
+        logger.info("Starting AI-Powered KB Research Pipeline with GitHub Tracking")
+        logger.info("=" * 60)
         
         # Step 1: Get GitHub updates (commits, releases)
         github_updates = self.get_github_updates()
@@ -399,15 +465,15 @@ For the most current information, always refer to the official sources listed in
         has_github_updates = github_updates and github_updates.get('has_updates', False)
         
         if has_github_updates:
-            print(f"\n✅ GitHub updates detected:")
+            logger.info("GitHub updates detected:")
             if github_updates.get('new_commits'):
-                print(f"  - {len(github_updates['new_commits'])} new commits")
+                logger.info(f"  - {len(github_updates['new_commits'])} new commits")
             if github_updates.get('new_releases'):
-                print(f"  - {len(github_updates['new_releases'])} new releases")
+                logger.info(f"  - {len(github_updates['new_releases'])} new releases")
         elif github_updates and github_updates.get('initialized'):
-            print("\n✅ Repository database initialized")
+            logger.info("Repository database initialized")
         else:
-            print("\n✓ No new GitHub updates since last run")
+            logger.info("No new GitHub updates since last run")
         
         # Step 2: Research from cloned repository
         repo_findings = self.research_from_repo()
@@ -419,21 +485,21 @@ For the most current information, always refer to the official sources listed in
         insights = self.synthesize_kb_updates(repo_findings, web_findings, github_updates)
         
         # Step 5: Update KB if we have insights
-        if insights and insights != "Manual review needed - AI analysis unavailable":
+        if insights:
             updated = self.update_kb(insights)
             if updated:
-                print("\n✅ Pipeline completed successfully")
+                logger.info("Pipeline completed successfully")
                 
                 # Print summary
                 if self.repo_tracker:
-                    print(self.repo_tracker.get_summary())
+                    logger.info(self.repo_tracker.get_summary())
                 
                 return 0
             else:
-                print("\nℹ️ No updates needed")
+                logger.info("No updates needed")
                 return 0
         else:
-            print("\n⚠️ Pipeline completed with warnings")
+            logger.warn("Pipeline completed with warnings - AI synthesis unavailable")
             return 1
 
 

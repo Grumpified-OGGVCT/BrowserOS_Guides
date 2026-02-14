@@ -17,6 +17,10 @@ from typing import Dict, List, Tuple, Optional
 import urllib.request
 import urllib.error
 
+# Import resilience utilities
+sys.path.insert(0, str(Path(__file__).parent))
+from utils.resilience import ResilientLogger, safe_file_write, safe_file_read
+
 # Force UTF-8 output for Windows console
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding='utf-8')
@@ -50,11 +54,21 @@ class SelfTest:
         self.fixes_applied: List[str] = []
         self.manual_review_needed: List[Dict] = []
         
+        # Initialize resilient logger
+        import logging
+        log_level = logging.DEBUG if verbose else logging.INFO
+        self.logger = ResilientLogger("self_test", level=log_level)
+        
     def log(self, message: str, level: str = "INFO"):
-        """Log message if verbose"""
-        if self.verbose or level in ["ERROR", "WARNING"]:
-            timestamp = datetime.now().strftime("%H:%M:%S")
-            print(f"[{timestamp}] [{level}] {message}")
+        """Log message with structured logging"""
+        if level == "ERROR":
+            self.logger.error(message)
+        elif level == "WARNING":
+            self.logger.warn(message)
+        elif level == "DEBUG":
+            self.logger.debug(message)
+        else:
+            self.logger.info(message)
     
     def run_all_tests(self) -> bool:
         """Run all test categories"""
@@ -188,8 +202,11 @@ class SelfTest:
         
         if SEARCH_INDEX.exists():
             try:
-                with open(SEARCH_INDEX, encoding='utf-8') as f:
-                    index = json.load(f)
+                content = safe_file_read(str(SEARCH_INDEX), default=None, logger=self.logger)
+                if content is None:
+                    raise ValueError("Failed to read search index file")
+                
+                index = json.loads(content)
                 
                 # Check structure
                 documents = index
@@ -215,17 +232,23 @@ class SelfTest:
                 if self.auto_fix:
                     # Regenerate search index
                     try:
-                        subprocess.run([
+                        result = subprocess.run([
                             sys.executable,
                             str(REPO_ROOT / "scripts" / "generate_search_index.py")
-                        ], check=True, capture_output=True)
+                        ], check=True, capture_output=True, text=True)
                         self.fixes_applied.append("Regenerated search index")
                         self.results.append(TestResult("search_index", True, "Regenerated index", fixable=True, fixed=True))
                     except subprocess.CalledProcessError as regen_error:
-                        self.results.append(TestResult("search_index", False, f"Failed to regenerate: {regen_error}", fixable=True))
+                        error_msg = f"Failed to regenerate: {regen_error}"
+                        if regen_error.stderr:
+                            error_msg += f"\nstderr: {regen_error.stderr}"
+                        if regen_error.stdout:
+                            error_msg += f"\nstdout: {regen_error.stdout}"
+                        self.logger.error(error_msg, exc_info=True)
+                        self.results.append(TestResult("search_index", False, error_msg, fixable=True))
                         self.manual_review_needed.append({
                             "test": "search_index",
-                            "issue": f"Search index broken and regeneration failed: {regen_error}",
+                            "issue": f"Search index broken and regeneration failed: {error_msg}",
                             "severity": "high",
                             "suggested_fix": "Manually run: python scripts/generate_search_index.py"
                         })
@@ -235,14 +258,20 @@ class SelfTest:
             if self.auto_fix:
                 # Generate missing index
                 try:
-                    subprocess.run([
+                    result = subprocess.run([
                         sys.executable,
                         str(REPO_ROOT / "scripts" / "generate_search_index.py")
-                    ], check=True, capture_output=True)
+                    ], check=True, capture_output=True, text=True)
                     self.fixes_applied.append("Created search index")
                     self.results.append(TestResult("search_index", True, "Created index", fixable=True, fixed=True))
                 except subprocess.CalledProcessError as e:
-                    self.results.append(TestResult("search_index", False, f"Failed to create: {e}", fixable=True))
+                    error_msg = f"Failed to create: {e}"
+                    if e.stderr:
+                        error_msg += f"\nstderr: {e.stderr}"
+                    if e.stdout:
+                        error_msg += f"\nstdout: {e.stdout}"
+                    self.logger.error(error_msg, exc_info=True)
+                    self.results.append(TestResult("search_index", False, error_msg, fixable=True))
             else:
                 self.results.append(TestResult("search_index", False, "Index file missing", fixable=True))
     
@@ -298,14 +327,19 @@ class SelfTest:
             
             for json_file in json_files:
                 try:
-                    with open(json_file, encoding='utf-8') as f:
-                        data = json.load(f)
+                    content = safe_file_read(str(json_file), default=None, logger=self.logger)
+                    if content is None:
+                        invalid_files.append(f"{json_file.name}: Failed to read file")
+                        continue
+                    
+                    data = json.loads(content)
                     # Basic workflow validation
                     if isinstance(data, dict) and ("steps" in data or "name" in data):
                         valid_count += 1
                     else:
                         invalid_files.append(str(json_file.name))
                 except Exception as e:
+                    self.logger.error(f"Error validating {json_file.name}: {e}", exc_info=True)
                     invalid_files.append(f"{json_file.name}: {e}")
             
             if invalid_files:
@@ -391,7 +425,11 @@ class SelfTest:
         
         for md_file in md_files:
             try:
-                content = md_file.read_text(encoding='utf-8')
+                content = safe_file_read(str(md_file), default=None, logger=self.logger)
+                if content is None:
+                    self.log(f"Failed to read {md_file.name}", "WARNING")
+                    continue
+                
                 # Find markdown links
                 links = re.findall(r'\[([^\]]+)\]\(([^\)]+)\)', content)
                 for link_text, link_path in links:
@@ -411,6 +449,7 @@ class SelfTest:
                     if not target.exists():
                         broken_links.append(f"{md_file.name} -> {link_path}")
             except Exception as e:
+                self.logger.error(f"Error checking {md_file}: {e}", exc_info=True)
                 self.log(f"Error checking {md_file}: {e}", "WARNING")
         
         if broken_links:
@@ -441,11 +480,16 @@ class SelfTest:
             
             for py_file in py_files:
                 try:
+                    content = safe_file_read(str(py_file), default=None, logger=self.logger)
+                    if content is None:
+                        invalid_files.append(f"{py_file.name}: Failed to read file")
+                        continue
+                    
                     # Compile Python file to check syntax
-                    with open(py_file, encoding='utf-8') as f:
-                        compile(f.read(), py_file.name, 'exec')
+                    compile(content, py_file.name, 'exec')
                     valid_count += 1
                 except SyntaxError as e:
+                    self.logger.error(f"Syntax error in {py_file.name}: {e}", exc_info=True)
                     invalid_files.append(f"{py_file.name}:{e.lineno}")
             
             if invalid_files:
@@ -503,11 +547,13 @@ class SelfTest:
             "manual_review_needed": self.manual_review_needed
         }
         
-        TEST_RESULTS_FILE.parent.mkdir(parents=True, exist_ok=True)
-        with open(TEST_RESULTS_FILE, 'w') as f:
-            json.dump(report, f, indent=2)
-        
-        self.log(f"\nReport saved to: {TEST_RESULTS_FILE}")
+        # Use safe_file_write for test results
+        report_json = json.dumps(report, indent=2)
+        if safe_file_write(str(TEST_RESULTS_FILE), report_json, create_dirs=True, logger=self.logger):
+            self.log(f"\nReport saved to: {TEST_RESULTS_FILE}")
+        else:
+            self.logger.error(f"Failed to save report to {TEST_RESULTS_FILE}")
+            self.log(f"ERROR: Failed to save report to {TEST_RESULTS_FILE}", "ERROR")
     
     def create_github_issue(self):
         """Create GitHub issue for manual review items"""
@@ -552,10 +598,20 @@ def main():
     
     if args.report_only:
         if TEST_RESULTS_FILE.exists():
-            with open(TEST_RESULTS_FILE) as f:
-                report = json.load(f)
-            print(json.dumps(report, indent=2))
-            return 0
+            logger = ResilientLogger("self_test")
+            content = safe_file_read(str(TEST_RESULTS_FILE), default=None, logger=logger)
+            if content:
+                try:
+                    report = json.loads(content)
+                    print(json.dumps(report, indent=2))
+                    return 0
+                except json.JSONDecodeError as e:
+                    logger.error(f"Failed to parse test results: {e}", exc_info=True)
+                    print("Error: Test results file is corrupted")
+                    return 1
+            else:
+                print("Error: Failed to read test results file")
+                return 1
         else:
             print("No test results found. Run tests first.")
             return 1

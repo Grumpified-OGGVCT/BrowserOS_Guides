@@ -103,26 +103,70 @@ while true; do
     echo
     echo "What would you like to do?"
     echo
-    echo "  1. Start MCP Server (Port 3100)"
-    echo "  2. Update Knowledge Base (research pipeline)"
-    echo "  3. Run Self-Test"
-    echo "  4. Validate Knowledge Base"
-    echo "  5. Monitor WhatsApp Integration"
-    echo "  6. Generate Library Artifacts"
-    echo "  7. Build Provenance Index"
-    echo "  8. Generate Workflow"
-    echo "  9. Extract Claude Skills"
-    echo "  A. Generate Repository Structure"
-    echo "  B. Security Scan"
-    echo "  C. Check for and Install System Updates"
-    echo "  D. Configure Settings"
-    echo "  E. View Documentation"
+    echo "  1. Configure Settings"
+    echo "  2. Check for and Install System Updates"
+    echo "  3. Start MCP Server (Port 3100)"
+    echo "  4. Launch Watchtower (Evolution Monitor)"
+    echo "  5. Update Knowledge Base (research pipeline)"
+    echo "  6. Run Self-Test"
+    echo "  7. Validate Knowledge Base"
+    echo "  8. Generate Library Artifacts"
+    echo "  9. Workflow Generator"
+    echo "  A. Monitor WhatsApp Integration"
+    echo "  B. Build Provenance Index"
+    echo "  C. Security Scan"
+    echo "  D. Generate Repository Structure"
+    echo "  E. Extract Claude Skills"
+    echo "  F. View Documentation"
     echo "  0. Exit"
     echo
-    read -p "Enter your choice [0-9,A-E]: " CHOICE
+    read -p "Enter your choice [0-9,A-F]: " CHOICE
 
     case $CHOICE in
         1)
+            # Configure Settings
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Configuration Manager${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Launching interactive configuration manager..."
+            echo
+            read -p "Press Enter to continue..."
+
+            $PYTHON_CMD scripts/config_manager.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Configuration manager encountered an error${NC}"
+            else
+                echo
+                echo -e "${GREEN}✓ Configuration updated successfully${NC}"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        2)
+            # Check for System Updates
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Check for and Install System Updates${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Checking for updates to BrowserOS Knowledge Base from GitHub..."
+            echo "Updates will be installed automatically if available."
+            echo
+
+            $PYTHON_CMD scripts/auto_update.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Update check failed${NC}"
+            else
+                echo
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        3)
             # Start MCP Server
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -156,7 +200,36 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        2)
+        4)
+            # Launch Watchtower
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   The Watchtower (Semantic Bridge Monitor)${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Launching Real-time Learning & Healing Monitor..."
+            echo "- Monitoring active browser tab"
+            echo "- Detecting drift from objective"
+            echo "- Capturing autonomous insights for Knowledge Base"
+            echo
+            read -p "Enter your current research objective: " OBJ
+            if [ -z "$OBJ" ]; then
+                OBJ="General BrowserOS Research"
+            fi
+
+            echo
+            echo "Starting Watchtower with Objective: \"$OBJ\""
+            echo
+
+            $PYTHON_CMD scripts/semantic_bridge.py --objective "$OBJ"
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Watchtower encountered an error${NC}"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        5)
             # Update Knowledge Base
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -182,7 +255,7 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        3)
+        6)
             # Run Self-Test
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -204,7 +277,7 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        4)
+        7)
             # Validate Knowledge Base
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -226,7 +299,52 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        5)
+        8)
+            # Generate Library Artifacts
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Generate Library Artifacts${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "Generating executable workflow templates and pattern index..."
+            echo
+
+            $PYTHON_CMD scripts/generate_library.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Library generation failed${NC}"
+            else
+                echo
+                echo -e "${GREEN}✓ SUCCESS: Library artifacts generated${NC}"
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        9)
+            # Workflow Generator
+            clear
+            echo -e "${BLUE}================================================================================${NC}"
+            echo -e "${BLUE}   Workflow Generator${NC}"
+            echo -e "${BLUE}================================================================================${NC}"
+            echo
+            echo "This tool generates new workflow JSON files using AI."
+            echo
+
+            read -p "Enter workflow description (or press Enter to skip): " DESC
+            if [ -n "$DESC" ]; then
+                $PYTHON_CMD scripts/workflow_generator.py full --use-case "$DESC"
+                if [ $? -ne 0 ]; then
+                    echo
+                    echo -e "${RED}✗ ERROR: Workflow generation failed${NC}"
+                else
+                    echo
+                    echo -e "${GREEN}✓ SUCCESS: Workflow generated${NC}"
+                fi
+            fi
+            read -p "Press Enter to continue..."
+            ;;
+
+        [Aa])
             # Monitor WhatsApp Integration
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -251,28 +369,7 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        6)
-            # Generate Library Artifacts
-            clear
-            echo -e "${BLUE}================================================================================${NC}"
-            echo -e "${BLUE}   Generate Library Artifacts${NC}"
-            echo -e "${BLUE}================================================================================${NC}"
-            echo
-            echo "Generating executable workflow templates and pattern index..."
-            echo
-
-            $PYTHON_CMD scripts/generate_library.py
-            if [ $? -ne 0 ]; then
-                echo
-                echo -e "${RED}✗ ERROR: Library generation failed${NC}"
-            else
-                echo
-                echo -e "${GREEN}✓ SUCCESS: Library artifacts generated${NC}"
-            fi
-            read -p "Press Enter to continue..."
-            ;;
-
-        7)
+        [Bb])
             # Build Provenance Index
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -295,73 +392,7 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        8)
-            # Generate Workflow
-            clear
-            echo -e "${BLUE}================================================================================${NC}"
-            echo -e "${BLUE}   Workflow Generator${NC}"
-            echo -e "${BLUE}================================================================================${NC}"
-            echo
-            echo "This tool generates new workflow JSON files using AI."
-            echo
-
-            read -p "Enter workflow description (or press Enter to skip): " DESC
-            if [ -n "$DESC" ]; then
-                $PYTHON_CMD scripts/workflow_generator.py --description "$DESC"
-                if [ $? -ne 0 ]; then
-                    echo
-                    echo -e "${RED}✗ ERROR: Workflow generation failed${NC}"
-                else
-                    echo
-                    echo -e "${GREEN}✓ SUCCESS: Workflow generated${NC}"
-                fi
-            fi
-            read -p "Press Enter to continue..."
-            ;;
-
-        9)
-            # Extract Claude Skills
-            clear
-            echo -e "${BLUE}================================================================================${NC}"
-            echo -e "${BLUE}   Extract Claude Skills${NC}"
-            echo -e "${BLUE}================================================================================${NC}"
-            echo
-            echo "Extracting and adapting Claude skills from community repositories..."
-            echo
-
-            $PYTHON_CMD scripts/extract_claude_skills.py
-            if [ $? -ne 0 ]; then
-                echo
-                echo -e "${RED}✗ ERROR: Skill extraction failed${NC}"
-            else
-                echo
-                echo -e "${GREEN}✓ SUCCESS: Skills extracted${NC}"
-            fi
-            read -p "Press Enter to continue..."
-            ;;
-
-        [Aa])
-            # Generate Repository Structure
-            clear
-            echo -e "${BLUE}================================================================================${NC}"
-            echo -e "${BLUE}   Generate Repository Structure${NC}"
-            echo -e "${BLUE}================================================================================${NC}"
-            echo
-            echo "Generating repo-structure.json for the repository browser..."
-            echo
-
-            $PYTHON_CMD scripts/generate_repo_structure.py
-            if [ $? -ne 0 ]; then
-                echo
-                echo -e "${RED}✗ ERROR: Structure generation failed${NC}"
-            else
-                echo
-                echo -e "${GREEN}✓ SUCCESS: Repository structure generated${NC}"
-            fi
-            read -p "Press Enter to continue..."
-            ;;
-
-        [Bb])
+        [Cc])
             # Security Scan
             clear
             echo -e "${BLUE}================================================================================${NC}"
@@ -383,42 +414,49 @@ while true; do
             read -p "Press Enter to continue..."
             ;;
 
-        [Cc])
-            # Check for System Updates
+        [Dd])
+            # Generate Repository Structure
             clear
             echo -e "${BLUE}================================================================================${NC}"
-            echo -e "${BLUE}   Check for and Install System Updates${NC}"
+            echo -e "${BLUE}   Generate Repository Structure${NC}"
             echo -e "${BLUE}================================================================================${NC}"
             echo
-            echo "Checking for updates to BrowserOS Knowledge Base from GitHub..."
-            echo "Updates will be installed automatically if available."
+            echo "Generating repo-structure.json for the repository browser..."
             echo
 
-            $PYTHON_CMD scripts/auto_update.py
+            $PYTHON_CMD scripts/generate_repo_structure.py
             if [ $? -ne 0 ]; then
                 echo
-                echo -e "${RED}✗ ERROR: Update check failed${NC}"
+                echo -e "${RED}✗ ERROR: Structure generation failed${NC}"
             else
                 echo
+                echo -e "${GREEN}✓ SUCCESS: Repository structure generated${NC}"
             fi
             read -p "Press Enter to continue..."
             ;;
 
-        [Dd])
-            # Configure Settings
+        [Ee])
+            # Extract Claude Skills
             clear
             echo -e "${BLUE}================================================================================${NC}"
-            echo -e "${BLUE}   Configuration Manager${NC}"
+            echo -e "${BLUE}   Extract Claude Skills${NC}"
             echo -e "${BLUE}================================================================================${NC}"
             echo
-            echo "Launching interactive configuration manager..."
+            echo "Extracting and adapting Claude skills from community repositories..."
             echo
-            read -p "Press Enter to continue..."
 
-            $PYTHON_CMD scripts/config_manager.py
+            $PYTHON_CMD scripts/extract_claude_skills.py
+            if [ $? -ne 0 ]; then
+                echo
+                echo -e "${RED}✗ ERROR: Skill extraction failed${NC}"
+            else
+                echo
+                echo -e "${GREEN}✓ SUCCESS: Skills extracted${NC}"
+            fi
+            read -p "Press Enter to continue..."
             ;;
 
-        [Ee])
+        [Ff])
             # View Documentation
             clear
             echo -e "${BLUE}================================================================================${NC}"

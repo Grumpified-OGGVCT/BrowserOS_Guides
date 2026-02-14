@@ -19,6 +19,12 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
+# Import resilience utilities
+from utils.resilience import (
+    ResilientLogger, retry_with_backoff, validate_api_key,
+    safe_json_load, resilient_request
+)
+
 # Force UTF-8 output for Windows console
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding='utf-8')
@@ -27,58 +33,91 @@ if sys.platform == "win32":
 try:
     from config_loader import get_config as load_config
 except ImportError:
-    print("Warning: config_loader not available, using defaults")
     load_config = None
+    # We'll log this later after the logger is created
 
+# Module-level logger
+logger = ResilientLogger(__name__)
+
+# Log config_loader warning if it's not available
+if load_config is None:
+    logger.warn("config_loader not available, using defaults")
 
 class AIWorkflowGenerator:
 
 
     def _extract_json(self, text: str) -> Optional[Dict[str, Any]]:
-        """Simply and robustly extract JSON from any preamble/postamble"""
-        if not text: return None
+        """Simply and robustly extract JSON from any preamble/postamble.
+        
+        Tries several strategies in sequence:
+        1. JSON between the outermost '{' and '}'.
+        2. Entire text as JSON.
+        3. JSON inside a fenced markdown code block.
+        4. First balanced-brace JSON block found.
+        5. Last-resort outermost '{' ... '}' again.
+        """
+        if not text: 
+            logger.debug("_extract_json: Empty text provided")
+            return None
+        
+        import re
+        
+        # First attempt: JSON between the outermost braces (original primary behavior)
         start = text.find("{")
         end = text.rfind("}")
-        if start == -1 or end == -1: return None
-        try:
-            return json.loads(text[start:end+1])
-        except Exception as e:
-            print(f"Extraction failed: {e}")
-            return None
-
-        try:
-            return json.loads(text)
-        except:
-            pass
+        if start != -1 and end != -1:
+            result = safe_json_load(text[start:end+1], default=None, logger=logger)
+            if result is not None:
+                logger.debug("Strategy 1 (outermost braces) succeeded")
+                return result
+            logger.debug("Strategy 1 (outermost braces) failed, trying next strategy")
+        
+        # Second attempt: parse the entire text as JSON
+        result = safe_json_load(text, default=None, logger=logger)
+        if result is not None:
+            logger.debug("Strategy 2 (entire text) succeeded")
+            return result
+        logger.debug("Strategy 2 (entire text) failed, trying next strategy")
             
-        import re
-        # Try markdown block
+        # Third attempt: JSON inside a fenced markdown code block
         match = re.search(r"```(?:json)?\s*(.*?)\s*```", text, re.DOTALL)
         if match:
-            try: return json.loads(match.group(1))
-            except: pass
+            result = safe_json_load(match.group(1), default=None, logger=logger)
+            if result is not None:
+                logger.debug("Strategy 3 (markdown code block) succeeded")
+                return result
+            logger.debug("Strategy 3 (markdown code block) failed, trying next strategy")
             
-        # Try finding the largest block between matched braces
+        # Fourth attempt: find the largest block between matched braces
         stack = 0
         first_brace = -1
         for i, char in enumerate(text):
             if char == "{":
-                if stack == 0: first_brace = i
+                if stack == 0:
+                    first_brace = i
                 stack += 1
             elif char == "}":
                 stack -= 1
                 if stack == 0 and first_brace != -1:
                     candidate = text[first_brace:i+1]
-                    try: return json.loads(candidate)
-                    except: pass
+                    result = safe_json_load(candidate, default=None, logger=logger)
+                    if result is not None:
+                        logger.debug("Strategy 4 (balanced braces) succeeded")
+                        return result
         
-        # Last resort: try any { } pair found from ends
+        logger.debug("Strategy 4 (balanced braces) failed, trying last resort")
+        
+        # Fifth attempt (last resort): try any outermost '{' ... '}' pair again
         start = text.find("{")
         end = text.rfind("}")
         if start != -1 and end != -1:
-            try: return json.loads(text[start:end+1])
-            except: pass
+            result = safe_json_load(text[start:end+1], default=None, logger=logger)
+            if result is not None:
+                logger.debug("Strategy 5 (last resort outermost braces) succeeded")
+                return result
+            logger.debug("Strategy 5 (last resort) failed")
             
+        logger.warn("All JSON extraction strategies failed")
         return None
 
     """
@@ -183,9 +222,24 @@ class AIWorkflowGenerator:
     
     def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
         """Initialize the workflow generator"""
+        # Initialize logger for this class
+        self.logger = ResilientLogger(self.__class__.__name__)
+        
+        # Get and validate API key
         self.api_key = api_key or os.getenv('OLLAMA_API_KEY')
-        if not self.api_key:
-            raise ValueError("OLLAMA_API_KEY environment variable required")
+        
+        try:
+            validate_api_key(
+                self.api_key,
+                key_name="OLLAMA_API_KEY",
+                min_length=10,  # Lower threshold for Ollama
+                allow_placeholder=False
+            )
+        except ValueError as e:
+            self.logger.error(f"API key validation failed: {e}")
+            self.logger.error("Please set a valid OLLAMA_API_KEY environment variable")
+            self.logger.error("Example: export OLLAMA_API_KEY='your-actual-api-key-here'")
+            raise
         
         self.base_url = "http://localhost:11434/v1"
         
@@ -203,13 +257,13 @@ class AIWorkflowGenerator:
             self.model = "glm-5:cloud"
             source = "Default (Fallback)"
         
-        print(f"✅ Initialized AI Workflow Generator")
-        print(f"   Model: {self.model} ({source})")
-        print(f"   API: Ollama Cloud")
-        print(f"   Safety: Enabled (NSFW/Illegal content filtering)")
-        print(f"")
-        print(f"   ℹ️  DISCLAIMER: Safety filters apply to public hosted instances.")
-        print(f"       Private instances can be configured differently for specific use cases.")
+        self.logger.info("✅ Initialized AI Workflow Generator")
+        self.logger.info(f"   Model: {self.model} ({source})")
+        self.logger.info(f"   API: Ollama Cloud")
+        self.logger.info(f"   Safety: Enabled (NSFW/Illegal content filtering)")
+        self.logger.info("")
+        self.logger.info("   ℹ️  DISCLAIMER: Safety filters apply to public hosted instances.")
+        self.logger.info("       Private instances can be configured differently for specific use cases.")
     
     def check_safety(self, use_case: str, industry: Optional[str] = None) -> Dict[str, Any]:
         """
@@ -295,7 +349,7 @@ class AIWorkflowGenerator:
                 config = load_config()
                 return config.get('OLLAMA', {})
             except Exception as e:
-                print(f"Warning: Could not load config: {e}")
+                self.logger.warn(f"Could not load config: {e}")
         
         # Default configuration
         return {
@@ -335,9 +389,9 @@ class AIWorkflowGenerator:
         # NOTE: Public safety filter - can be modified for private instances
         safety_check = self.check_safety(use_case, industry)
         if not safety_check['safe']:
-            print(f"❌ REJECTED: {safety_check['reason']}")
-            print(f"   ℹ️  This safety filter applies to the public hosted generator.")
-            print(f"       Private instances can be configured for different use cases.")
+            self.logger.error(f"❌ REJECTED: {safety_check['reason']}")
+            self.logger.info("   ℹ️  This safety filter applies to the public hosted generator.")
+            self.logger.info("       Private instances can be configured for different use cases.")
             return {
                 'rejected': True,
                 'reason': 'safety_violation',
@@ -349,11 +403,11 @@ class AIWorkflowGenerator:
                 'generated_at': datetime.utcnow().isoformat()
             }
         
-        print(f"\n🤖 Generating workflow idea for: {use_case}")
+        self.logger.info(f"\n🤖 Generating workflow idea for: {use_case}")
         if industry:
-            print(f"   Industry: {industry}")
-        print(f"   Complexity: {complexity}")
-        print(f"   Safety: ✅ Passed")
+            self.logger.info(f"   Industry: {industry}")
+        self.logger.info(f"   Complexity: {complexity}")
+        self.logger.info(f"   Safety: ✅ Passed")
         
         # Construct prompt for AI
         prompt = self._build_workflow_idea_prompt(use_case, industry, complexity)
@@ -368,7 +422,7 @@ class AIWorkflowGenerator:
             
             # Check if AI also rejected it
             if idea.get('rejected'):
-                print(f"❌ AI Rejected: {idea.get('explanation', 'Safety violation')}")
+                self.logger.error(f"❌ AI Rejected: {idea.get('explanation', 'Safety violation')}")
                 return idea
             
             idea['generated_at'] = datetime.utcnow().isoformat()
@@ -378,11 +432,11 @@ class AIWorkflowGenerator:
             idea['complexity'] = complexity
             idea['safety_checked'] = True
             
-            print(f"✅ Generated workflow idea: {idea.get('title', 'Untitled')}")
+            self.logger.info(f"✅ Generated workflow idea: {idea.get('title', 'Untitled')}")
             return idea
             
         except json.JSONDecodeError:
-            print(f"⚠️  {self.model} response was not valid JSON, wrapping in structure")
+            self.logger.warn(f"⚠️  {self.model} response was not valid JSON, wrapping in structure")
             return {
                 'title': f"Workflow for {use_case}",
                 'description': response,
@@ -408,8 +462,8 @@ class AIWorkflowGenerator:
         Returns:
             Complete BrowserOS workflow JSON
         """
-        print(f"\n🔨 Generating workflow implementation...")
-        print(f"   Title: {idea.get('title', 'Unknown')}")
+        self.logger.info(f"\n🔨 Generating workflow implementation...")
+        self.logger.info(f"   Title: {idea.get('title', 'Unknown')}")
         
         # Construct prompt for implementation
         prompt = self._build_workflow_implementation_prompt(idea)
@@ -429,12 +483,12 @@ class AIWorkflowGenerator:
             workflow['metadata']['idea'] = idea
             workflow['metadata']['generator_version'] = '1.0.0'
             
-            print(f"✅ Generated workflow with {len(workflow.get('steps', []))} steps")
+            self.logger.info(f"✅ Generated workflow with {len(workflow.get('steps', []))} steps")
             return workflow
             
         except json.JSONDecodeError as e:
-            print(f"❌ Failed to parse workflow JSON: {e}")
-            print(f"Response preview: {response[:200]}...")
+            self.logger.error(f"❌ Failed to parse workflow JSON: {e}")
+            self.logger.error(f"Response preview: {response[:200]}...")
             raise
     
     def validate_workflow_feasibility(
@@ -450,7 +504,7 @@ class AIWorkflowGenerator:
         Returns:
             Validation results with feasibility score and issues
         """
-        print(f"\n🔍 Validating workflow feasibility...")
+        self.logger.info(f"\n🔍 Validating workflow feasibility...")
         
         # Construct validation prompt
         prompt = self._build_validation_prompt(workflow)
@@ -469,20 +523,20 @@ class AIWorkflowGenerator:
             score = validation.get('feasibility_score', 0)
             
             if feasible:
-                print(f"✅ Workflow is FEASIBLE (score: {score}/100)")
+                self.logger.info(f"✅ Workflow is FEASIBLE (score: {score}/100)")
             else:
-                print(f"❌ Workflow has issues (score: {score}/100)")
+                self.logger.warn(f"❌ Workflow has issues (score: {score}/100)")
             
             issues = validation.get('issues', [])
             if issues:
-                print(f"   Found {len(issues)} issue(s):")
+                self.logger.info(f"   Found {len(issues)} issue(s):")
                 for issue in issues[:3]:  # Show first 3
-                    print(f"   - {issue}")
+                    self.logger.info(f"   - {issue}")
             
             return validation
             
         except json.JSONDecodeError:
-            print("⚠️  Validation response was not JSON, assuming valid")
+            self.logger.warn("⚠️  Validation response was not JSON, assuming valid")
             return {
                 'feasible': True,
                 'feasibility_score': 75,
@@ -491,6 +545,11 @@ class AIWorkflowGenerator:
                 'raw_response': response
             }
     
+    @retry_with_backoff(
+        max_attempts=3,
+        base_delay=2.0,
+        exceptions=(requests.exceptions.RequestException, requests.exceptions.Timeout)
+    )
     def _call_model(self, prompt: str, max_tokens: int = 2000) -> str:
         """
         Call AI model via Ollama Cloud API
@@ -543,9 +602,9 @@ class AIWorkflowGenerator:
             return content.strip()
             
         except requests.exceptions.RequestException as e:
-            print(f"❌ Error calling Model API: {e}")
-            if hasattr(e.response, 'text'):
-                print(f"   Response: {e.response.text[:200]}")
+            self.logger.error(f"❌ Error calling Model API: {e}")
+            if hasattr(e, 'response') and hasattr(e.response, 'text'):
+                self.logger.error(f"   Response: {e.response.text[:200]}")
             raise
     
     def _build_workflow_idea_prompt(
@@ -1028,8 +1087,9 @@ def main():
     try:
         generator = AIWorkflowGenerator(model=args.model)
     except ValueError as e:
-        print(f"❌ {e}")
-        print("Set OLLAMA_API_KEY environment variable")
+        logger.error(f"❌ {e}")
+        logger.error("Set OLLAMA_API_KEY environment variable")
+        logger.error("Example: export OLLAMA_API_KEY='your-actual-api-key-here'")
         sys.exit(1)
     
     # Execute command
@@ -1043,10 +1103,10 @@ def main():
         if args.output:
             with open(args.output, 'w') as f:
                 json.dump(idea, f, indent=2)
-            print(f"\n💾 Saved idea to {args.output}")
+            logger.info(f"\n💾 Saved idea to {args.output}")
         else:
-            print(f"\n📄 Generated Idea:")
-            print(json.dumps(idea, indent=2))
+            logger.info(f"\n📄 Generated Idea:")
+            logger.info(json.dumps(idea, indent=2))
     
     elif args.command == 'implement':
         with open(args.idea_file) as f:
@@ -1057,10 +1117,10 @@ def main():
         if args.output:
             with open(args.output, 'w') as f:
                 json.dump(workflow, f, indent=2)
-            print(f"\n💾 Saved workflow to {args.output}")
+            logger.info(f"\n💾 Saved workflow to {args.output}")
         else:
-            print(f"\n📄 Generated Workflow:")
-            print(json.dumps(workflow, indent=2))
+            logger.info(f"\n📄 Generated Workflow:")
+            logger.info(json.dumps(workflow, indent=2))
     
     elif args.command == 'validate':
         with open(args.workflow) as f:
@@ -1071,10 +1131,10 @@ def main():
         if args.output:
             with open(args.output, 'w') as f:
                 json.dump(validation, f, indent=2)
-            print(f"\n💾 Saved validation to {args.output}")
+            logger.info(f"\n💾 Saved validation to {args.output}")
         else:
-            print(f"\n📄 Validation Results:")
-            print(json.dumps(validation, indent=2))
+            logger.info(f"\n📄 Validation Results:")
+            logger.info(json.dumps(validation, indent=2))
     
     elif args.command == 'full':
         # Create output directory
@@ -1082,9 +1142,9 @@ def main():
         output_dir.mkdir(parents=True, exist_ok=True)
         
         # Generate idea
-        print("\n" + "="*60)
-        print("PHASE 1: Generating Workflow Idea")
-        print("="*60)
+        logger.info("\n" + "="*60)
+        logger.info("PHASE 1: Generating Workflow Idea")
+        logger.info("="*60)
         idea = generator.generate_workflow_idea(
             args.use_case,
             args.industry,
@@ -1095,48 +1155,48 @@ def main():
         idea_file = output_dir / 'idea.json'
         with open(idea_file, 'w') as f:
             json.dump(idea, f, indent=2)
-        print(f"💾 Saved idea to {idea_file}")
+        logger.info(f"💾 Saved idea to {idea_file}")
         
         # Generate implementation
-        print("\n" + "="*60)
-        print("PHASE 2: Generating Workflow Implementation")
-        print("="*60)
+        logger.info("\n" + "="*60)
+        logger.info("PHASE 2: Generating Workflow Implementation")
+        logger.info("="*60)
         workflow = generator.generate_workflow_implementation(idea)
         
         # Save workflow
         workflow_file = output_dir / 'workflow.json'
         with open(workflow_file, 'w') as f:
             json.dump(workflow, f, indent=2)
-        print(f"💾 Saved workflow to {workflow_file}")
+        logger.info(f"💾 Saved workflow to {workflow_file}")
         
         # Validate if requested
         if args.validate:
-            print("\n" + "="*60)
-            print("PHASE 3: Validating Workflow Feasibility")
-            print("="*60)
+            logger.info("\n" + "="*60)
+            logger.info("PHASE 3: Validating Workflow Feasibility")
+            logger.info("="*60)
             validation = generator.validate_workflow_feasibility(workflow)
             
             # Save validation
             validation_file = output_dir / 'validation.json'
             with open(validation_file, 'w') as f:
                 json.dump(validation, f, indent=2)
-            print(f"💾 Saved validation to {validation_file}")
+            logger.info(f"💾 Saved validation to {validation_file}")
             
             # Print summary
-            print("\n" + "="*60)
-            print("SUMMARY")
-            print("="*60)
-            print(f"✅ Workflow Title: {idea.get('title')}")
-            print(f"✅ Steps: {len(workflow.get('steps', []))}")
-            print(f"✅ Feasibility Score: {validation.get('feasibility_score', 0)}/100")
-            print(f"✅ Verdict: {validation.get('verdict', 'Unknown')}")
+            logger.info("\n" + "="*60)
+            logger.info("SUMMARY")
+            logger.info("="*60)
+            logger.info(f"✅ Workflow Title: {idea.get('title')}")
+            logger.info(f"✅ Steps: {len(workflow.get('steps', []))}")
+            logger.info(f"✅ Feasibility Score: {validation.get('feasibility_score', 0)}/100")
+            logger.info(f"✅ Verdict: {validation.get('verdict', 'Unknown')}")
             
             if not validation.get('feasible', False):
-                print("\n⚠️  Workflow has feasibility issues!")
+                logger.warn("\n⚠️  Workflow has feasibility issues!")
                 for issue in validation.get('issues', [])[:5]:
-                    print(f"   - {issue}")
+                    logger.warn(f"   - {issue}")
         
-        print(f"\n🎉 Complete! All files saved to {output_dir}")
+        logger.info(f"\n🎉 Complete! All files saved to {output_dir}")
 
 
 if __name__ == '__main__':
