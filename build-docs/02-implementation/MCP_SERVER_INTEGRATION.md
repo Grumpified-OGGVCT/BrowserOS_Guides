@@ -205,6 +205,36 @@ The MCP server exposes the following tools that agents can use:
 
 ---
 
+## MCP Server Changes (Current Implementation)
+
+**No new MCP server code changes were made in this update.** The list below summarizes the key enhancements already present in `server/mcp-server.js`:
+
+- ✅ **Zero-dependency `.env` loading** with multi-name port support (`MCP_SERVER_PORT`, `MCP_PORT`, `BROWSEROS_GUIDES_PORT`)
+- ✅ **JSON-RPC MCP compatibility** (`initialize`, `tools/list`, `tools/call`) plus legacy `{ tool, parameters }` requests
+- ✅ **Automatic KB reload** every 5 minutes with SHA-256 hashing and last-updated metadata
+- ✅ **Optional caching** for query responses (`BROWSEROS_GUIDES_ENABLE_CACHE=true`)
+- ✅ **Workflow generation rate limits** (concurrency + hourly caps) to prevent abuse
+- ✅ **Structured logging with secret redaction** gated by `BROWSEROS_GUIDES_LOG_LEVEL`
+- ✅ **Local repo browser tools** (`list_directory`, `read_file`) with path traversal protection
+- ✅ **Semantic Bridge monitor tool** to track browser context drift via CDP
+- ✅ **`chat_with_model` tool** for quick LLM queries with optional doc context
+
+---
+
+## Tooling Gaps & Feasible Additions (Not Implemented Yet)
+
+These are realistic additions the MCP server is still missing, plus why they matter:
+
+- **`get_workflow_schema`** – return the JSON Schema for workflows/steps so IDEs and UIs can validate client-side (prevents malformed workflows and reduces runtime failures).
+- **`diff_workflow_versions`** – compare a workflow ID across KB versions and highlight changes (solves regression tracking after weekly updates).
+- **`validate_selectors`** – lint CSS/XPath selectors and suggest safer alternatives (reduces brittle selectors that break on minor UI changes).
+- **`summarize_kb_changes`** – show what’s new since the last KB build (solves discovery of new features without scanning commits).
+- **`export_workflow_format`** – convert workflows to YAML or a BrowserOS-friendly DSL (solves integration with tools that don’t consume JSON).
+- **`estimate_execution_cost`** – provide a predicted runtime/step cost based on loop counts and page volume (solves planning/scheduling for large jobs).
+- **`search_sources_with_citations`** – return exact source snippets + citations from `sources.json` (improves traceability for compliance and auditing).
+
+---
+
 ## BrowserOS Integration
 
 ### Adding to BrowserOS
