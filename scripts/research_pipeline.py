@@ -91,7 +91,7 @@ class AIResearcher:
         logger.info(f"OpenRouter URL: {self.openrouter_url}")
         self.session = requests.Session()
     
-    @retry_with_backoff(max_retries=3, base_delay=2.0)
+    @retry_with_backoff(max_attempts=3, base_delay=2.0)
     def query_ollama(self, prompt: str, model: str = "llama3") -> str:
         """Query Ollama API for research"""
         # For local Ollama, we don't strictly need a key, even if env var has a placeholder
@@ -130,7 +130,7 @@ class AIResearcher:
             logger.error(f"Ollama API error: {e}")
             raise
     
-    @retry_with_backoff(max_retries=3, base_delay=2.0)
+    @retry_with_backoff(max_attempts=3, base_delay=2.0)
     def query_openrouter(self, prompt: str, model: str = "x-ai/grok-4.1-fast") -> str:
         """Query OpenRouter API for enhanced research"""
         if not OPENROUTER_API_KEY or "your-openrouter-api-key" in OPENROUTER_API_KEY:
@@ -187,11 +187,9 @@ class SourceArchiver:
         """Fetch URL content and archive it"""
         try:
             # Validate URL before fetching
-            try:
-                validate_url(url)
-            except ValueError as e:
-                logger.warn(f"Invalid URL {url}: {e}")
-                raise
+            if not validate_url(url):
+                logger.warn(f"Invalid URL format: {url}")
+                raise ValueError(f"Invalid URL format: {url}")
             
             # Create hash for filename
             url_hash = hashlib.sha256(url.encode()).hexdigest()

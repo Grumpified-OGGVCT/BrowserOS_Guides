@@ -898,7 +898,8 @@ def main():
         try:
             logger = ResilientLogger(__name__)
             logger.error(f"Setup failed with exception: {e}", exc_info=True)
-        except:
+        except Exception:
+            # If secondary logging fails, continue with traceback
             pass
         import traceback
         traceback.print_exc()

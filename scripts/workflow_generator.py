@@ -53,7 +53,7 @@ class AIWorkflowGenerator:
         1. JSON between the outermost '{' and '}'.
         2. Entire text as JSON.
         3. JSON inside a fenced markdown code block.
-        4. Largest balanced-brace JSON block.
+        4. First balanced-brace JSON block found.
         5. Last-resort outermost '{' ... '}' again.
         """
         if not text: 

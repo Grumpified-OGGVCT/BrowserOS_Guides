@@ -193,6 +193,8 @@ REM ============================================================================
 echo.
 echo [1/9] Checking Python installation...
 
+REM Resume logic: Skip this step only if LAST_STATE is exactly this checkpoint
+REM Note: Steps before LAST_STATE will re-run (safe but redundant)
 if defined LAST_STATE if "%LAST_STATE%"=="python_checked" goto skip_python_check
 
 python --version >nul 2>&1

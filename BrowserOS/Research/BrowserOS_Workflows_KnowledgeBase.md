@@ -673,7 +673,7 @@ This matrix enables the BrowserOS agent suite to automatically select the **Best
 
 ### 3. The "Workflow Architect" (Generator)
 - **Target:** deepseek-v3.2:cloud
-- **Reason:** Superior at large-scale agentic task synthesis�outputting structured, bug-free JSON.
+- **Reason:** Superior at large-scale agentic task synthesis—outputting structured, bug-free JSON.
 
 ### 4. The "Visionary UI Operator" (Interactive Mode)
 - **Target:** qwen3-vl:235b-cloud
