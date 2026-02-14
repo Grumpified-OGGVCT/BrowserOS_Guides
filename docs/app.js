@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeCategoryNavigation();
         initializeCopyButtons();
         initializeSystemMonitor();
+        loadUpcomingFeatures();  // Load AI predictions
     } catch (error) {
         console.error('Initialization error:', error);
         // Display user-friendly error message
@@ -1090,3 +1091,123 @@ function initializeSystemMonitor() {
     setInterval(fetchHealth, 5000);
 }
 
+
+// ============================================================================
+// Load Upcoming Features (AI Predictions)
+// ============================================================================
+
+async function loadUpcomingFeatures() {
+    const container = document.getElementById('upcoming-features-container');
+    const grid = document.getElementById('upcoming-features-grid');
+    const meta = document.getElementById('prediction-meta');
+    const loading = document.getElementById('predictions-loading');
+    const error = document.getElementById('predictions-error');
+    
+    if (!container) return; // Section not on this page
+    
+    try {
+        const response = await fetch('upcoming-features.json');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Hide loading, show content
+        loading.style.display = 'none';
+        container.style.display = 'block';
+        
+        // Render predictions for each repository
+        let allPredictions = [];
+        data.repositories.forEach(repo => {
+            allPredictions = allPredictions.concat(
+                repo.predictions.map(p => ({ ...p, repo: repo.repository }))
+            );
+        });
+        
+        if (allPredictions.length === 0) {
+            error.style.display = 'block';
+            loading.style.display = 'none';
+            return;
+        }
+        
+        // Render prediction cards
+        grid.innerHTML = allPredictions.map(pred => {
+            const confidenceColor = {
+                high: '#10B981',
+                medium: '#F59E0B',
+                low: '#6B7280'
+            }[pred.confidence] || '#6B7280';
+            
+            const categoryIcon = {
+                new_feature: '✨',
+                improvement: '🚀',
+                ui_enhancement: '🎨',
+                performance: '⚡'
+            }[pred.category] || '📦';
+            
+            return `
+                <div style="background: var(--bg-secondary); border: 1px solid rgba(147, 51, 234, 0.2); border-radius: var(--radius-xl); padding: var(--space-6); transition: all 0.3s ease; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle at center, rgba(147, 51, 234, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-3); position: relative;">
+                        <div style="font-size: 2rem;">${categoryIcon}</div>
+                        <div style="background: ${confidenceColor}; color: white; padding: 0.25rem 0.75rem; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">
+                            ${pred.confidence}
+                        </div>
+                    </div>
+                    
+                    <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-2);">
+                        ${escapeHtml(pred.name)}
+                    </h3>
+                    
+                    <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--space-4);">
+                        ${escapeHtml(pred.description)}
+                    </p>
+                    
+                    <div style="padding-top: var(--space-3); border-top: 1px solid rgba(147, 51, 234, 0.1);">
+                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: var(--space-1);">
+                            <strong>Evidence:</strong>
+                        </div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace;">
+                            ${escapeHtml(pred.evidence)}
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: var(--space-3); font-size: 0.75rem; color: #9333EA; font-weight: 600;">
+                        📦 ${pred.repo}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // Render metadata
+        const totalCommits = data.repositories.reduce((sum, r) => sum + r.commits_since_release, 0);
+        const reposList = data.repositories.map(r => {
+            const release = r.latest_release ? `v${r.latest_release}` : 'No release';
+            const commits = r.commits_since_release;
+            return `<strong>${r.repository}</strong> (${release}, ${commits} commits)`;
+        }).join(' • ');
+        
+        meta.innerHTML = `
+            <h4 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-2);">
+                📊 Prediction Metadata
+            </h4>
+            <div style="display: grid; gap: var(--space-2); font-size: 0.875rem; color: var(--text-secondary);">
+                <div><strong>Total Predictions:</strong> ${allPredictions.length}</div>
+                <div><strong>Total Commits Analyzed:</strong> ${totalCommits}</div>
+                <div><strong>Repositories:</strong> ${reposList}</div>
+                <div><strong>Last Updated:</strong> ${new Date(data.generated_at).toLocaleString()}</div>
+            </div>
+            <p style="margin-top: var(--space-3); font-size: 0.75rem; color: var(--text-tertiary); font-style: italic;">
+                These predictions are generated weekly by analyzing commit patterns, messages, and changes between releases. They are educated guesses, not official announcements.
+            </p>
+        `;
+        
+    } catch (err) {
+        console.error('Failed to load upcoming features:', err);
+        loading.style.display = 'none';
+        error.style.display = 'block';
+    }
+}

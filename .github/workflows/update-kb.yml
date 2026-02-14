@@ -99,6 +99,22 @@ jobs:
           python scripts/extract_claude_skills.py --verbose || echo "⚠️ Skill extraction encountered issues"
         continue-on-error: true
       
+      - name: Predict upcoming features (Weekly)
+        if: github.event_name == 'schedule'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
+        run: |
+          echo "🔮 Predicting upcoming BrowserOS features from commit analysis..."
+          python scripts/predict_upcoming_features.py --verbose || echo "⚠️ Feature prediction encountered issues"
+          # Copy predictions to docs for web page
+          if [ -f "BrowserOS/Research/upcoming_features.json" ]; then
+            cp BrowserOS/Research/upcoming_features.json docs/upcoming-features.json
+            echo "✓ Copied predictions to docs/"
+          fi
+        continue-on-error: true
+      
       - name: Regenerate search index
         run: |
           echo "📊 Regenerating search index..."
@@ -140,6 +156,7 @@ jobs:
           git add library/
           git add docs/repo-structure.json
           git add docs/search-index.json
+          git add docs/upcoming-features.json
           
           # Generate commit message with summary
           COMMIT_MSG="🤖 Automated KB update - $(date +%Y-%m-%d)
