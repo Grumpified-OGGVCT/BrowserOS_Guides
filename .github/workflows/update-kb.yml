@@ -91,6 +91,14 @@ jobs:
           echo "🔍 Generating live repository structure..."
           python scripts/generate_repo_structure.py
       
+      - name: Extract skills from awesome-claude-skills (Weekly)
+        if: github.event_name == 'schedule'
+        run: |
+          echo "🎯 Extracting skills from awesome-claude-skills repository..."
+          echo "Repository: https://github.com/Grumpified-OGGVCT/awesome-claude-skills"
+          python scripts/extract_claude_skills.py --verbose || echo "⚠️ Skill extraction encountered issues"
+        continue-on-error: true
+      
       - name: Regenerate search index
         run: |
           echo "📊 Regenerating search index..."
@@ -128,6 +136,7 @@ jobs:
           git add BrowserOS/Research/
           git add BrowserOS/ANTI_PATTERNS_AND_CONSTRAINTS.md
           git add BrowserOS/structure.md
+          git add BrowserOS/Workflows/Community-Contributed/claude-skills-adapted/
           git add library/
           git add docs/repo-structure.json
           git add docs/search-index.json
