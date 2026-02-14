@@ -78,9 +78,9 @@ jobs:
             echo "changes=true" >> $GITHUB_OUTPUT
             echo "✅ New or updated skills detected"
             
-            # Count new/modified files
+            # Count new/modified files (improved pattern matching)
             NEW_COUNT=$(git status --porcelain | grep "^??" | wc -l)
-            MODIFIED_COUNT=$(git status --porcelain | grep "^ M" | wc -l)
+            MODIFIED_COUNT=$(git status --porcelain | grep "^ M\|^M " | wc -l)
             echo "new_files=$NEW_COUNT" >> $GITHUB_OUTPUT
             echo "modified_files=$MODIFIED_COUNT" >> $GITHUB_OUTPUT
             echo "📝 New skills: $NEW_COUNT, Modified skills: $MODIFIED_COUNT"
