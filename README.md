@@ -30,12 +30,29 @@ npm run mcp-server
 This repository has evolved into an **operational intelligence layer** for BrowserOS agents:
 
 - 🧠 **HTTP MCP Server** - 10 tools for agent self-awareness
+- 🎯 **917+ Claude Skills** - Daily auto-extracted from [awesome-claude-skills](https://github.com/Grumpified-OGGVCT/awesome-claude-skills)
 - 📚 **917+ Executable Workflows** - Ready-to-use, validated templates
 - 🔐 **Content Integrity** - SHA-256 hashing with delta detection
 - ⚠️ **Anti-Patterns Catalog** - Know what fails before trying
 - ✅ **Ground Truth Validation** - Verified against BrowserOS source code
 - 🔄 **Event-Driven Updates** - Real-time sync with BrowserOS repo
 - 🌐 **Universal MCP** - Works with BrowserOS, Claude Desktop, Cursor, etc.
+
+### 🎯 NEW: 917+ Claude Skills Library
+
+**Daily automated extraction from [awesome-claude-skills](https://github.com/Grumpified-OGGVCT/awesome-claude-skills)!**
+
+Every day at 2:00 AM UTC, our GitHub Actions workflow automatically:
+- ✅ Clones/updates the awesome-claude-skills repository
+- ✅ Extracts browser-compatible skills (web automation, scraping, form filling, etc.)
+- ✅ Adapts them to BrowserOS workflow format
+- ✅ Runs security scanning and sanitization
+- ✅ Updates the search index and commits changes
+
+**🙏 Huge credit to Composio HQ and the awesome-claude-skills contributors!**
+
+📂 Browse all skills: `BrowserOS/Workflows/Community-Contributed/claude-skills-adapted/`  
+🌐 View online: [Skills Library Section](https://grumpified-oggvct.github.io/BrowserOS_Guides/#skills)
 
 ### How to Use
 

@@ -84,6 +84,57 @@
     }
   },
   {
+    "url": "https://github.com/browseros-ai/docs",
+    "accessed": "2026-02-14T01:05:00Z",
+    "author": "browseros-ai",
+    "type": "github_repository",
+    "abstract": "Official BrowserOS documentation repository with MDX files and guides",
+    "branches": [
+      "main"
+    ],
+    "track_beta": false,
+    "priority": "high",
+    "provenance": {
+      "first_indexed": "2026-02-14T01:05:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
+  },
+  {
+    "url": "https://github.com/browseros-ai/mintlify-docs",
+    "accessed": "2026-02-14T01:05:00Z",
+    "author": "browseros-ai",
+    "type": "github_repository",
+    "abstract": "Mintlify-powered documentation with structured guides and API references",
+    "branches": [
+      "main"
+    ],
+    "track_beta": false,
+    "priority": "high",
+    "provenance": {
+      "first_indexed": "2026-02-14T01:05:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
+  },
+  {
+    "url": "https://github.com/browseros-ai/codex",
+    "accessed": "2026-02-14T01:05:00Z",
+    "author": "browseros-ai",
+    "type": "github_repository",
+    "abstract": "Lightweight coding agent that runs in terminal - Rust-based CLI tool",
+    "branches": [
+      "main"
+    ],
+    "track_beta": false,
+    "priority": "medium",
+    "provenance": {
+      "first_indexed": "2026-02-14T01:05:00Z",
+      "update_count": 0,
+      "last_validation": null
+    }
+  },
+  {
     "url": "https://github.com/browser-use/workflow-use",
     "accessed": "2026-02-13T11:56:54.411958",
     "author": "browser-use",
