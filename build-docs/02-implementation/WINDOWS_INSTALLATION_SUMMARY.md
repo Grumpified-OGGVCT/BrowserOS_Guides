@@ -500,7 +500,7 @@ Potential improvements for future versions:
 **Documentation**:
 - [WINDOWS_SETUP.md](WINDOWS_SETUP.md) - Complete guide
 - [README.md](README.md) - Repository overview
-- [AUTOMATION_QUICKSTART.md](AUTOMATION_QUICKSTART.md) - Automation guide
+- [AUTOMATION_QUICKSTART.md](../../AUTOMATION_QUICKSTART.md) - Automation guide
 
 **Getting Help**:
 - Check documentation first

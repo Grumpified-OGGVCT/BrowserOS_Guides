@@ -2,12 +2,12 @@
 
 ## Self-Test Found Issues Requiring Manual Review
 
-**Test Run:** 2026-02-14 05:38:02 UTC
+**Test Run:** 2026-02-14 05:40:47 UTC
 **Total Issues:** 1
 
 ### doc_links [LOW]
 
-**Issue:** Broken internal links: README.md -> ./tutorials/first-workflow.md, README.md -> ./tutorials/common-patterns.md, README.md -> ./tutorials/error-handling.md, README.md -> ./tutorials/performance.md, README.md -> ./tutorials/custom-steps.md
+**Issue:** Broken internal links: OPERATIONAL_STATUS.md -> ./QUICKSTART_MCP.md, OPERATIONAL_STATUS.md -> ./ARCHITECTURE.md, OPERATIONAL_STATUS.md -> ./MCP_SERVER_INTEGRATION.md, OPERATIONAL_STATUS.md -> ./docker-compose.yml, OPERATIONAL_STATUS.md -> ./WHATSAPP_MONITORING_STATUS.md
 
 **Suggested Fix:** Fix broken links in documentation
 

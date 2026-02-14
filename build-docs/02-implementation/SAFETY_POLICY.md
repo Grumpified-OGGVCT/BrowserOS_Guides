@@ -168,7 +168,7 @@ Please report to: security@browseros-guides.dev (or open a GitHub issue)
 
 ## 📚 Additional Resources
 
-- [BrowserOS Ethical Guidelines](../SECURITY-POLICY.md)
+- [BrowserOS Ethical Guidelines](../../SECURITY-POLICY.md)
 - [Web Scraping Legal Guide](https://www.eff.org/issues/coders/reverse-engineering-faq)
 - [GDPR Compliance for Data Collection](https://gdpr.eu/)
 - [Terms of Service - Best Practices](https://www.termsfeed.com/blog/sample-terms-of-service-template/)

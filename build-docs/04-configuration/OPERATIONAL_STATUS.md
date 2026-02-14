@@ -329,11 +329,11 @@ sudo systemctl start browseros-guides.service
 ## Support & Resources
 
 ### Documentation
-- [Quick Start](./QUICKSTART_MCP.md)
-- [Architecture Guide](./ARCHITECTURE.md)
-- [MCP Integration](./MCP_SERVER_INTEGRATION.md)
-- [Docker Deployment](./docker-compose.yml)
-- [WhatsApp Monitoring](./WHATSAPP_MONITORING_STATUS.md)
+- [Quick Start](../../QUICKSTART_MCP.md)
+- [Architecture Guide](../../ARCHITECTURE.md)
+- [MCP Integration](../02-implementation/MCP_SERVER_INTEGRATION.md)
+- [Docker Deployment](../../docker-compose.yml)
+- [WhatsApp Monitoring](../07-whatsapp-monitoring/WHATSAPP_MONITORING_STATUS.md)
 
 ### Community
 - GitHub Issues: [Report bugs or request features](https://github.com/Grumpified-OGGVCT/BrowserOS_Guides/issues)

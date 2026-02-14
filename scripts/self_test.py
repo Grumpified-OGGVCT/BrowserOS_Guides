@@ -430,8 +430,11 @@ class SelfTest:
                     self.log(f"Failed to read {md_file.name}", "WARNING")
                     continue
                 
+                # Remove HTML comments before checking links (they may contain placeholder/future links)
+                content_no_comments = re.sub(r'<!--.*?-->', '', content, flags=re.DOTALL)
+                
                 # Find markdown links
-                links = re.findall(r'\[([^\]]+)\]\(([^\)]+)\)', content)
+                links = re.findall(r'\[([^\]]+)\]\(([^\)]+)\)', content_no_comments)
                 for link_text, link_path in links:
                     # Skip external links
                     if link_path.startswith(('http://', 'https://', 'mailto:', '#')):
