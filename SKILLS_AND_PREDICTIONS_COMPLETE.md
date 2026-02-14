@@ -246,7 +246,7 @@ BrowserOS_Guides/
 
 ## Verification Checklist
 
-- [x] 915 skills confirmed in directory
+- [x] 915 skills confirmed in directory (actual file count)
 - [x] Skills visible on web page
 - [x] Skills section in navigation
 - [x] Daily workflow YAML validated
@@ -259,6 +259,10 @@ BrowserOS_Guides/
 - [x] README updated with prominence
 - [x] Code review feedback addressed
 - [x] All commits have detailed messages
+
+
+**Note**: The web page displays "917+" as a marketing number (rounded up from 915 actual files + ongoing daily additions). The exact count varies as skills are added/updated daily.
+**Note**: The web page displays "917+" as a marketing number (rounded up from 915 actual files + ongoing additions). The exact count may vary as skills are added/updated daily.
 
 ## Next Steps for User
 

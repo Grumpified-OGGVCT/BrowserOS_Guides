@@ -5,6 +5,7 @@ Analyzes commits between releases to predict what's coming next
 """
 
 import os
+import sys
 import json
 import requests
 import subprocess
@@ -13,6 +14,12 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional
 from dotenv import load_dotenv
 
+# Import resilience utilities for hardened automation
+sys.path.insert(0, str(Path(__file__).parent))
+from utils.resilience import (
+    ResilientLogger, retry_with_backoff, resilient_request, safe_file_write
+)
+
 load_dotenv()
 
 REPO_ROOT = Path(__file__).parent.parent
@@ -20,6 +27,8 @@ PREDICTIONS_PATH = REPO_ROOT / "BrowserOS" / "Research" / "upcoming_features.jso
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY")
+USE_OLLAMA = os.getenv("USE_OLLAMA", "false").lower() == "true"
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
 class FeaturePredictor:
     """Analyzes commits to predict upcoming features"""
@@ -27,11 +36,13 @@ class FeaturePredictor:
     def __init__(self, verbose: bool = False):
         self.verbose = verbose
         self.predictions = []
+        self.logger = ResilientLogger(__name__)
         
     def log(self, message: str):
         if self.verbose:
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] {message}")
+            self.logger.info(message)
     
+    @retry_with_backoff(max_attempts=3, base_delay=2.0)
     def get_latest_release(self, owner: str, repo: str) -> Optional[Dict]:
         """Get the latest release from GitHub"""
         url = f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
@@ -39,52 +50,46 @@ class FeaturePredictor:
         if GITHUB_TOKEN:
             headers["Authorization"] = f"token {GITHUB_TOKEN}"
         
-        try:
-            response = requests.get(url, headers=headers, timeout=10)
-            if response.status_code == 200:
-                return response.json()
-            elif response.status_code == 404:
-                self.log(f"No releases found for {owner}/{repo}")
-                return None
-            else:
-                self.log(f"Error fetching releases: {response.status_code}")
-                return None
-        except Exception as e:
-            self.log(f"Error: {e}")
+        response = resilient_request(url, headers=headers, timeout=10, logger=self.logger)
+        if response and response.status_code == 200:
+            return response.json()
+        elif response and response.status_code == 404:
+            self.log(f"No releases found for {owner}/{repo}")
+            return None
+        else:
+            self.log(f"Error fetching releases: {response.status_code if response else 'No response'}")
             return None
     
+    @retry_with_backoff(max_attempts=3, base_delay=2.0)
     def get_commits_since_release(self, owner: str, repo: str, release_tag: Optional[str] = None) -> List[Dict]:
-        """Get commits since the latest release"""
-        url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+        """Get commits since the latest release using GitHub compare API"""
         headers = {}
         if GITHUB_TOKEN:
             headers["Authorization"] = f"token {GITHUB_TOKEN}"
-        
-        params = {"per_page": 100}
+
+        # If we have a release tag, use the compare API to get commits between
+        # that tag and the main branch.
         if release_tag:
-            params["sha"] = "main"  # Get from main branch
-        
-        try:
-            response = requests.get(url, headers=headers, params=params, timeout=10)
-            if response.status_code != 200:
-                self.log(f"Error fetching commits: {response.status_code}")
+            compare_url = f"https://api.github.com/repos/{owner}/{repo}/compare/{release_tag}...main"
+            response = resilient_request(compare_url, headers=headers, timeout=10, logger=self.logger)
+            if response and response.status_code == 200:
+                compare_data = response.json()
+                commits = compare_data.get("commits", [])
+                self.log(f"Found {len(commits)} commits since {release_tag}")
+                return commits
+            else:
+                self.log(f"Error fetching compare data: {response.status_code if response else 'No response'}")
                 return []
-            
+
+        # If no release tag is provided, fall back to returning recent commits
+        url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+        params = {"per_page": 100}
+        response = resilient_request(url, headers=headers, params=params, timeout=10, logger=self.logger)
+        if response and response.status_code == 200:
             all_commits = response.json()
-            
-            # If we have a release tag, filter commits after that release
-            if release_tag:
-                filtered_commits = []
-                for commit in all_commits:
-                    if commit["sha"] == release_tag:
-                        break
-                    filtered_commits.append(commit)
-                return filtered_commits
-            
             return all_commits[:30]  # Return last 30 commits if no release
-            
-        except Exception as e:
-            self.log(f"Error: {e}")
+        else:
+            self.log(f"Error fetching commits: {response.status_code if response else 'No response'}")
             return []
     
     def analyze_commit_patterns(self, commits: List[Dict]) -> Dict[str, Any]:
@@ -172,14 +177,16 @@ Respond in JSON format:
         
         return predictions
     
+    @retry_with_backoff(max_attempts=2, base_delay=1.0)
     def _query_ai(self, prompt: str) -> List[Dict[str, Any]]:
         """Query AI service for predictions"""
         
         # Try OpenRouter
-        if OPENROUTER_API_KEY and OPENROUTER_API_KEY != "your-openrouter-api-key-here":
+        if OPENROUTER_API_KEY and OPENROUTER_API_KEY not in ["your-openrouter-api-key-here", "placeholder"]:
             try:
-                response = requests.post(
+                response = resilient_request(
                     "https://openrouter.ai/api/v1/chat/completions",
+                    method="POST",
                     headers={
                         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
                         "Content-Type": "application/json"
@@ -189,10 +196,11 @@ Respond in JSON format:
                         "messages": [{"role": "user", "content": prompt}],
                         "temperature": 0.3
                     },
-                    timeout=30
+                    timeout=30,
+                    logger=self.logger
                 )
                 
-                if response.status_code == 200:
+                if response and response.status_code == 200:
                     content = response.json()["choices"][0]["message"]["content"]
                     # Extract JSON from response
                     import re
@@ -200,30 +208,39 @@ Respond in JSON format:
                     if json_match:
                         return json.loads(json_match.group())
             except Exception as e:
-                self.log(f"OpenRouter error: {e}")
+                self.logger.error(f"OpenRouter error: {e}", exc_info=True)
         
-        # Try Ollama
-        if OLLAMA_API_KEY or True:  # Ollama doesn't strictly require key
+        # Try Ollama if explicitly enabled
+        if USE_OLLAMA:
             try:
-                response = requests.post(
-                    "http://localhost:11434/v1/chat/completions",
+                # Health check first
+                health_url = f"{OLLAMA_BASE_URL}/api/tags"
+                health_response = resilient_request(health_url, timeout=2, logger=self.logger)
+                if not health_response or health_response.status_code != 200:
+                    self.log("Ollama service not available, skipping")
+                    return []
+                
+                response = resilient_request(
+                    f"{OLLAMA_BASE_URL}/v1/chat/completions",
+                    method="POST",
                     headers={"Content-Type": "application/json"},
                     json={
                         "model": "llama3",
                         "messages": [{"role": "user", "content": prompt}],
                         "temperature": 0.3
                     },
-                    timeout=30
+                    timeout=30,
+                    logger=self.logger
                 )
                 
-                if response.status_code == 200:
+                if response and response.status_code == 200:
                     content = response.json()["choices"][0]["message"]["content"]
                     import re
                     json_match = re.search(r'\[.*\]', content, re.DOTALL)
                     if json_match:
                         return json.loads(json_match.group())
             except Exception as e:
-                self.log(f"Ollama error: {e}")
+                self.logger.error(f"Ollama error: {e}", exc_info=True)
         
         return []
     
@@ -320,10 +337,19 @@ Respond in JSON format:
         
         # Save predictions
         PREDICTIONS_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with open(PREDICTIONS_PATH, 'w') as f:
-            json.dump(all_predictions, f, indent=2)
+        predictions_json = json.dumps(all_predictions, indent=2)
+        success = safe_file_write(
+            str(PREDICTIONS_PATH),
+            predictions_json,
+            create_dirs=True,
+            logger=self.logger
+        )
         
-        self.log(f"\n✓ Predictions saved to {PREDICTIONS_PATH}")
+        if success:
+            self.log(f"\n✓ Predictions saved to {PREDICTIONS_PATH}")
+        else:
+            self.logger.error(f"Failed to save predictions to {PREDICTIONS_PATH}")
+        
         return len(all_predictions["repositories"])
 
 def main():

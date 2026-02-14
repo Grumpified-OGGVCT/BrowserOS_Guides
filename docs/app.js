@@ -1154,7 +1154,7 @@ async function loadUpcomingFeatures() {
                     <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-3); position: relative;">
                         <div style="font-size: 2rem;">${categoryIcon}</div>
                         <div style="background: ${confidenceColor}; color: white; padding: 0.25rem 0.75rem; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">
-                            ${pred.confidence}
+                            ${escapeHtml(pred.confidence)}
                         </div>
                     </div>
                     
@@ -1176,7 +1176,7 @@ async function loadUpcomingFeatures() {
                     </div>
                     
                     <div style="margin-top: var(--space-3); font-size: 0.75rem; color: #9333EA; font-weight: 600;">
-                        📦 ${pred.repo}
+                        📦 ${escapeHtml(pred.repo)}
                     </div>
                 </div>
             `;
@@ -1185,9 +1185,9 @@ async function loadUpcomingFeatures() {
         // Render metadata
         const totalCommits = data.repositories.reduce((sum, r) => sum + r.commits_since_release, 0);
         const reposList = data.repositories.map(r => {
-            const release = r.latest_release ? `v${r.latest_release}` : 'No release';
+            const release = r.latest_release ? `v${escapeHtml(r.latest_release)}` : 'No release';
             const commits = r.commits_since_release;
-            return `<strong>${r.repository}</strong> (${release}, ${commits} commits)`;
+            return `<strong>${escapeHtml(r.repository)}</strong> (${release}, ${commits} commits)`;
         }).join(' • ');
         
         meta.innerHTML = `
