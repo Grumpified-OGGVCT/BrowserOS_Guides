@@ -99,9 +99,8 @@ class SelfTest:
         # Generate report
         self.generate_report(duration, passed_tests, failed_tests, fixed_tests)
         
-        # Create issues if needed
-        if self.manual_review_needed:
-            self.create_github_issue()
+        # Create or clear issue draft
+        self.create_github_issue()
         
         return failed_tests == 0 or (self.auto_fix and not self.manual_review_needed)
     
@@ -560,7 +559,13 @@ class SelfTest:
     
     def create_github_issue(self):
         """Create GitHub issue for manual review items"""
+        issue_file = REPO_ROOT / ".github" / "issue_draft.md"
+        
         if not self.manual_review_needed:
+            # Clear stale issue draft when all tests pass
+            if issue_file.exists():
+                issue_file.unlink()
+                self.log(f"\nCleared stale issue draft: {issue_file}")
             return
         
         issue_title = f"[Self-Test] {len(self.manual_review_needed)} Issues Require Manual Attention"
@@ -582,7 +587,6 @@ class SelfTest:
         issue_body += "4. Close this issue when all tests pass\n"
         
         # Write issue to file for GitHub Actions to create
-        issue_file = REPO_ROOT / ".github" / "issue_draft.md"
         issue_file.parent.mkdir(parents=True, exist_ok=True)
         with open(issue_file, 'w') as f:
             f.write(f"# {issue_title}\n\n{issue_body}")
