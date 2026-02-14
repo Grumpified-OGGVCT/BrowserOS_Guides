@@ -1,11 +1,11 @@
 {
   "test_run": {
-    "timestamp": "2026-02-14T05:41:27.379791",
-    "duration_seconds": 0.127075,
+    "timestamp": "2026-02-14T05:41:47.797437",
+    "duration_seconds": 0.127911,
     "total_tests": 13,
     "passed": 13,
     "failed": 0,
-    "fixed": 1
+    "fixed": 0
   },
   "results": {
     "C01_sections": "PASS",
@@ -22,8 +22,6 @@
     "doc_links": "PASS",
     "python_syntax": "PASS"
   },
-  "fixes_applied": [
-    "Updated KB checksum"
-  ],
+  "fixes_applied": [],
   "manual_review_needed": []
 }
