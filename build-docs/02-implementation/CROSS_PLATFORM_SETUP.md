@@ -793,10 +793,10 @@ Use this checklist for any platform:
 
 ## 📚 Platform-Specific Documentation
 
-- **Windows**: [WINDOWS_SETUP.md](WINDOWS_SETUP.md)
+- **Windows**: [WINDOWS_SETUP.md](../../WINDOWS_SETUP.md)
 - **All Platforms**: This guide
-- **General**: [README.md](README.md)
-- **Automation**: [AUTOMATION_QUICKSTART.md](AUTOMATION_QUICKSTART.md)
+- **General**: [README.md](../../README.md)
+- **Automation**: [AUTOMATION_QUICKSTART.md](../../AUTOMATION_QUICKSTART.md)
 
 ---
 

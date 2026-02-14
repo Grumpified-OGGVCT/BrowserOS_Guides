@@ -310,18 +310,24 @@ python scripts/optimize_workflow.py --workflow path/to/workflow.json
 
 ### Beginners
 - [Workflow Basics](../Research/BrowserOS_Workflows_KnowledgeBase.md)
+<!-- Tutorials coming soon:
 - [Your First Workflow](./tutorials/first-workflow.md)
 - [Common Patterns](./tutorials/common-patterns.md)
+-->
 
 ### Intermediate
 - [Advanced Techniques](../Research/ADVANCED_TECHNIQUES.md)
+<!-- Tutorials coming soon:
 - [Error Handling](./tutorials/error-handling.md)
 - [Performance Optimization](./tutorials/performance.md)
+-->
 
 ### Advanced
+<!-- Tutorials coming soon:
 - [Custom Step Types](./tutorials/custom-steps.md)
 - [Distributed Workflows](./tutorials/distributed.md)
 - [Production Deployment](./tutorials/production.md)
+-->
 
 ---
 

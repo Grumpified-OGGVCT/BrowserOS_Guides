@@ -38,7 +38,7 @@ I have completed a comprehensive audit and testing of all GitHub Actions workflo
 #### Documentation
 - `WORKFLOW_VERIFICATION_REPORT.md` - Detailed 11KB verification report
 - `.github/workflows/README.md` - Comprehensive workflow documentation
-- `WORKFLOW_TRIGGER_GUIDE.md` - Existing 16KB guide (validated)
+- `../../WORKFLOW_TRIGGER_GUIDE.md` - Existing 16KB guide (validated)
 - `README.md` - Updated with workflow status section
 
 ---
@@ -279,7 +279,7 @@ Consider the workflow testing **complete and successful** when:
 ### Documentation
 1. `WORKFLOW_VERIFICATION_REPORT.md` (11KB) - Comprehensive verification report
 2. `.github/workflows/README.md` (7KB) - Workflow directory documentation  
-3. `WORKFLOW_TRIGGER_GUIDE.md` (16KB) - Detailed trigger guide
+3. `../../WORKFLOW_TRIGGER_GUIDE.md` (16KB) - Detailed trigger guide
 4. `THIS_FILE.md` - Quick action guide
 
 ### Scripts
@@ -312,9 +312,9 @@ Once these workflows run successfully, they'll continue to run automatically eve
 
 ## 📞 Questions?
 
-- **Detailed instructions**: See [WORKFLOW_TRIGGER_GUIDE.md](WORKFLOW_TRIGGER_GUIDE.md)
+- **Detailed instructions**: See [WORKFLOW_TRIGGER_GUIDE.md](../../WORKFLOW_TRIGGER_GUIDE.md)
 - **Full verification report**: See [WORKFLOW_VERIFICATION_REPORT.md](WORKFLOW_VERIFICATION_REPORT.md)
-- **Workflow documentation**: See [.github/workflows/README.md](.github/workflows/README.md)
+- **Workflow documentation**: See [.github/workflows/README.md](../../.github/workflows/README.md)
 
 ---
 
