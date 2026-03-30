@@ -45,7 +45,7 @@ if (fs.existsSync(envPath)) {
 }
 
 // Configuration
-// Support multiple environment variable names for flexibility
+// BrowserOS-style port resolution: environment-driven first, fixed default last.
 const PORT = process.env.MCP_SERVER_PORT || process.env.MCP_PORT || process.env.BROWSEROS_GUIDES_PORT || 3100;
 const HOST = process.env.MCP_HOST || process.env.BROWSEROS_GUIDES_HOST || 'localhost';
 const ENABLE_CACHE = process.env.BROWSEROS_GUIDES_ENABLE_CACHE === 'true';
