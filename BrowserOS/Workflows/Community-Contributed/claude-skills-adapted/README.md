@@ -52,8 +52,8 @@ If you improve one of these adapted workflows:
 ## Statistics
 
 - **Total Skills in Source**: 107+
-- **Extracted for BrowserOS**: 917
-- **Last Updated**: 2026-04-09
+- **Extracted for BrowserOS**: 918
+- **Last Updated**: 2026-04-10
 
 ## Categories Extracted
 
@@ -63,9 +63,10 @@ If you improve one of these adapted workflows:
 - **Document Processing**: 2 workflows
 - **Communication & Writing**: 1 workflows
 - **Productivity & Organization**: 1 workflows
+- **Other**: 1 workflows
 - **Business & Marketing**: 1 workflows
 
 ---
 
-*Automatically generated on 2026-04-09 04:24:09 UTC*  
+*Automatically generated on 2026-04-10 04:37:59 UTC*  
 *Source: [awesome-claude-skills](https://github.com/Grumpified-OGGVCT/awesome-claude-skills)*

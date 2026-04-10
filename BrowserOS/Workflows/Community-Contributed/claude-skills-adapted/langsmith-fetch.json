@@ -1,22 +1,24 @@
 {
-  "name": "video_downloader",
-  "id": "video_downloader",
-  "description": "Downloads videos from YouTube and other platforms for offline viewing, editing, or archival. Handles various formats and quality options.",
+  "name": "langsmith_fetch",
+  "id": "langsmith_fetch",
+  "description": "Debug LangChain and LangGraph agents by fetching execution traces from LangSmith Studio. Use when debugging agent behavior, investigating errors, analyzing tool calls, checking memory operations, or examining agent performance. Automatically fetches recent traces and analyzes execution patterns. Requires langsmith-fetch CLI installed.",
   "version": "1.0.0",
   "source": "adapted-from-claude-skill",
-  "original_skill": "video-downloader",
-  "category": "Creative & Media",
+  "original_skill": "langsmith-fetch",
+  "category": "Other",
   "tags": [
     "claude-skill",
     "community"
   ],
   "metadata": {
-    "created": "2026-04-10T04:37:59.852276Z",
+    "created": "2026-04-10T04:37:59.552432Z",
     "adapted_from": "awesome-claude-skills",
     "requires_mcp": [],
     "use_cases": [
-      "```bash",
-      "```bash"
+      "response format:**",
+      "response format:**",
+      "response format:**",
+      "1: \"Agent Not Responding\""
     ]
   },
   "steps": [
@@ -30,7 +32,7 @@
       "name": "extract_data",
       "type": "extract",
       "selector": "{{data_selector}}",
-      "description": "Extract relevant data for video-downloader"
+      "description": "Extract relevant data for langsmith-fetch"
     },
     {
       "name": "process_results",
@@ -52,11 +54,11 @@
     }
   },
   "notes": [
-    "This workflow was automatically adapted from the Claude skill: video-downloader",
-    "Original skill description: Downloads videos from YouTube and other platforms for offline viewing, editing, or archival. Handles various formats and quality options.",
+    "This workflow was automatically adapted from the Claude skill: langsmith-fetch",
+    "Original skill description: Debug LangChain and LangGraph agents by fetching execution traces from LangSmith Studio. Use when debugging agent behavior, investigating errors, analyzing tool calls, checking memory operations, or examining agent performance. Automatically fetches recent traces and analyzes execution patterns. Requires langsmith-fetch CLI installed.",
     "Additional customization required for production use",
     "See original skill at: https://github.com/Grumpified-OGGVCT/awesome-claude-skills",
     "\u26a0\ufe0f SECURITY: This workflow has been scanned and sanitized, but review before production use",
-    "Content hash: 1fd25dc98c944261"
+    "Content hash: d176e6ff9dc17528"
   ]
 }
