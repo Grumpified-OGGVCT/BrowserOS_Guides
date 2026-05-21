@@ -37,7 +37,7 @@ services:
       
       # URLs for containerized services
       - OLLAMA_BASE_URL=http://ollama:11434/v1
-      - MCP_SERVER_URL=http://mcp-server:3100
+      - MCP_SERVER_URL=http://mcp-server:${BROWSEROS_GUIDES_PORT:-3100}
       
       # Force update flag
       - FORCE_UPDATE=${FORCE_UPDATE:-false}
@@ -130,10 +130,10 @@ services:
     restart: unless-stopped
     
     ports:
-      - "3100:3100"
+      - "${BROWSEROS_GUIDES_PORT:-3100}:${BROWSEROS_GUIDES_PORT:-3100}"
     
     environment:
-      - BROWSEROS_GUIDES_PORT=3100
+      - BROWSEROS_GUIDES_PORT=${BROWSEROS_GUIDES_PORT:-3100}
       - BROWSEROS_GUIDES_HOST=0.0.0.0
       - MCP_PROTOCOL_VERSION=2024-11-05
     
