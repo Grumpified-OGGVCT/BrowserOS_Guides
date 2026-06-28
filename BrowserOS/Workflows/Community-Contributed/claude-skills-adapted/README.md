@@ -53,7 +53,7 @@ If you improve one of these adapted workflows:
 
 - **Total Skills in Source**: 107+
 - **Extracted for BrowserOS**: 918
-- **Last Updated**: 2026-05-30
+- **Last Updated**: 2026-06-28
 
 ## Categories Extracted
 
@@ -68,5 +68,5 @@ If you improve one of these adapted workflows:
 
 ---
 
-*Automatically generated on 2026-05-30 05:39:55 UTC*  
+*Automatically generated on 2026-06-28 06:06:35 UTC*  
 *Source: [awesome-claude-skills](https://github.com/Grumpified-OGGVCT/awesome-claude-skills)*
