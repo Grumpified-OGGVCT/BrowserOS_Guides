@@ -45,6 +45,7 @@ OLLAMA:
   
   # MCP Server Configuration
   mcp:
+    # BrowserOS-style environment-driven port (defaults to 3100 in server/mcp-server.js)
     server_url: "mcp://localhost:3100/ollama"
     protocol_version: "2024-11-05"
     transport: "stdio"  # stdio, http, websocket
@@ -231,6 +232,7 @@ MCP:
   
   # Server Configuration
   server:
+    # BrowserOS-style environment-driven host/port (defaults resolved by server/mcp-server.js)
     host: "localhost"
     port: 3100
     protocol: "2024-11-05"

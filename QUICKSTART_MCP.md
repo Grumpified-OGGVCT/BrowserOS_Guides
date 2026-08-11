@@ -18,6 +18,7 @@ npm run mcp-server
 ```
 
 The server will start on `http://localhost:3100/mcp` (REST) and `http://localhost:3100/sse` (SSE).
+Set `BROWSEROS_GUIDES_PORT` to override the default port when needed.
 
 ### Step 2: Add to BrowserOS
 
@@ -161,6 +162,7 @@ Expected response:
 **Server won't start?**
 - Check if port 3100 is available: `lsof -i :3100`
 - Try a different port: `BROWSEROS_GUIDES_PORT=3101 npm run mcp-server`
+- Port selection order: `MCP_SERVER_PORT` → `MCP_PORT` → `BROWSEROS_GUIDES_PORT` → `3100`
 
 **BrowserOS can't connect?**
 - Verify server is running: `curl http://localhost:3100/mcp/health`

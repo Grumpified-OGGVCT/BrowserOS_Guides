@@ -12,6 +12,7 @@
 ```bash
 npm run mcp-server
 # Server starts at http://localhost:3100/mcp
+# Override port if needed: BROWSEROS_GUIDES_PORT=3101 npm run mcp-server
 ```
 
 **📖 [Quick Start Guide](./QUICKSTART_MCP.md)** | **🏗️ [Architecture](./ARCHITECTURE.md)** | **📡 [MCP Integration](./build-docs/02-implementation/MCP_SERVER_INTEGRATION.md)**
@@ -60,6 +61,7 @@ Every day at 2:00 AM UTC, our GitHub Actions workflow automatically:
 ```bash
 npm run mcp-server
 # Add to BrowserOS: http://localhost:3100/sse
+# Optional override: BROWSEROS_GUIDES_PORT=3101 npm run mcp-server
 ```
 
 **Option 2: Interactive Website**
